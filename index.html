@@ -332,6 +332,129 @@
   }
   .add-row-btn:hover{ background:#F3E9CE; }
 
+  /* ---------- 소요시간 / 예산 셀 ---------- */
+  table.doc-table td.dur-cell{
+    display:flex; align-items:center; gap:4px; padding:4px 5px;
+  }
+  table.doc-table td.dur-cell .dur-input{
+    flex:1; min-width:0; border:1px dashed var(--paper-line); background:transparent;
+    font-family:'JetBrains Mono', monospace; font-size:12px; text-align:center;
+    outline:none; border-radius:4px; padding:3px 2px; color:var(--ink);
+  }
+  table.doc-table td.dur-cell .dur-input::placeholder{ color:var(--ink-faint); }
+  table.doc-table td.dur-cell .dur-input:focus{ border-color:var(--seal); background:rgba(166,54,44,0.04); }
+  table.doc-table td.dur-cell .time-link{ margin:0; font-size:14px; flex:none; }
+  table.doc-table select.gubun-select{
+    width:100%; font-family:'Noto Sans KR', sans-serif; font-size:12.5px; color:var(--ink);
+    border:1px solid var(--paper-line); background:var(--panel); border-radius:4px;
+    padding:4px 2px; outline:none; text-align:center; text-align-last:center;
+  }
+  table.doc-table select.gubun-select:focus{ border-color:var(--seal); }
+
+  /* ---------- 일정 비고 칸: 결제방식 선택 + 비고 텍스트 ---------- */
+  table.doc-table td.bigo-cell{
+    display:flex; flex-direction:column; gap:3px; padding:4px 5px; text-align:left;
+  }
+  table.doc-table td.bigo-cell select.payment-select{
+    width:100%; font-family:'Noto Sans KR', sans-serif; font-size:11px; color:var(--ink);
+    border:1px solid var(--paper-line); background:var(--panel); border-radius:4px;
+    padding:2px 1px; outline:none;
+  }
+  table.doc-table td.bigo-cell select.payment-select:focus{ border-color:var(--seal); }
+  table.doc-table td.bigo-cell .bigo-text{
+    outline:none; border-bottom:1px dashed var(--paper-line); min-height:14px; padding:0 2px; color:var(--ink);
+  }
+  table.doc-table td.bigo-cell .bigo-text:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
+  table.doc-table td.bigo-cell .bigo-text:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
+
+  /* ---------- 소요예산: 결제 완료 체크 ---------- */
+  table.doc-table td.note-cell{ display:flex; flex-direction:column; gap:4px; align-items:stretch; }
+  table.doc-table .paid-check-label{
+    display:flex; align-items:center; gap:4px; font-size:11px; color:var(--ink-soft); cursor:pointer; justify-content:center;
+  }
+  table.doc-table .paid-check-label input{ width:13px; height:13px; accent-color:var(--seal); cursor:pointer; }
+  table.doc-table tr.paid-done td.note-cell .paid-check-label{ color:#2E7D4F; font-weight:700; }
+
+  /* ---------- 소계 행: 예산 대비 실금액 초과/절약 표시 ---------- */
+  table.doc-table tr.budget-group-header td.diff-cell{ text-align:left; font-weight:700; }
+  table.doc-table tr.budget-group-header td.diff-cell.over{ color:var(--seal); }
+  table.doc-table tr.budget-group-header td.diff-cell.under{ color:#2E7D4F; }
+  table.doc-table tr.budget-group-header td.diff-cell.even{ color:var(--ink-faint); font-weight:400; }
+
+  .day-budget-total{
+    margin-top:8px; text-align:right; font-family:'JetBrains Mono', monospace;
+    font-size:12.5px; color:var(--ink-soft);
+  }
+  .day-budget-total b{ color:var(--ink); font-size:13.5px; }
+  .grand-budget-total{
+    margin:14px 0 0; text-align:right; font-family:'JetBrains Mono', monospace;
+    font-size:13.5px; color:var(--ink-soft); border-top:1px dashed var(--paper-line); padding-top:10px;
+  }
+  .grand-budget-total b{ color:var(--seal-dark); font-size:15px; }
+
+  /* ---------- 구분 항목 관리 패널 ---------- */
+  .gubun-manager{
+    background:var(--panel); border:1px dashed var(--gold-soft); border-radius:8px;
+    padding:10px 12px; margin-bottom:16px;
+  }
+  .gubun-manager-head{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:13px; color:var(--ink);
+    cursor:pointer; user-select:none;
+  }
+  .gubun-manager-hint{ font-weight:400; font-size:11.5px; color:var(--ink-faint); }
+  .gubun-manager .manager-arrow{ font-size:10px; transition:transform .15s; margin-left:auto; flex:none; }
+  .gubun-manager.collapsed .manager-arrow{ transform:rotate(-90deg); }
+  .gubun-manager.collapsed .gubun-body{ display:none; }
+  .gubun-body{ margin-top:10px; }
+  .gubun-chip-list{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+  .gubun-chip{
+    display:flex; align-items:center; gap:6px; background:var(--paper); border:1px solid var(--paper-line);
+    border-radius:14px; padding:5px 6px 5px 12px; font-size:12.5px; color:var(--ink);
+  }
+  .gubun-chip input{
+    border:none; background:transparent; font-family:'Noto Sans KR', sans-serif; font-size:12.5px;
+    color:var(--ink); outline:none; width:70px;
+  }
+  .gubun-chip .chip-del{ font-size:12px; color:#B08968; cursor:pointer; line-height:1; flex:none; }
+  .gubun-chip .chip-del:hover{ color:var(--seal); }
+  .gubun-add-row{ display:flex; gap:6px; }
+  .gubun-add-row input{
+    flex:1; border:1px solid var(--paper-line); border-radius:6px; padding:6px 8px;
+    font-size:12.5px; outline:none; background:var(--panel); color:var(--ink);
+  }
+  .gubun-add-row input:focus{ border-color:var(--seal); }
+  .gubun-add-row button{
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:12px; color:var(--gold);
+    background:var(--panel); border:1px dashed var(--gold-soft); border-radius:6px; padding:6px 10px;
+    cursor:pointer; white-space:nowrap;
+  }
+  .gubun-add-row button:hover{ background:#F3E9CE; }
+
+  body.dark-mode .gubun-manager{ background:#1D1B15; border-color:#4A4230; }
+  body.dark-mode .gubun-chip{ background:#26221A; border-color:#4A4230; color:#DCD2BC; }
+  body.dark-mode .gubun-chip input{ color:#DCD2BC; }
+  body.dark-mode .gubun-add-row input{ background:#1D1B15; border-color:#4A4230; color:#E7E3D6; }
+  body.dark-mode .gubun-add-row button{ background:#3A331F; border-color:#4A4230; color:#E9D9A4; }
+
+  /* ---------- 소요예산: 구분별 합계 / 자동연동 표시 ---------- */
+  /* 구분별 pill 표시는 제거됨 (표 안 소계 행으로 대체) */
+  .sync-hint{ font-size:11.5px; color:var(--ink-faint); line-height:1.6; margin-bottom:10px; }
+  table.doc-table tr.synced-row td{ background:rgba(169,129,47,0.07); }
+  table.doc-table tr.synced-row td[contenteditable="false"]{ color:var(--ink-soft); cursor:default; }
+  table.doc-table tr.synced-row input.amt[readonly]{ color:var(--ink-soft); cursor:default; }
+  table.doc-table tr.synced-row .row-del{
+    background:#FDF3DC; border-color:var(--gold-soft); color:var(--gold);
+  }
+  table.doc-table tr.synced-row .row-del:hover{ background:var(--gold); color:#fff; }
+  body.dark-mode table.doc-table tr.synced-row td{ background:rgba(255,255,255,0.04); }
+
+  table.doc-table tr.budget-group-header td{
+    background:var(--header-fill); font-weight:700; color:var(--gold); font-size:12px;
+    padding:6px 8px; border-top:2px solid var(--gold-soft); text-align:left;
+  }
+  table.doc-table tr.budget-group-header td.num{ text-align:right; color:var(--ink); }
+
   .day-block{ margin-bottom:26px; position:relative; }
   .day-head{
     display:flex; align-items:center; gap:10px; margin-bottom:12px;
@@ -478,6 +601,7 @@
     .paper::before{ display:none; }
     .row-del, .add-row-btn, .day-del, .add-day-wrap{ display:none !important; }
     ul.checklist li .row-del{ display:none !important; }
+    .gubun-manager{ display:none !important; }
     table.doc-table{ font-size:11.5px; }
     .day-block{ page-break-inside:avoid; }
     .map-link{ display:none !important; }
@@ -533,9 +657,9 @@
 
 <div class="main-col">
 <nav class="tabs">
-  <button class="tab active" data-tab="plan">✈ 여행계획</button>
   <button class="tab" data-tab="checklist">✅ 준비 체크리스트</button>
   <button class="tab" data-tab="budget">💰 소요예산</button>
+  <button class="tab active" data-tab="plan">✈ 여행계획표</button>
 </nav>
 
 <div class="wrap">
@@ -573,10 +697,25 @@
     </section>
 
     <div class="tab-page active" data-tab-page="plan">
+      <div class="gubun-manager collapsed" id="gubunManager">
+        <div class="gubun-manager-head" id="gubunManagerToggle">
+          🏷 구분 항목 관리
+          <span class="gubun-manager-hint">아래 표의 "구분" 선택 목록을 추가·수정·삭제할 수 있어요</span>
+          <span class="manager-arrow">▾</span>
+        </div>
+        <div class="gubun-body">
+          <div class="gubun-chip-list" id="gubunChipList"></div>
+          <div class="gubun-add-row">
+            <input type="text" id="gubunNewInput" placeholder="새 항목 (예: 쇼핑)">
+            <button type="button" id="gubunAddBtn">+ 추가</button>
+          </div>
+        </div>
+      </div>
       <section id="daysContainer"></section>
       <div class="add-day-wrap">
         <button class="add-day-btn" id="addDayBtn">+ 일차 추가</button>
       </div>
+      <div class="grand-budget-total" id="grandBudgetTotal">전체 일정 예산 합계 : <b>0원</b></div>
     </div>
 
     <div class="tab-page" data-tab-page="checklist">
@@ -593,23 +732,26 @@
         <div class="field-list" style="margin-bottom:12px;">
           <div class="field-line">
             <span class="bullet">o</span> 총예산 : <b id="totalBudgetLabel">0원</b>
-            &nbsp;&nbsp;※ 1인경비 :
-            <span id="perPersonCost" contenteditable="true" data-ph="원" style="min-width:60px;"></span>
+            &nbsp;&nbsp;<span class="bullet">o</span> 총실금액 : <b id="totalActualLabel">0원</b>
           </div>
           <div class="field-line">
             <span class="bullet">o</span> 사전결제 : <b id="prepaidLabel">0원</b>
             &nbsp;&nbsp;<span class="bullet">o</span> 현장결제 : <b id="onsiteLabel">0원</b>
+            &nbsp;&nbsp;※ 1인경비 :
+            <span id="perPersonCost" contenteditable="true" data-ph="원" style="min-width:60px;"></span>
           </div>
         </div>
+        <div class="sync-hint">🔗 배경이 표시된 행은 여행계획표의 일정과 자동으로 연동된 항목이에요. 여행계획표에서 구분·내용·예산·실금액을 수정하면 여기도 함께 바뀌어요. 직접 고쳐 쓰고 싶으면 해당 행의 × 버튼을 눌러 연동을 해제하세요. 같은 구분끼리는 표에서 자동으로 모아서 보여주고, 각 구분의 소계는 그 구분의 마지막 행에 예산 대비 실금액이 얼마나 남았는지/초과했는지와 함께 나와요. 결제 방식(사전결제/현장결제)은 여행계획표의 비고에서 선택하고, 여기서는 그 결제가 완료됐는지만 체크해요.</div>
         <div class="tbl-scroll">
           <table class="doc-table" id="budgetTable">
             <thead>
               <tr>
-                <th style="width:14%;">구분</th>
-                <th style="width:18%;">항목</th>
+                <th style="width:12%;">구분</th>
+                <th style="width:16%;">항목</th>
                 <th>내용</th>
-                <th style="width:16%;">금액(원)</th>
-                <th style="width:16%;">비고</th>
+                <th style="width:12%;">예산(원)</th>
+                <th style="width:12%;">실금액(원)</th>
+                <th style="width:12%;">비고</th>
                 <th class="rm-cell"></th>
               </tr>
             </thead>
@@ -618,6 +760,7 @@
               <tr class="total-row">
                 <td colspan="3">합&nbsp;&nbsp;계</td>
                 <td class="num" id="budgetTotal">0</td>
+                <td class="num" id="budgetActualTotal">0</td>
                 <td></td>
                 <td class="rm-cell"></td>
               </tr>
@@ -664,27 +807,398 @@ const dayColDefs = [
   { label:'일시', ph:'예: 09:00', width:'10%' },
   { label:'출발장소', ph:'출발', width:'13%' },
   { label:'도착장소', ph:'도착', width:'13%' },
+  { label:'소요시간', ph:'예: 1시간', width:'' },
   { label:'내용', ph:'내용 / 세부 일정', width:'' },
+  { label:'예산', ph:'0', width:'' },
   { label:'비고', ph:'비고', width:'12%' },
 ];
 
+// ---- 구분(항목) 목록 관리 ----
+const DEFAULT_GUBUN_OPTIONS = ['출발','도착','식사','관광','이동','레저','렌트','숙소'];
+let GUBUN_OPTIONS = DEFAULT_GUBUN_OPTIONS.slice();
+
+function gubunOptionsHTML(){
+  return '<option value="">선택</option>' + GUBUN_OPTIONS.map(o=>`<option value="${escapeHtmlSafe(o)}">${escapeHtmlSafe(o)}</option>`).join('');
+}
+// escapeHtml()은 아래쪽(휴지통 파트)에서 정의되므로, 초기 로드 순서에 안전하도록 별도의 얇은 래퍼를 둠
+function escapeHtmlSafe(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+function setGubunValue(select, value){
+  if(value && !Array.from(select.options).some(o=>o.value===value)){
+    const opt = document.createElement('option');
+    opt.value = value; opt.textContent = value;
+    select.appendChild(opt);
+  }
+  select.value = value || '';
+}
+function refreshAllGubunSelects(){
+  document.querySelectorAll('.gubun-select').forEach(sel=>{
+    const cur = sel.value;
+    sel.innerHTML = gubunOptionsHTML();
+    setGubunValue(sel, cur);
+  });
+}
+function renderGubunManager(){
+  const list = document.getElementById('gubunChipList');
+  if(!list) return;
+  list.innerHTML = '';
+  GUBUN_OPTIONS.forEach((opt, idx)=>{
+    const chip = document.createElement('div');
+    chip.className = 'gubun-chip';
+    chip.innerHTML = `<input type="text" value="${escapeHtmlSafe(opt)}"><span class="chip-del" title="삭제">×</span>`;
+    const input = chip.querySelector('input');
+    input.addEventListener('change', ()=>{
+      const v = input.value.trim();
+      if(!v){ input.value = GUBUN_OPTIONS[idx]; return; }
+      GUBUN_OPTIONS[idx] = v;
+      refreshAllGubunSelects();
+      scheduleSave();
+    });
+    chip.querySelector('.chip-del').addEventListener('click', ()=>{
+      GUBUN_OPTIONS.splice(idx,1);
+      renderGubunManager();
+      refreshAllGubunSelects();
+      scheduleSave();
+    });
+    list.appendChild(chip);
+  });
+}
+
+// ---- 여행계획표 ↔ 소요예산 자동 연동 ----
+let scheduleRowIdCounter = 0;
+const SCHEDULE_TO_BUDGET_CATEGORY = {
+  '출발':'교통', '도착':'교통', '이동':'교통',
+  '식사':'식비',
+  '숙소':'숙박',
+  '관광':'관광/레저', '레저':'관광/레저',
+  '렌트':'렌트',
+};
+const CATEGORY_ORDER = ['교통','식비','숙박','관광/레저','렌트','기타'];
+function budgetCategoryFor(gubun){
+  return SCHEDULE_TO_BUDGET_CATEGORY[gubun] || '기타';
+}
+
+function applySyncedLockUI(tr, locked){
+  const tds = tr.querySelectorAll('td[contenteditable]');
+  if(tds[0]) tds[0].contentEditable = locked ? 'false' : 'true';
+  if(tds[1]) tds[1].contentEditable = locked ? 'false' : 'true';
+  const amt = tr.querySelector('.amt');
+  if(amt) amt.readOnly = !!locked;
+  const actualAmt = tr.querySelector('.actual-amt-input');
+  if(actualAmt) actualAmt.readOnly = !!locked;
+  const noteSelect = tr.querySelector('.note-select');
+  if(noteSelect) noteSelect.disabled = !!locked; // 결제방식은 여행계획표에서 정함 — '완료' 체크는 항상 직접 편집 가능
+  tr.classList.toggle('synced-row', !!locked);
+  if(locked){
+    tr.querySelector('.row-del').title = '🔗 여행계획표와 자동연동됨 — 클릭하면 연동 해제';
+  } else {
+    tr.querySelector('.row-del').title = '행 삭제';
+  }
+}
+
+function unlinkSyncedBudgetRow(tr){
+  if(!confirm('여행계획표와의 자동연동을 해제할까요? 해제하면 이 항목은 더 이상 자동으로 갱신되지 않고, 직접 수정/삭제할 수 있어요.')) return;
+  const srcRow = document.querySelector(`.day-block tr[data-row-id="${tr.dataset.syncId}"]`);
+  if(srcRow) srcRow.dataset.syncDisabled = 'true';
+  delete tr.dataset.syncId;
+  applySyncedLockUI(tr, false);
+  scheduleSave();
+}
+
+function bumpRowIdCounterFromExisting(){
+  let max = 0;
+  document.querySelectorAll('[data-row-id]').forEach(el=>{
+    const m = /^r(\d+)$/.exec(el.dataset.rowId||'');
+    if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  scheduleRowIdCounter = Math.max(scheduleRowIdCounter, max);
+}
+
+function resyncBudgetFromSchedule(){
+  const activeIds = new Set();
+  document.querySelectorAll('#daysContainer .day-block').forEach(block=>{
+    const dayLabel = block.querySelector('.day-label').textContent.trim() || '미지정';
+    block.querySelectorAll('tbody tr').forEach(tr=>{
+      if(tr.dataset.syncDisabled === 'true') return;
+      const budgetInput = tr.querySelector('.budget-input');
+      const actualInput = tr.querySelector('.actual-input');
+      const budgetNum = Number((budgetInput.value||'0').replace(/[^0-9]/g,''));
+      const actualNum = Number((actualInput.value||'0').replace(/[^0-9]/g,''));
+      if(budgetNum <= 0 && actualNum <= 0) return;
+      const rowId = tr.dataset.rowId;
+      if(!rowId) return;
+      activeIds.add(rowId);
+      const gubun = tr.querySelector('.gubun-select').value;
+      const content = tr.querySelector('.naeyong-cell').textContent.trim();
+      const budgetCategory = budgetCategoryFor(gubun);
+      const itemName = content ? `${dayLabel} ${content}` : `${dayLabel} ${gubun || '일정'}`;
+
+      let row = document.querySelector(`#budgetBody tr[data-sync-id="${rowId}"]`);
+      if(!row){
+        row = makeBudgetRow();
+        row.dataset.syncId = rowId;
+        document.getElementById('budgetBody').appendChild(row);
+        applySyncedLockUI(row, true);
+      }
+      const tds = row.querySelectorAll('td[contenteditable]');
+      if(tds[0].textContent !== budgetCategory) tds[0].textContent = budgetCategory;
+      if(tds[1].textContent !== itemName) tds[1].textContent = itemName;
+      const amt = row.querySelector('.amt');
+      const newAmt = budgetNum.toLocaleString('ko-KR');
+      if(amt.value !== newAmt) amt.value = newAmt;
+      const actualAmt = row.querySelector('.actual-amt-input');
+      const newActual = actualNum.toLocaleString('ko-KR');
+      if(actualAmt.value !== newActual) actualAmt.value = newActual;
+      const paymentVal = tr.querySelector('.payment-select').value;
+      const noteSelect = row.querySelector('.note-select');
+      if(noteSelect.value !== paymentVal) noteSelect.value = paymentVal;
+    });
+  });
+  document.querySelectorAll('#budgetBody tr[data-sync-id]').forEach(row=>{
+    if(!activeIds.has(row.dataset.syncId)) row.remove();
+  });
+  recalcBudget();
+}
+
+// (구분별 pill 표시 기능은 제거됨 — 표 안 소계 행으로 대체)
+
+// ---- 소요예산: 같은 구분끼리 묶어서 보여주기 (구분 셀 병합 + 소계는 그 구분의 마지막 행) ----
+function regroupBudgetRows(){
+  const tbody = document.getElementById('budgetBody');
+  if(!tbody) return;
+  if(tbody.contains(document.activeElement)) return; // 편집 중인 행은 재배열하지 않음 (포커스/커서 끊김 방지)
+  tbody.querySelectorAll('tr.budget-group-header').forEach(h=> h.remove());
+  const rows = Array.from(tbody.querySelectorAll('tr:not(.budget-group-header)'));
+  // 이전에 병합(rowspan)했던 셀들을 원상복구
+  rows.forEach(tr=>{
+    const cell = tr.querySelectorAll('td[contenteditable]')[0];
+    if(cell){ cell.style.display = ''; cell.removeAttribute('rowspan'); }
+  });
+  const groups = new Map();
+  rows.forEach(tr=>{
+    const cat = tr.querySelectorAll('td[contenteditable]')[0].textContent.trim() || '__none__';
+    if(!groups.has(cat)) groups.set(cat, []);
+    groups.get(cat).push(tr);
+  });
+  const catKeys = Array.from(groups.keys());
+  catKeys.sort((a,b)=>{
+    if(a === '__none__') return 1;
+    if(b === '__none__') return -1;
+    const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+    if(ia === -1 && ib === -1) return a.localeCompare(b, 'ko');
+    if(ia === -1) return 1;
+    if(ib === -1) return -1;
+    return ia - ib;
+  });
+  catKeys.forEach(cat=>{
+    const rowsInCat = groups.get(cat);
+    let sumBudget = 0, sumActual = 0;
+    rowsInCat.forEach(tr=>{
+      sumBudget += Number((tr.querySelector('.amt').value||'0').replace(/[^0-9]/g,''));
+      sumActual += Number((tr.querySelector('.actual-amt-input').value||'0').replace(/[^0-9]/g,''));
+    });
+    // 구분이 비어있지 않고 같은 구분이 여러 행이면, 구분 셀을 하나로 병합해서 보여줌
+    if(cat !== '__none__' && rowsInCat.length > 1){
+      const headCell = rowsInCat[0].querySelectorAll('td[contenteditable]')[0];
+      headCell.rowSpan = rowsInCat.length;
+      headCell._groupRows = rowsInCat;
+      for(let i=1;i<rowsInCat.length;i++){
+        rowsInCat[i].querySelectorAll('td[contenteditable]')[0].style.display = 'none';
+      }
+    }
+    rowsInCat.forEach(tr=> tbody.appendChild(tr));
+    const label = cat === '__none__' ? '미분류' : cat;
+    const footer = document.createElement('tr');
+    footer.className = 'budget-group-header';
+    const diff = sumActual - sumBudget;
+    let diffText = '', diffClass = 'even';
+    if(sumBudget <= 0 && sumActual <= 0){
+      diffText = '';
+    } else if(diff > 0){
+      diffText = `▲ 예산 초과 ${diff.toLocaleString('ko-KR')}원`; diffClass = 'over';
+    } else if(diff < 0){
+      diffText = `▼ 예산보다 절약 ${Math.abs(diff).toLocaleString('ko-KR')}원`; diffClass = 'under';
+    } else {
+      diffText = '예산과 동일';
+    }
+    footer.innerHTML = `<td colspan="3">${escapeHtmlSafe(label)} 소계</td><td class="num">${sumBudget.toLocaleString('ko-KR')}</td><td class="num">${sumActual.toLocaleString('ko-KR')}</td><td class="diff-cell ${diffClass}">${diffText}</td><td class="rm-cell"></td>`;
+    tbody.appendChild(footer);
+  });
+}
+
+// ---- 일시 자동계산 (일시 + 소요시간 → 다음 행 일시) ----
+function parseTimeHM(text){
+  const m = (text||'').match(/([01]?\d|2[0-3]):([0-5]\d)/);
+  if(!m) return null;
+  return { h: parseInt(m[1],10), m: parseInt(m[2],10) };
+}
+function parseDurationMinutes(text){
+  if(!text) return null;
+  text = text.trim();
+  let total = 0, matched = false;
+  const hMatch = text.match(/(\d+)\s*시간/);
+  const mMatch = text.match(/(\d+)\s*분/);
+  if(hMatch){ total += parseInt(hMatch[1],10)*60; matched = true; }
+  if(mMatch){ total += parseInt(mMatch[1],10); matched = true; }
+  if(!matched){
+    const hm = text.match(/^(\d{1,2}):(\d{2})$/);
+    if(hm){ total = parseInt(hm[1],10)*60 + parseInt(hm[2],10); matched = true; }
+  }
+  if(!matched){
+    const num = text.match(/^(\d+)$/);
+    if(num){ total = parseInt(num[1],10); matched = true; }
+  }
+  return matched ? total : null;
+}
+function formatHM(totalMinutesRaw){
+  const overflowDays = Math.floor(totalMinutesRaw / 1440);
+  const mins = ((totalMinutesRaw % 1440) + 1440) % 1440;
+  const h = Math.floor(mins/60), m = mins%60;
+  const hh = String(h).padStart(2,'0'), mm = String(m).padStart(2,'0');
+  return overflowDays > 0 ? `${hh}:${mm} (+${overflowDays}일)` : `${hh}:${mm}`;
+}
+function recalcDayChain(dayBlock){
+  if(!dayBlock) return;
+  const rows = Array.from(dayBlock.querySelectorAll('tbody tr'));
+  for(let i=0;i<rows.length-1;i++){
+    const curIlsi = rows[i].querySelector('.ilsi-cell');
+    const curDur = rows[i].querySelector('.dur-input');
+    const nextIlsi = rows[i+1].querySelector('.ilsi-cell');
+    if(!curIlsi || !curDur || !nextIlsi) continue;
+    const t = parseTimeHM(curIlsi.textContent);
+    const dur = parseDurationMinutes(curDur.value);
+    if(t == null || dur == null) continue;
+    if(nextIlsi.dataset.timeSource === 'manual') continue;
+    nextIlsi.textContent = formatHM(t.h*60 + t.m + dur);
+    nextIlsi.dataset.timeSource = 'auto';
+  }
+}
+
+// ---- 일자별 / 전체 예산 합계 ----
+function updateDayBudgetTotal(block){
+  let sum = 0;
+  block.querySelectorAll('.budget-input').forEach(inp=>{
+    sum += Number((inp.value||'0').replace(/[^0-9]/g,''));
+  });
+  const totalEl = block.querySelector('.day-budget-total b');
+  if(totalEl) totalEl.textContent = sum.toLocaleString('ko-KR') + '원';
+  return sum;
+}
+function recalcAllDayBudgets(){
+  let grand = 0;
+  document.querySelectorAll('.day-block').forEach(block=>{ grand += updateDayBudgetTotal(block); });
+  const grandEl = document.querySelector('#grandBudgetTotal b');
+  if(grandEl) grandEl.textContent = grand.toLocaleString('ko-KR') + '원';
+}
+
 function makeDayTableRow(){
   const tr = document.createElement('tr');
+  tr.dataset.rowId = 'r' + (++scheduleRowIdCounter);
   tr.innerHTML = `
-    <td contenteditable="true" data-ph=""></td>
-    <td contenteditable="true" data-ph="예: 09:00"></td>
-    <td contenteditable="true" data-ph="출발"></td>
-    <td contenteditable="true" data-ph="도착"></td>
-    <td class="time-cell"><a href="#" class="map-link time-link" title="이동시간 자동 계산 (카카오맵)">🕒</a></td>
-    <td contenteditable="true" data-ph="내용 / 세부 일정" style="text-align:left;"></td>
-    <td contenteditable="true" data-ph="비고"></td>
+    <td class="gubun-cell"><select class="gubun-select">${gubunOptionsHTML()}</select></td>
+    <td class="ilsi-cell" contenteditable="true" data-ph="예: 09:00"></td>
+    <td class="chulbal-cell" contenteditable="true" data-ph="출발"></td>
+    <td class="dochak-cell" contenteditable="true" data-ph="도착"></td>
+    <td class="dur-cell">
+      <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
+      <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보)">🕒</a>
+    </td>
+    <td class="naeyong-cell" contenteditable="true" data-ph="내용 / 세부 일정" style="text-align:left;"></td>
+    <td class="budget-cell num"><input class="amt budget-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="actual-cell num"><input class="amt actual-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="bigo-cell">
+      <select class="payment-select" title="결제 방식">
+        <option value="">결제선택</option>
+        <option value="사전결제">사전결제</option>
+        <option value="현장결제">현장결제</option>
+      </select>
+      <span class="bigo-text" contenteditable="true" data-ph="비고"></span>
+    </td>
     <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
   `;
-  const tds = tr.querySelectorAll('td[contenteditable]');
-  const ilsiTd = tds[1], chulbalTd = tds[2], dochakTd = tds[3];
+  const ilsiTd = tr.querySelector('.ilsi-cell'), chulbalTd = tr.querySelector('.chulbal-cell'), dochakTd = tr.querySelector('.dochak-cell');
   const timeLink = tr.querySelector('.time-link');
+  const durInput = tr.querySelector('.dur-input');
+  const budgetInput = tr.querySelector('.budget-input');
+  const actualInput = tr.querySelector('.actual-input');
+
+  // 일시를 사용자가 직접 수정하면 '수동' 표시 (프로그램이 자동으로 채운 경우는 input 이벤트가 발생하지 않음)
+  ilsiTd.addEventListener('input', ()=>{
+    if(ilsiTd.textContent.trim() === ''){ delete ilsiTd.dataset.timeSource; }
+    else{ ilsiTd.dataset.timeSource = 'manual'; }
+    recalcDayChain(tr.closest('.day-block'));
+  });
+  // 소요시간이 바뀌면 다음 행의 일시를 다시 계산
+  durInput.addEventListener('input', ()=>{ recalcDayChain(tr.closest('.day-block')); });
+  // 예산 입력: 숫자만 남기고 천단위 콤마, 일자별/전체 합계 갱신
+  budgetInput.addEventListener('input', ()=>{
+    let v = budgetInput.value.replace(/[^0-9]/g,'');
+    budgetInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcAllDayBudgets();
+  });
+  // 실금액 입력: 숫자만 남기고 천단위 콤마
+  actualInput.addEventListener('input', ()=>{
+    let v = actualInput.value.replace(/[^0-9]/g,'');
+    actualInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
+  });
+
+  let travelResult = null;   // { walkSeconds, transitSeconds }
+  let travelMode = null;     // 'transit' | 'walk'
+  let lastTravelText = '';   // 지금 일시 칸에 들어가 있는, 이 기능이 넣은 텍스트 (토글 시 이걸 지우고 새로 넣음)
+
+  function applyTravelMode(mode){
+    const seconds = mode === 'transit' ? travelResult.transitSeconds : travelResult.walkSeconds;
+    const label = mode === 'transit' ? '대중교통' : '도보';
+    const newText = '(' + label + ' ' + formatMinutes(seconds) + ')';
+
+    let current = ilsiTd.textContent;
+    if(lastTravelText){
+      current = current.split(' / ' + lastTravelText).join('');
+      current = current.split(lastTravelText + ' / ').join('');
+      current = current.split(lastTravelText).join('');
+    }
+    const merged = current.trim() ? (current.trim() + ' / ' + newText) : newText;
+    const prevText = ilsiTd.textContent;
+    ilsiTd.textContent = merged;
+    recordInsert(ilsiTd, prevText, null);
+
+    lastTravelText = newText;
+    travelMode = mode;
+    const otherLabel = mode === 'transit' ? '도보' : '대중교통';
+    timeLink.textContent = mode === 'transit' ? '🚌' : '🚶';
+    timeLink.title = label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + otherLabel + '로 전환';
+    scheduleSave();
+  }
+
+  // 출발/도착 장소가 바뀌면 이전 계산 결과는 무효화 (다시 누르면 새로 계산)
+  function invalidateTravelResult(){
+    if(!travelResult) return;
+    travelResult = null;
+    travelMode = null;
+    timeLink.textContent = '🕒';
+    timeLink.title = '클릭하면 이동시간을 계산해요 (대중교통/도보)';
+  }
+  chulbalTd.addEventListener('input', invalidateTravelResult);
+  dochakTd.addEventListener('input', invalidateTravelResult);
+
   timeLink.addEventListener('click', async (e)=>{
     e.preventDefault();
+
+    // 이미 계산된 결과가 있으면: 대중교통 ↔ 도보 전환만 하고 끝
+    if(travelResult){
+      const other = travelMode === 'transit' ? 'walk' : 'transit';
+      const otherSeconds = other === 'transit' ? travelResult.transitSeconds : travelResult.walkSeconds;
+      if(otherSeconds == null){
+        alert('이 구간은 ' + (other === 'transit' ? '대중교통' : '도보') + ' 경로 정보가 없어요.');
+        return;
+      }
+      applyTravelMode(other);
+      return;
+    }
+
     const origin = chulbalTd.textContent.trim();
     const destination = dochakTd.textContent.trim();
     if(!origin || !destination){
@@ -697,27 +1211,24 @@ function makeDayTableRow(){
       const result = await kakaoTravelTime(origin, destination);
       if(result.error === 'not-found'){
         alert('출발지 또는 도착지를 카카오맵에서 찾지 못했어요. 장소 이름을 조금 더 정확히 입력해보세요 (예: "OO역", "OO공항", "OO시청").');
+        timeLink.textContent = originalIcon;
         return;
       }
       if(result.error){
         alert('이동시간 계산에 실패했어요: ' + result.error);
+        timeLink.textContent = originalIcon;
         return;
       }
-      const parts = [];
-      if(result.transitSeconds != null) parts.push('대중교통 ' + formatMinutes(result.transitSeconds));
-      if(result.walkSeconds != null) parts.push('도보 ' + formatMinutes(result.walkSeconds));
-      if(!parts.length){
+      if(result.transitSeconds == null && result.walkSeconds == null){
         alert('이동시간을 계산하지 못했어요. 거리가 너무 멀거나 경로가 없는 구간일 수 있어요.');
+        timeLink.textContent = originalIcon;
         return;
       }
-      const resultText = '(' + parts.join(' · ') + ')';
-      const prevText = insertTextIntoField(ilsiTd, resultText);
-      recordInsert(ilsiTd, prevText, null);
-      scheduleSave();
+      travelResult = result;
+      applyTravelMode(result.transitSeconds != null ? 'transit' : 'walk');
     } catch(err){
       console.error(err);
       alert('이동시간 계산 중 문제가 발생했어요. 인터넷 연결을 확인하거나 잠시 후 다시 시도해주세요.');
-    } finally {
       timeLink.textContent = originalIcon;
     }
   });
@@ -740,13 +1251,15 @@ function addDay(prefillLabel){
       <table class="doc-table">
         <thead>
           <tr>
-            <th style="width:8%;">구분</th>
-            <th style="width:10%;">일시</th>
-            <th style="width:13%;">출발장소</th>
-            <th style="width:13%;">도착장소</th>
-            <th class="time-cell"></th>
+            <th style="width:6%;">구분</th>
+            <th style="width:8%;">일시</th>
+            <th style="width:10%;">출발장소</th>
+            <th style="width:10%;">도착장소</th>
+            <th style="width:12%;">소요시간</th>
             <th>내용</th>
-            <th style="width:12%;">비고</th>
+            <th style="width:9%;">예산(원)</th>
+            <th style="width:9%;">실금액(원)</th>
+            <th style="width:9%;">비고</th>
             <th class="rm-cell"></th>
           </tr>
         </thead>
@@ -754,6 +1267,7 @@ function addDay(prefillLabel){
       </table>
     </div>
     <button class="add-row-btn">+ 일정 행 추가</button>
+    <div class="day-budget-total">이 날짜 예산 합계 : <b>0원</b></div>
   `;
   const tbody = wrap.querySelector('tbody');
   for(let i=0;i<5;i++) tbody.appendChild(makeDayTableRow());
@@ -763,6 +1277,7 @@ function addDay(prefillLabel){
   });
   wrap.querySelector('.add-row-btn').addEventListener('click', ()=>{
     tbody.appendChild(makeDayTableRow());
+    recalcDayChain(wrap);
     scheduleSave();
   });
 
@@ -773,16 +1288,18 @@ function addDay(prefillLabel){
 function makeBudgetRow(){
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
+    <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
     <td contenteditable="true" data-ph="항목"></td>
     <td contenteditable="true" data-ph="내용" style="text-align:left;"></td>
     <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="note-cell">
       <select class="note-select">
         <option value="">선택</option>
         <option value="사전결제">사전결제</option>
         <option value="현장결제">현장결제</option>
       </select>
+      <label class="paid-check-label"><input type="checkbox" class="paid-check"> 완료</label>
     </td>
     <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
   `;
@@ -792,29 +1309,60 @@ function makeBudgetRow(){
     amt.value = v ? Number(v).toLocaleString('ko-KR') : '';
     recalcBudget();
   });
+  const actualAmt = tr.querySelector('.actual-amt-input');
+  actualAmt.addEventListener('input', ()=>{
+    let v = actualAmt.value.replace(/[^0-9]/g,'');
+    actualAmt.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcBudget();
+  });
   tr.querySelector('.note-select').addEventListener('change', recalcBudget);
-  tr.querySelector('.row-del').addEventListener('click', ()=>{ sendToTrash(tr, 'budgetRow'); });
+  tr.querySelector('.paid-check').addEventListener('change', (e)=>{
+    tr.classList.toggle('paid-done', e.target.checked);
+    scheduleSave();
+  });
+  tr.querySelector('.row-del').addEventListener('click', ()=>{
+    if(tr.dataset.syncId){ unlinkSyncedBudgetRow(tr); }
+    else{ sendToTrash(tr, 'budgetRow'); }
+  });
   return tr;
 }
 
 function addBudgetRow(){
   document.getElementById('budgetBody').appendChild(makeBudgetRow());
+  regroupBudgetRows();
 }
+// 예산 표의 어떤 셀이든 포커스를 벗어나면(편집 종료) 그 즉시 구분별로 재배열
+document.getElementById('budgetBody').addEventListener('blur', (e)=>{
+  const cell = e.target;
+  if(cell && cell.classList && cell.classList.contains('budget-gubun-cell') && cell._groupRows && cell._groupRows.length > 1){
+    const newVal = cell.textContent;
+    cell._groupRows.forEach(memberTr=>{
+      const memberCell = memberTr.querySelectorAll('td[contenteditable]')[0];
+      if(memberCell !== cell) memberCell.textContent = newVal;
+    });
+  }
+  regroupBudgetRows();
+}, true);
 
 function recalcBudget(){
-  let sum = 0, prepaid = 0, onsite = 0;
-  document.querySelectorAll('#budgetBody tr').forEach(tr=>{
+  let sum = 0, actualSum = 0, prepaid = 0, onsite = 0;
+  document.querySelectorAll('#budgetBody tr:not(.budget-group-header)').forEach(tr=>{
     const inp = tr.querySelector('.amt');
     const n = Number((inp.value||'0').replace(/[^0-9]/g,''));
     sum += n;
+    const actualInp = tr.querySelector('.actual-amt-input');
+    actualSum += Number((actualInp.value||'0').replace(/[^0-9]/g,''));
     const note = tr.querySelector('.note-select').value;
     if(note === '사전결제') prepaid += n;
     else if(note === '현장결제') onsite += n;
   });
   document.getElementById('budgetTotal').textContent = sum.toLocaleString('ko-KR');
+  document.getElementById('budgetActualTotal').textContent = actualSum.toLocaleString('ko-KR');
   document.getElementById('totalBudgetLabel').textContent = sum.toLocaleString('ko-KR') + '원';
+  document.getElementById('totalActualLabel').textContent = actualSum.toLocaleString('ko-KR') + '원';
   document.getElementById('prepaidLabel').textContent = prepaid.toLocaleString('ko-KR') + '원';
   document.getElementById('onsiteLabel').textContent = onsite.toLocaleString('ko-KR') + '원';
+  regroupBudgetRows();
 }
 
 // ---- checklist ----
@@ -1188,6 +1736,7 @@ function sendToTrash(node, type){
   scheduleSave();
   if(type === 'budgetRow') recalcBudget();
   if(type === 'checklistItem') updateChecklistProgress();
+  if(type === 'dayRow' || type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); }
 }
 
 function restoreTrashItem(id){
@@ -1203,6 +1752,7 @@ function restoreTrashItem(id){
   renderTrash();
   if(item.type === 'budgetRow') recalcBudget();
   if(item.type === 'checklistItem') updateChecklistProgress();
+  if(item.type === 'dayRow' || item.type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); }
   scheduleSave();
 }
 
@@ -1258,21 +1808,33 @@ function collectState(){
       text: li.querySelector('.item-text').textContent,
       checked: li.querySelector('input').checked,
     })),
-    budgetRows: Array.from(document.querySelectorAll('#budgetBody tr')).map(tr=>{
+    budgetRows: Array.from(document.querySelectorAll('#budgetBody tr:not(.budget-group-header)')).map(tr=>{
       const tds = tr.querySelectorAll('td[contenteditable]');
       return {
         gubun: tds[0].textContent, hangmok: tds[1].textContent, naeyong: tds[2].textContent,
-        amt: tr.querySelector('.amt').value, note: tr.querySelector('.note-select').value,
+        amt: tr.querySelector('.amt').value, actualAmt: tr.querySelector('.actual-amt-input').value,
+        note: tr.querySelector('.note-select').value,
+        paid: tr.querySelector('.paid-check').checked,
+        syncId: tr.dataset.syncId || '',
       };
     }),
+    gubunOptions: GUBUN_OPTIONS.slice(),
     days: Array.from(document.querySelectorAll('#daysContainer .day-block')).map(block=>({
       label: block.querySelector('.day-label').textContent,
       rows: Array.from(block.querySelectorAll('tbody tr')).map(tr=>{
-        const tds = tr.querySelectorAll('td[contenteditable]');
         return {
-          gubun: tds[0].textContent, ilsi: tds[1].textContent,
-          chulbal: tds[2].textContent, dochak: tds[3].textContent,
-          naeyong: tds[4].textContent, bigo: tds[5].textContent,
+          id: tr.dataset.rowId || '',
+          syncDisabled: tr.dataset.syncDisabled === 'true',
+          gubun: tr.querySelector('.gubun-select').value,
+          ilsi: tr.querySelector('.ilsi-cell').textContent,
+          chulbal: tr.querySelector('.chulbal-cell').textContent,
+          dochak: tr.querySelector('.dochak-cell').textContent,
+          dur: tr.querySelector('.dur-input').value,
+          naeyong: tr.querySelector('.naeyong-cell').textContent,
+          budget: tr.querySelector('.budget-input').value,
+          actual: tr.querySelector('.actual-input').value,
+          payment: tr.querySelector('.payment-select').value,
+          bigo: tr.querySelector('.bigo-text').textContent,
         };
       }),
     })),
@@ -1287,12 +1849,13 @@ function collectState(){
 }
 
 function defaultState(){
-  const blankRows = () => Array.from({length:5}, ()=>({gubun:'',ilsi:'',chulbal:'',dochak:'',naeyong:'',bigo:''}));
+  const blankRows = () => Array.from({length:5}, ()=>({gubun:'',ilsi:'',chulbal:'',dochak:'',dur:'',naeyong:'',budget:'',actual:'',payment:'',bigo:''}));
   return {
     dest:'', dateStart:'', dateEnd:'',
     overviewPlace:'', overviewLodging:'', perPersonCost:'',
     checklist: DEFAULT_CHECKLIST.map(t=>({text:t, checked:false})),
-    budgetRows: [0,0,0].map(()=>({gubun:'',hangmok:'',naeyong:'',amt:'',note:''})),
+    budgetRows: [0,0,0].map(()=>({gubun:'',hangmok:'',naeyong:'',amt:'',actualAmt:'',note:'',paid:false})),
+    gubunOptions: DEFAULT_GUBUN_OPTIONS.slice(),
     days: [
       {label:'1일차', rows: blankRows()},
       {label:'2일차', rows: blankRows()},
@@ -1336,10 +1899,15 @@ function applyState(state){
     const tr = makeBudgetRow();
     const tds = tr.querySelectorAll('td[contenteditable]');
     tds[0].textContent = r.gubun||''; tds[1].textContent = r.hangmok||''; tds[2].textContent = r.naeyong||'';
-    tr.querySelector('.amt').value = r.amt||''; tr.querySelector('.note-select').value = r.note||'';
+    tr.querySelector('.amt').value = r.amt||''; tr.querySelector('.actual-amt-input').value = r.actualAmt||''; tr.querySelector('.note-select').value = r.note||'';
+    if(r.paid){ tr.querySelector('.paid-check').checked = true; tr.classList.add('paid-done'); }
+    if(r.syncId){ tr.dataset.syncId = r.syncId; applySyncedLockUI(tr, true); }
     bb.appendChild(tr);
   });
   recalcBudget();
+
+  GUBUN_OPTIONS = Array.isArray(state.gubunOptions) ? state.gubunOptions.slice() : DEFAULT_GUBUN_OPTIONS.slice();
+  renderGubunManager();
 
   dayCount = 0;
   document.getElementById('daysContainer').innerHTML = '';
@@ -1349,15 +1917,27 @@ function applyState(state){
     tbody.innerHTML = '';
     (d.rows||[]).forEach(r=>{
       const tr = makeDayTableRow();
-      const tds = tr.querySelectorAll('td[contenteditable]');
+      if(r.id) tr.dataset.rowId = r.id;
+      if(r.syncDisabled) tr.dataset.syncDisabled = 'true';
       // 예전 저장 데이터(장소 한 칸)와의 호환: chulbal/dochak이 없으면 기존 jangso 값을 도착장소로 옮겨줌
       const dochakVal = (r.dochak !== undefined) ? r.dochak : (r.jangso || '');
-      tds[0].textContent = r.gubun||''; tds[1].textContent = r.ilsi||'';
-      tds[2].textContent = r.chulbal||''; tds[3].textContent = dochakVal;
-      tds[4].textContent = r.naeyong||''; tds[5].textContent = r.bigo||'';
+      setGubunValue(tr.querySelector('.gubun-select'), r.gubun||'');
+      tr.querySelector('.ilsi-cell').textContent = r.ilsi||'';
+      if((r.ilsi||'').trim()) tr.querySelector('.ilsi-cell').dataset.timeSource = 'manual';
+      tr.querySelector('.chulbal-cell').textContent = r.chulbal||'';
+      tr.querySelector('.dochak-cell').textContent = dochakVal;
+      tr.querySelector('.dur-input').value = r.dur||'';
+      tr.querySelector('.naeyong-cell').textContent = r.naeyong||'';
+      tr.querySelector('.budget-input').value = r.budget||'';
+      tr.querySelector('.actual-input').value = r.actual||'';
+      tr.querySelector('.payment-select').value = r.payment||'';
+      tr.querySelector('.bigo-text').textContent = r.bigo||'';
       tbody.appendChild(tr);
     });
   });
+  recalcAllDayBudgets();
+  bumpRowIdCounterFromExisting();
+  resyncBudgetFromSchedule();
 }
 
 // ---- Firebase sync ----
@@ -1442,13 +2022,37 @@ document.getElementById('syncCodeBadge').addEventListener('click', ()=>{
 // any edit inside the document schedules a sync save
 document.getElementById('paper').addEventListener('input', scheduleSave);
 document.getElementById('paper').addEventListener('change', scheduleSave);
+// 여행계획표 ↔ 소요예산 자동 연동 (구분/내용/예산/일차명이 바뀔 때마다 다시 계산)
+document.getElementById('paper').addEventListener('input', resyncBudgetFromSchedule);
+document.getElementById('paper').addEventListener('change', resyncBudgetFromSchedule);
 
 for(let i=0;i<3;i++) addBudgetRow();
+renderGubunManager();
 addDay('1일차');
 addDay('2일차');
 addDay('3일차');
 recalcBudget();
+recalcAllDayBudgets();
+resyncBudgetFromSchedule();
 updateOverviewMapLinks();
+
+document.getElementById('gubunAddBtn').addEventListener('click', ()=>{
+  const inp = document.getElementById('gubunNewInput');
+  const v = inp.value.trim();
+  if(!v) return;
+  if(GUBUN_OPTIONS.includes(v)){ inp.value=''; return; }
+  GUBUN_OPTIONS.push(v);
+  inp.value = '';
+  renderGubunManager();
+  refreshAllGubunSelects();
+  scheduleSave();
+});
+document.getElementById('gubunNewInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('gubunAddBtn').click(); }
+});
+document.getElementById('gubunManagerToggle').addEventListener('click', ()=>{
+  document.getElementById('gubunManager').classList.toggle('collapsed');
+});
 
 // ---- 탭 전환 ----
 document.querySelectorAll('nav.tabs button').forEach(btn=>{
