@@ -1145,15 +1145,29 @@ function makeDayTableRow(){
     actualInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
   });
 
-  let travelResult = null;   // { walkSeconds, transitSeconds }
-  let travelMode = null;     // 'transit' | 'walk'
-  let lastTravelText = '';   // 지금 일시 칸에 들어가 있는, 이 기능이 넣은 텍스트 (토글 시 이걸 지우고 새로 넣음)
-
+    let travelResult = null;   // { walkSeconds, transitSeconds, carSeconds }
+  let travelMode = null;     // 'transit' | 'walk' | 'car'
+  let lastTravelText = '';   // 지금 일시 칸에 들어가 있는, 이 기능이 넣은 텍스트 (전환 시 이걸 지우고 새로 넣음)
+  const MODE_ORDER = ['transit', 'walk', 'car'];
+  const MODE_LABEL = { transit: '대중교통', walk: '도보', car: '자동차' };
+  const MODE_ICON  = { transit: '🚌', walk: '🚶', car: '🚗' };
+  function secondsFor(mode){
+    if(mode === 'transit') return travelResult.transitSeconds;
+    if(mode === 'walk') return travelResult.walkSeconds;
+    return travelResult.carSeconds;
+  }
+  function nextAvailableMode(fromMode){
+    const startIdx = MODE_ORDER.indexOf(fromMode);
+    for(let i=1;i<=MODE_ORDER.length;i++){
+      const candidate = MODE_ORDER[(startIdx + i) % MODE_ORDER.length];
+      if(secondsFor(candidate) != null) return candidate;
+    }
+    return null;
+  }
   function applyTravelMode(mode){
-    const seconds = mode === 'transit' ? travelResult.transitSeconds : travelResult.walkSeconds;
-    const label = mode === 'transit' ? '대중교통' : '도보';
+    const seconds = secondsFor(mode);
+    const label = MODE_LABEL[mode];
     const newText = '(' + label + ' ' + formatMinutes(seconds) + ')';
-
     let current = ilsiTd.textContent;
     if(lastTravelText){
       current = current.split(' / ' + lastTravelText).join('');
@@ -1164,41 +1178,37 @@ function makeDayTableRow(){
     const prevText = ilsiTd.textContent;
     ilsiTd.textContent = merged;
     recordInsert(ilsiTd, prevText, null);
-
     lastTravelText = newText;
     travelMode = mode;
-    const otherLabel = mode === 'transit' ? '도보' : '대중교통';
-    timeLink.textContent = mode === 'transit' ? '🚌' : '🚶';
-    timeLink.title = label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + otherLabel + '로 전환';
+    const otherMode = nextAvailableMode(mode);
+    timeLink.textContent = MODE_ICON[mode];
+    timeLink.title = otherMode
+      ? label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + MODE_LABEL[otherMode] + '로 전환'
+      : label + ' ' + formatMinutes(seconds);
     scheduleSave();
   }
-
   // 출발/도착 장소가 바뀌면 이전 계산 결과는 무효화 (다시 누르면 새로 계산)
   function invalidateTravelResult(){
     if(!travelResult) return;
     travelResult = null;
     travelMode = null;
     timeLink.textContent = '🕒';
-    timeLink.title = '클릭하면 이동시간을 계산해요 (대중교통/도보)';
+    timeLink.title = '클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)';
   }
   chulbalTd.addEventListener('input', invalidateTravelResult);
   dochakTd.addEventListener('input', invalidateTravelResult);
-
   timeLink.addEventListener('click', async (e)=>{
     e.preventDefault();
-
-    // 이미 계산된 결과가 있으면: 대중교통 ↔ 도보 전환만 하고 끝
+    // 이미 계산된 결과가 있으면: 대중교통 → 도보 → 자동차 순으로 전환만 하고 끝
     if(travelResult){
-      const other = travelMode === 'transit' ? 'walk' : 'transit';
-      const otherSeconds = other === 'transit' ? travelResult.transitSeconds : travelResult.walkSeconds;
-      if(otherSeconds == null){
-        alert('이 구간은 ' + (other === 'transit' ? '대중교통' : '도보') + ' 경로 정보가 없어요.');
+      const next = nextAvailableMode(travelMode);
+      if(!next){
+        alert('이 구간은 다른 이동수단 경로 정보가 없어요.');
         return;
       }
-      applyTravelMode(other);
+      applyTravelMode(next);
       return;
     }
-
     const origin = chulbalTd.textContent.trim();
     const destination = dochakTd.textContent.trim();
     if(!origin || !destination){
@@ -1219,19 +1229,21 @@ function makeDayTableRow(){
         timeLink.textContent = originalIcon;
         return;
       }
-      if(result.transitSeconds == null && result.walkSeconds == null){
+      if(result.transitSeconds == null && result.walkSeconds == null && result.carSeconds == null){
         alert('이동시간을 계산하지 못했어요. 거리가 너무 멀거나 경로가 없는 구간일 수 있어요.');
         timeLink.textContent = originalIcon;
         return;
       }
       travelResult = result;
-      applyTravelMode(result.transitSeconds != null ? 'transit' : 'walk');
+      const firstMode = result.transitSeconds != null ? 'transit' : (result.walkSeconds != null ? 'walk' : 'car');
+      applyTravelMode(firstMode);
     } catch(err){
       console.error(err);
       alert('이동시간 계산 중 문제가 발생했어요. 인터넷 연결을 확인하거나 잠시 후 다시 시도해주세요.');
       timeLink.textContent = originalIcon;
     }
   });
+
   tr.querySelector('.row-del').addEventListener('click', ()=>{ sendToTrash(tr, 'dayRow'); });
   return tr;
 }
