@@ -205,6 +205,7 @@
   }
   .field-line .auto-field:empty::before{ content:attr(data-ph); color:var(--ink-faint); font-family:'Noto Sans KR', sans-serif; }
   .checklist-progress{ font-family:'JetBrains Mono', monospace; font-weight:400; font-size:12.5px; color:var(--ink-soft); margin-left:auto; }
+  .checklist-scroll{ overflow-y:auto; max-height:200px; border:1px solid var(--paper-line); border-radius:6px; padding:0 8px; }
   ul.checklist{ list-style:none; margin:0; padding:0; }
   ul.checklist li{ display:flex; align-items:center; gap:9px; padding:7px 4px; border-bottom:1px dashed var(--paper-line); font-size:14px; }
   ul.checklist li:last-child{ border-bottom:none; }
@@ -213,7 +214,11 @@
   ul.checklist li span.item-text:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
   ul.checklist li.checked span.item-text{ color:var(--ink-faint); text-decoration:line-through; }
   ul.checklist li .row-del{ flex:none; }
-  .tbl-scroll{ overflow-x:auto; border:1px solid var(--ink); }
+  .tbl-scroll{ overflow:auto; border:1px solid var(--ink); max-height:420px; }
+  table.doc-table thead th{ position:sticky; top:0; z-index:2; }
+  table.doc-table thead th.chk-cell, table.doc-table thead th.rm-cell{ background:var(--header-fill); }
+  table.doc-table tfoot td{ position:sticky; bottom:-1px; z-index:2; }
+  table.doc-table tfoot tr.total-row td.rm-cell{ background:#EFE8D5; }
   table.doc-table{ width:100%; border-collapse:collapse; font-size:14.5px; background:var(--panel); min-width:680px; }
   table.doc-table th, table.doc-table td{ border:1px solid #B9AF93; padding:11px 10px; text-align:center; vertical-align:middle; }
   table.doc-table th{ background:var(--header-fill); font-weight:700; color:var(--ink); font-size:13.5px; }
@@ -225,6 +230,14 @@
     word-break:break-word; overflow-wrap:anywhere; line-height:1.5;
   }
   table.doc-table th.naeyong-th{ min-width:190px; }
+  table.doc-table td.ilsi-cell, table.doc-table td.chulbal-cell, table.doc-table td.dochak-cell{
+    min-width:92px; white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; line-height:1.5;
+  }
+  table.doc-table td.budget-gubun-cell, table.doc-table td.hangmok-cell{
+    min-width:82px; white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; line-height:1.5;
+  }
+  table.doc-table td.bigo-cell{ min-width:78px; }
+  table.doc-table td.bigo-cell .bigo-text{ white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; line-height:1.5; }
   table.doc-table td.num{ text-align:right; font-family:'JetBrains Mono', monospace; }
   table.doc-table input.amt{
     width:100%; border:none; background:transparent; text-align:right; font-family:'JetBrains Mono', monospace;
@@ -255,7 +268,7 @@
     padding:6px 12px; cursor:pointer;
   }
   .add-row-btn:hover{ background:#F3E9CE; }
-  table.doc-table td.dur-cell{ display:flex; flex-direction:column; align-items:stretch; gap:6px; padding:8px 7px; }
+  table.doc-table td.dur-cell{ display:flex; flex-direction:column; justify-content:space-between; align-items:stretch; gap:6px; padding:8px 7px; }
   table.doc-table td.dur-cell .dur-row1{ display:flex; align-items:center; gap:6px; }
   table.doc-table td.dur-cell .dur-input{
     flex:1; min-width:0; border:1px dashed var(--paper-line); background:transparent;
@@ -727,7 +740,7 @@
     <div class="tab-page" data-tab-page="checklist">
       <section class="block">
         <h2><span class="box"></span>여행 준비 체크리스트 <span id="checklistProgress" class="checklist-progress"></span></h2>
-        <ul class="checklist" id="checklist"></ul>
+        <div class="checklist-scroll"><ul class="checklist" id="checklist"></ul></div>
         <button class="add-row-btn" id="addChecklistItem">+ 항목 추가</button>
       </section>
     </div>
@@ -1358,7 +1371,7 @@ function makeBudgetRow(){
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
-    <td contenteditable="true" data-ph="항목"></td>
+    <td class="hangmok-cell" contenteditable="true" data-ph="항목"></td>
     <td class="naeyong-cell" contenteditable="true" data-ph="내용" style="text-align:left;"></td>
     <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
@@ -2533,7 +2546,7 @@ function makeBudgetRow2(){
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
-    <td contenteditable="true" data-ph="항목"></td>
+    <td class="hangmok-cell" contenteditable="true" data-ph="항목"></td>
     <td class="naeyong-cell" contenteditable="true" data-ph="내용" style="text-align:left;"></td>
     <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
@@ -2952,7 +2965,7 @@ function makeBudgetRow3(){
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
-    <td contenteditable="true" data-ph="항목"></td>
+    <td class="hangmok-cell" contenteditable="true" data-ph="항목"></td>
     <td class="naeyong-cell" contenteditable="true" data-ph="내용" style="text-align:left;"></td>
     <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
