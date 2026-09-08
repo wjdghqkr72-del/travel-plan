@@ -76,71 +76,7 @@
     padding:10px 16px;
     background:linear-gradient(180deg, #20262B 0%, #171b1e 100%);
     border-bottom:2px solid var(--gold);
-    box-shadow:0 4px 14px rgba(0,0,0,0.25);{
-  "name": "여행계획표",
-  "short_name": "여행계획표",
-  "description": "여행 일정, 예산, 체크리스트를 관리하는 개인용 여행계획표",const CACHE_NAME = 'travel-plan-shell-v1';
-const APP_SHELL = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/apple-touch-icon.png',
-  './icons/favicon-32.png',
-  './icons/favicon-16.png',
-];
-
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_SHELL))
-      .catch((err) => console.warn('일부 파일을 캐시하지 못했어요:', err))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
-});
-
-// 네트워크 우선, 실패하면(오프라인) 캐시된 마지막 버전을 보여줘요.
-self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
-  if (!req.url.startsWith(self.location.origin)) return; // 외부(CDN) 요청은 그대로 두기
-
-  event.respondWith(
-    fetch(req)
-      .then((res) => {
-        const resClone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-        return res;
-      })
-      .catch(() =>
-        caches.match(req).then((cached) => cached || caches.match('./index.html'))
-      )
-  );
-});
-
-  "start_url": "./index.html",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#FBF8F0",
-  "theme_color": "#20262B",
-  "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
-}
-
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
   }
   .toolbar .app-name{
     font-family:'Noto Serif KR', serif; font-weight:900; font-size:15px;
