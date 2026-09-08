@@ -214,9 +214,9 @@
   ul.checklist li.checked span.item-text{ color:var(--ink-faint); text-decoration:line-through; }
   ul.checklist li .row-del{ flex:none; }
   .tbl-scroll{ overflow-x:auto; border:1px solid var(--ink); }
-  table.doc-table{ width:100%; border-collapse:collapse; font-size:13px; background:var(--panel); min-width:600px; }
-  table.doc-table th, table.doc-table td{ border:1px solid #B9AF93; padding:7px 8px; text-align:center; vertical-align:middle; }
-  table.doc-table th{ background:var(--header-fill); font-weight:700; color:var(--ink); font-size:12.5px; }
+  table.doc-table{ width:100%; border-collapse:collapse; font-size:14.5px; background:var(--panel); min-width:680px; }
+  table.doc-table th, table.doc-table td{ border:1px solid #B9AF93; padding:11px 10px; text-align:center; vertical-align:middle; }
+  table.doc-table th{ background:var(--header-fill); font-weight:700; color:var(--ink); font-size:13.5px; }
   table.doc-table td[contenteditable]{ outline:none; text-align:left; }
   table.doc-table td[contenteditable]:focus{ background:rgba(166,54,44,0.05); }
   table.doc-table td[contenteditable]:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
@@ -250,15 +250,22 @@
     padding:6px 12px; cursor:pointer;
   }
   .add-row-btn:hover{ background:#F3E9CE; }
-  table.doc-table td.dur-cell{ display:flex; align-items:center; gap:4px; padding:4px 5px; }
+  table.doc-table td.dur-cell{ display:flex; flex-direction:column; align-items:stretch; gap:6px; padding:8px 7px; }
+  table.doc-table td.dur-cell .dur-row1{ display:flex; align-items:center; gap:6px; }
   table.doc-table td.dur-cell .dur-input{
     flex:1; min-width:0; border:1px dashed var(--paper-line); background:transparent;
-    font-family:'JetBrains Mono', monospace; font-size:12px; text-align:center;
-    outline:none; border-radius:4px; padding:3px 2px; color:var(--ink);
+    font-family:'JetBrains Mono', monospace; font-size:13.5px; text-align:center;
+    outline:none; border-radius:4px; padding:6px 4px; color:var(--ink);
   }
   table.doc-table td.dur-cell .dur-input::placeholder{ color:var(--ink-faint); }
   table.doc-table td.dur-cell .dur-input:focus{ border-color:var(--seal); background:rgba(166,54,44,0.04); }
-  table.doc-table td.dur-cell .time-link{ margin:0; font-size:14px; flex:none; }
+  table.doc-table td.dur-cell .time-link{ margin:0; font-size:17px; flex:none; }
+  table.doc-table td.dur-cell .dur-arrival{
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--ink-soft);
+    background:rgba(169,129,47,0.08); border-radius:4px; padding:3px 4px; min-height:14px;
+  }
+  table.doc-table td.dur-cell .dur-arrival:empty::before{ content:'도착시간 자동계산'; color:var(--ink-faint); }
+  body.dark-mode table.doc-table td.dur-cell .dur-arrival{ background:rgba(255,255,255,0.06); }
   table.doc-table select.gubun-select{
     width:100%; font-family:'Noto Sans KR', sans-serif; font-size:12.5px; color:var(--ink);
     border:1px solid var(--paper-line); background:var(--panel); border-radius:4px;
@@ -597,9 +604,14 @@
     <button class="idea-build-btn" id="wantToGoBuildBtn" style="margin:0;">목록 만들기</button>
     <button type="button" class="maps-import-btn" id="wantToGoImportBtn">📍 구글지도 목록 가져오기</button>
     <input type="file" id="wantToGoImportInput" accept=".csv,.txt,.kml" style="display:none;">
+    <button type="button" class="idea-undo-btn" id="undoInsertBtn2" style="margin:0;" title="방금 표에 넣은 내용을 취소해요" disabled>↩️ 방금 넣은거 취소</button>
   </div>
   <div class="maps-import-source">↳ takeout.google.com 에서 "저장됨" 내보내기</div>
   <div class="idea-chips" id="wantToGoChips"></div>
+  <div class="trash-panel collapsed" id="trashPanel2">
+    <div class="trash-head" id="trashToggle2">🗑 휴지통 (<span id="trashCount2">0</span>) <span class="trash-arrow">▾</span></div>
+    <div class="trash-list" id="trashList2"></div>
+  </div>
 </div>
 </div>
 <div class="main-col">
@@ -1117,16 +1129,22 @@ function formatHM(totalMinutesRaw){
 function recalcDayChain(dayBlock){
   if(!dayBlock) return;
   const rows = Array.from(dayBlock.querySelectorAll('tbody tr'));
-  for(let i=0;i<rows.length-1;i++){
+  for(let i=0;i<rows.length;i++){
     const curIlsi = rows[i].querySelector('.ilsi-cell');
     const curDur = rows[i].querySelector('.dur-input');
-    const nextIlsi = rows[i+1].querySelector('.ilsi-cell');
-    if(!curIlsi || !curDur || !nextIlsi) continue;
+    const arrivalEl = rows[i].querySelector('.dur-arrival');
+    if(!curIlsi || !curDur) continue;
     const t = parseTimeHM(curIlsi.textContent);
     const dur = parseDurationMinutes(curDur.value);
-    if(t == null || dur == null) continue;
+    let arrivalTotal = null;
+    if(t != null && dur != null) arrivalTotal = t.h*60 + t.m + dur;
+    if(arrivalEl) arrivalEl.textContent = arrivalTotal != null ? ('도착 ' + formatHM(arrivalTotal)) : '';
+    const nextRow = rows[i+1];
+    if(!nextRow) continue;
+    const nextIlsi = nextRow.querySelector('.ilsi-cell');
+    if(!nextIlsi || arrivalTotal == null) continue;
     if(nextIlsi.dataset.timeSource === 'manual') continue;
-    nextIlsi.textContent = formatHM(t.h*60 + t.m + dur);
+    nextIlsi.textContent = formatHM(arrivalTotal);
     nextIlsi.dataset.timeSource = 'auto';
   }
 }
@@ -1155,8 +1173,11 @@ function makeDayTableRow(){
     <td class="chulbal-cell" contenteditable="true" data-ph="출발"></td>
     <td class="dochak-cell" contenteditable="true" data-ph="도착"></td>
     <td class="dur-cell">
-      <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
-      <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보)">🕒</a>
+      <div class="dur-row1">
+        <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
+        <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보)">🕒</a>
+      </div>
+      <div class="dur-arrival" title="일시 + 소요시간으로 자동 계산된 도착 예상 시간"></div>
     </td>
     <td class="naeyong-cell" contenteditable="true" data-ph="내용 / 세부 일정" style="text-align:left;"></td>
     <td class="budget-cell num"><input class="amt budget-input" type="text" inputmode="numeric" placeholder="0"></td>
@@ -1213,24 +1234,14 @@ function makeDayTableRow(){
   function applyTravelMode(mode){
     const seconds = secondsFor(mode);
     const label = MODE_LABEL[mode];
-    const newText = '(' + label + ' ' + formatMinutes(seconds) + ')';
-    let current = ilsiTd.textContent;
-    if(lastTravelText){
-      current = current.split(' / ' + lastTravelText).join('');
-      current = current.split(lastTravelText + ' / ').join('');
-      current = current.split(lastTravelText).join('');
-    }
-    const merged = current.trim() ? (current.trim() + ' / ' + newText) : newText;
-    const prevText = ilsiTd.textContent;
-    ilsiTd.textContent = merged;
-    recordInsert(ilsiTd, prevText, null);
-    lastTravelText = newText;
+    durInput.value = formatMinutes(seconds);
     travelMode = mode;
     const otherMode = nextAvailableMode(mode);
     timeLink.textContent = MODE_ICON[mode];
     timeLink.title = otherMode
       ? label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + MODE_LABEL[otherMode] + '로 전환'
       : label + ' ' + formatMinutes(seconds);
+    recalcDayChain(tr.closest('.day-block'));
     scheduleSave();
   }
   function invalidateTravelResult(){
@@ -1310,7 +1321,7 @@ function addDay(prefillLabel){
             <th style="width:8%;">일시</th>
             <th style="width:10%;">출발장소</th>
             <th style="width:10%;">도착장소</th>
-            <th style="width:12%;">소요시간</th>
+            <th style="width:16%;">소요시간</th>
             <th>내용</th>
             <th style="width:9%;">예산(원)</th>
             <th style="width:9%;">실금액(원)</th>
@@ -1637,6 +1648,19 @@ function insertTextIntoField(field, text){
   sel.addRange(range);
   return prevText;
 }
+function normalizePlaceNameEarly(s){
+  return (s || '').trim().toLowerCase().replace(/\s+/g, '');
+}
+function syncUsedByName(text, used){
+  const norm = normalizePlaceNameEarly(text);
+  if(!norm) return;
+  document.querySelectorAll('#ideaChips .idea-chip, #wantToGoChips .idea-chip').forEach(chip=>{
+    const chipText = chip.querySelector('.chip-text') ? chip.querySelector('.chip-text').textContent : '';
+    if(normalizePlaceNameEarly(chipText) === norm){
+      chip.classList.toggle('used', used);
+    }
+  });
+}
 let insertHistory = [];
 function recordInsert(field, prevText, chipId){
   insertHistory.push({ field, prevText, chipId });
@@ -1646,6 +1670,8 @@ function recordInsert(field, prevText, chipId){
 function updateUndoBtn(){
   const btn = document.getElementById('undoInsertBtn');
   if(btn) btn.disabled = insertHistory.length === 0;
+  const btn2 = document.getElementById('undoInsertBtn2');
+  if(btn2) btn2.disabled = insertHistory.length === 0;
 }
 function undoLastInsert(){
   const last = insertHistory.pop();
@@ -1654,19 +1680,26 @@ function undoLastInsert(){
   last.field.textContent = last.prevText;
   if(last.chipId){
     const chip = document.querySelector(`.idea-chip[data-id="${last.chipId}"]`);
-    if(chip) chip.classList.remove('used');
+    if(chip){
+      chip.classList.remove('used');
+      const text = chip.querySelector('.chip-text') ? chip.querySelector('.chip-text').textContent : '';
+      syncUsedByName(text, false);
+    }
   }
   scheduleSave();
 }
 document.getElementById('undoInsertBtn').addEventListener('click', undoLastInsert);
+document.getElementById('undoInsertBtn2').addEventListener('click', undoLastInsert);
 document.addEventListener('click', (e)=>{
   if(!selectedIdeaChip) return;
   if(e.target.closest('.idea-chip') || e.target.closest('.idea-board')) return;
   const target = findEditableTarget(e.target);
   if(target){
     const chipId = selectedIdeaChip.dataset.id;
-    const prevText = insertTextIntoField(target, selectedIdeaChip.querySelector('.chip-text').textContent);
+    const text = selectedIdeaChip.querySelector('.chip-text').textContent;
+    const prevText = insertTextIntoField(target, text);
     selectedIdeaChip.classList.add('used');
+    syncUsedByName(text, true);
     recordInsert(target, prevText, chipId);
     deselectIdeaChip();
     scheduleSave();
@@ -1692,6 +1725,7 @@ document.addEventListener('drop', (e)=>{
     const chip = document.querySelector(`.idea-chip[data-id="${chipId}"]`);
     if(chip) chip.classList.add('used');
   }
+  syncUsedByName(text, true);
   recordInsert(target, prevText, chipId);
   scheduleSave();
 });
@@ -1721,14 +1755,14 @@ function trashLabelFor(type, node){
   }
   return '삭제된 항목';
 }
-function sendToTrash(node, type){
+function sendToTrash(node, type, extra){
   const parent = node.parentNode;
   if(!parent) return;
   const nextSibling = node.nextSibling;
   const label = trashLabelFor(type, node);
   node.remove();
   trashCounter++;
-  trashItems.unshift({ id:'trash-'+trashCounter, type, label, node, parent, nextSibling });
+  trashItems.unshift({ id:'trash-'+trashCounter, type, label, node, parent, nextSibling, extra });
   if(trashItems.length > 30) trashItems.pop();
   renderTrash();
   scheduleSave();
@@ -1751,7 +1785,13 @@ function restoreTrashItem(id){
   if(item.type === 'budgetRow') recalcBudget();
   if(item.type === 'checklistItem') updateChecklistProgress();
   if(item.type === 'dayRow' || item.type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); }
-  if(item.type === 'chip') refreshWantToGoOverlap();
+  if(item.type === 'chip'){
+    refreshWantToGoOverlap();
+    if(item.extra && item.extra.__wantPlace){
+      wantToGoPlaces.push(item.extra.place);
+      renderWantToGoPlaces();
+    }
+  }
   scheduleSave();
 }
 function purgeTrashItem(id){
@@ -1761,33 +1801,37 @@ function purgeTrashItem(id){
   renderTrash();
 }
 function renderTrash(){
-  const countEl = document.getElementById('trashCount');
-  const listEl = document.getElementById('trashList');
-  if(!countEl || !listEl) return;
-  countEl.textContent = trashItems.length;
-  if(trashItems.length === 0){
-    listEl.innerHTML = '<div class="trash-empty">휴지통이 비어있어요.</div>';
-    return;
-  }
-  listEl.innerHTML = trashItems.map(item => `
+  const countEls = [document.getElementById('trashCount'), document.getElementById('trashCount2')].filter(Boolean);
+  const listEls = [document.getElementById('trashList'), document.getElementById('trashList2')].filter(Boolean);
+  if(!listEls.length) return;
+  countEls.forEach(el=> el.textContent = trashItems.length);
+  const html = trashItems.length === 0
+    ? '<div class="trash-empty">휴지통이 비어있어요.</div>'
+    : trashItems.map(item => `
     <div class="trash-item">
       <span class="trash-text" title="${escapeHtml(item.label)}">${escapeHtml(item.label)}</span>
       <button class="trash-restore" data-id="${item.id}">↺ 복원</button>
       <button class="trash-purge" data-id="${item.id}">🗑</button>
     </div>
   `).join('');
-  listEl.querySelectorAll('.trash-restore').forEach(btn=>{
-    btn.addEventListener('click', ()=>restoreTrashItem(btn.dataset.id));
-  });
-  listEl.querySelectorAll('.trash-purge').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      if(confirm('완전히 삭제할까요? 이후에는 복원할 수 없어요.')) purgeTrashItem(btn.dataset.id);
+  listEls.forEach(listEl=>{
+    listEl.innerHTML = html;
+    listEl.querySelectorAll('.trash-restore').forEach(btn=>{
+      btn.addEventListener('click', ()=>restoreTrashItem(btn.dataset.id));
+    });
+    listEl.querySelectorAll('.trash-purge').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        if(confirm('완전히 삭제할까요? 이후에는 복원할 수 없어요.')) purgeTrashItem(btn.dataset.id);
+      });
     });
   });
 }
 renderTrash();
 document.getElementById('trashToggle').addEventListener('click', ()=>{
   document.getElementById('trashPanel').classList.toggle('collapsed');
+});
+document.getElementById('trashToggle2').addEventListener('click', ()=>{
+  document.getElementById('trashPanel2').classList.toggle('collapsed');
 });
 function collectState(){
   return {
@@ -1985,6 +2029,7 @@ function applyState(state){
       tr.querySelector('.bigo-text').textContent = r.bigo||'';
       tbody.appendChild(tr);
     });
+    recalcDayChain(block);
   });
   recalcAllDayBudgets();
   bumpRowIdCounterFromExisting();
@@ -2025,6 +2070,7 @@ function applyState(state){
       tr.querySelector('.bigo-text').textContent = r.bigo||'';
       tbody.appendChild(tr);
     });
+    recalcDayChain(block);
   });
   recalcAllDayBudgets2();
   bumpRowIdCounterFromExisting2();
@@ -2065,6 +2111,7 @@ function applyState(state){
       tr.querySelector('.bigo-text').textContent = r.bigo||'';
       tbody.appendChild(tr);
     });
+    recalcDayChain(block);
   });
   recalcAllDayBudgets3();
   bumpRowIdCounterFromExisting3();
@@ -2305,8 +2352,11 @@ function makeDayTableRow2(){
     <td class="chulbal-cell" contenteditable="true" data-ph="출발"></td>
     <td class="dochak-cell" contenteditable="true" data-ph="도착"></td>
     <td class="dur-cell">
-      <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
-      <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)">🕒</a>
+      <div class="dur-row1">
+        <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
+        <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)">🕒</a>
+      </div>
+      <div class="dur-arrival" title="일시 + 소요시간으로 자동 계산된 도착 예상 시간"></div>
     </td>
     <td class="naeyong-cell" contenteditable="true" data-ph="내용 / 세부 일정" style="text-align:left;"></td>
     <td class="budget-cell num"><input class="amt budget-input" type="text" inputmode="numeric" placeholder="0"></td>
@@ -2363,22 +2413,14 @@ function makeDayTableRow2(){
   function applyTravelMode(mode){
     const seconds = secondsFor(mode);
     const label = MODE_LABEL[mode];
-    const newText = '(' + label + ' ' + formatMinutes(seconds) + ')';
-    let current = ilsiTd.textContent;
-    if(lastTravelText){
-      current = current.split(' / ' + lastTravelText).join('');
-      current = current.split(lastTravelText + ' / ').join('');
-      current = current.split(lastTravelText).join('');
-    }
-    const merged = current.trim() ? (current.trim() + ' / ' + newText) : newText;
-    ilsiTd.textContent = merged;
-    lastTravelText = newText;
+    durInput.value = formatMinutes(seconds);
     travelMode = mode;
     const otherMode = nextAvailableMode(mode);
     timeLink.textContent = MODE_ICON[mode];
     timeLink.title = otherMode
       ? label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + MODE_LABEL[otherMode] + '로 전환'
       : label + ' ' + formatMinutes(seconds);
+    recalcDayChain(tr.closest('.day-block'));
     scheduleSave();
   }
   function invalidateTravelResult(){
@@ -2454,7 +2496,7 @@ function addDay2(prefillLabel){
             <th style="width:8%;">일시</th>
             <th style="width:10%;">출발장소</th>
             <th style="width:10%;">도착장소</th>
-            <th style="width:12%;">소요시간</th>
+            <th style="width:16%;">소요시간</th>
             <th>내용</th>
             <th style="width:9%;">예산(원)</th>
             <th style="width:9%;">실금액(원)</th>
@@ -2729,8 +2771,11 @@ function makeDayTableRow3(){
     <td class="chulbal-cell" contenteditable="true" data-ph="출발"></td>
     <td class="dochak-cell" contenteditable="true" data-ph="도착"></td>
     <td class="dur-cell">
-      <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
-      <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)">🕒</a>
+      <div class="dur-row1">
+        <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
+        <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)">🕒</a>
+      </div>
+      <div class="dur-arrival" title="일시 + 소요시간으로 자동 계산된 도착 예상 시간"></div>
     </td>
     <td class="naeyong-cell" contenteditable="true" data-ph="내용 / 세부 일정" style="text-align:left;"></td>
     <td class="budget-cell num"><input class="amt budget-input" type="text" inputmode="numeric" placeholder="0"></td>
@@ -2787,22 +2832,14 @@ function makeDayTableRow3(){
   function applyTravelMode(mode){
     const seconds = secondsFor(mode);
     const label = MODE_LABEL[mode];
-    const newText = '(' + label + ' ' + formatMinutes(seconds) + ')';
-    let current = ilsiTd.textContent;
-    if(lastTravelText){
-      current = current.split(' / ' + lastTravelText).join('');
-      current = current.split(lastTravelText + ' / ').join('');
-      current = current.split(lastTravelText).join('');
-    }
-    const merged = current.trim() ? (current.trim() + ' / ' + newText) : newText;
-    ilsiTd.textContent = merged;
-    lastTravelText = newText;
+    durInput.value = formatMinutes(seconds);
     travelMode = mode;
     const otherMode = nextAvailableMode(mode);
     timeLink.textContent = MODE_ICON[mode];
     timeLink.title = otherMode
       ? label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + MODE_LABEL[otherMode] + '로 전환'
       : label + ' ' + formatMinutes(seconds);
+    recalcDayChain(tr.closest('.day-block'));
     scheduleSave();
   }
   function invalidateTravelResult(){
@@ -2878,7 +2915,7 @@ function addDay3(prefillLabel){
             <th style="width:8%;">일시</th>
             <th style="width:10%;">출발장소</th>
             <th style="width:10%;">도착장소</th>
-            <th style="width:12%;">소요시간</th>
+            <th style="width:16%;">소요시간</th>
             <th>내용</th>
             <th style="width:9%;">예산(원)</th>
             <th style="width:9%;">실금액(원)</th>
@@ -3069,8 +3106,9 @@ function makeWantToGoChip(text, overlap){
   });
   chip.querySelector('.chip-del').addEventListener('click', (e)=>{
     e.stopPropagation();
-    chip.remove();
+    const place = wantToGoPlaces.find(p => p.id === id);
     wantToGoPlaces = wantToGoPlaces.filter(p => p.id !== id);
+    sendToTrash(chip, 'chip', place ? { __wantPlace:true, place } : undefined);
     renderWantToGoPlaces();
   });
   return chip;
