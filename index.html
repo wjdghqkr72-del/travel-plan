@@ -196,7 +196,7 @@
   .field-line{ display:flex; align-items:baseline; gap:6px; font-size:14px; margin-bottom:7px; line-height:1.6; flex-wrap:wrap; }
   .field-line .bullet{ color:var(--ink-soft); flex:none; }
   .field-line .sub{ margin-left:16px; }
-  .field-line [contenteditable]{ outline:none; border-bottom:1px dashed var(--paper-line); min-width:60px; flex:1; padding:0 2px; color:var(--ink); }
+  .field-line [contenteditable]{ outline:none; border-bottom:1px dashed var(--paper-line); min-width:60px; flex:1; padding:0 2px; color:var(--ink); word-break:break-word; overflow-wrap:anywhere; white-space:pre-wrap; }
   .field-line [contenteditable]:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
   .field-line [contenteditable]:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
   .field-line .auto-field{
@@ -209,7 +209,7 @@
   ul.checklist li{ display:flex; align-items:center; gap:9px; padding:7px 4px; border-bottom:1px dashed var(--paper-line); font-size:14px; }
   ul.checklist li:last-child{ border-bottom:none; }
   ul.checklist input[type=checkbox]{ width:17px; height:17px; flex:none; accent-color:var(--seal); cursor:pointer; }
-  ul.checklist li span.item-text{ flex:1; outline:none; padding:2px 3px; border-bottom:1px dashed transparent; }
+  ul.checklist li span.item-text{ flex:1; min-width:0; outline:none; padding:2px 3px; border-bottom:1px dashed transparent; word-break:break-word; overflow-wrap:anywhere; white-space:pre-wrap; }
   ul.checklist li span.item-text:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
   ul.checklist li.checked span.item-text{ color:var(--ink-faint); text-decoration:line-through; }
   ul.checklist li .row-del{ flex:none; }
@@ -220,6 +220,11 @@
   table.doc-table td[contenteditable]{ outline:none; text-align:left; }
   table.doc-table td[contenteditable]:focus{ background:rgba(166,54,44,0.05); }
   table.doc-table td[contenteditable]:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
+  table.doc-table td.naeyong-cell{
+    min-width:190px; max-width:340px; white-space:pre-wrap;
+    word-break:break-word; overflow-wrap:anywhere; line-height:1.5;
+  }
+  table.doc-table th.naeyong-th{ min-width:190px; }
   table.doc-table td.num{ text-align:right; font-family:'JetBrains Mono', monospace; }
   table.doc-table input.amt{
     width:100%; border:none; background:transparent; text-align:right; font-family:'JetBrains Mono', monospace;
@@ -482,6 +487,7 @@
   .want-place-note{
     width:100%; box-sizing:border-box; border:1px solid var(--paper-line); border-radius:6px; background:var(--panel);
     font-family:'Noto Sans KR', sans-serif; font-size:13px; color:var(--ink); padding:6px 8px; margin-bottom:10px; outline:none;
+    resize:none; overflow:hidden; line-height:1.5;
   }
   .want-place-note:focus{ border-color:var(--seal); }
   .want-photo-btn{
@@ -747,7 +753,7 @@
               <tr>
                 <th style="width:12%;">구분</th>
                 <th style="width:16%;">항목</th>
-                <th>내용</th>
+                <th class="naeyong-th">내용</th>
                 <th style="width:12%;">예산(원)</th>
                 <th style="width:12%;">실금액(원)</th>
                 <th style="width:12%;">비고</th>
@@ -787,7 +793,7 @@
               <tr>
                 <th style="width:12%;">구분</th>
                 <th style="width:16%;">항목</th>
-                <th>내용</th>
+                <th class="naeyong-th">내용</th>
                 <th style="width:12%;">예산(원)</th>
                 <th style="width:12%;">실금액(원)</th>
                 <th style="width:12%;">비고</th>
@@ -827,7 +833,7 @@
               <tr>
                 <th style="width:12%;">구분</th>
                 <th style="width:16%;">항목</th>
-                <th>내용</th>
+                <th class="naeyong-th">내용</th>
                 <th style="width:12%;">예산(원)</th>
                 <th style="width:12%;">실금액(원)</th>
                 <th style="width:12%;">비고</th>
@@ -1322,7 +1328,7 @@ function addDay(prefillLabel){
             <th style="width:10%;">출발장소</th>
             <th style="width:10%;">도착장소</th>
             <th style="width:16%;">소요시간</th>
-            <th>내용</th>
+            <th class="naeyong-th">내용</th>
             <th style="width:9%;">예산(원)</th>
             <th style="width:9%;">실금액(원)</th>
             <th style="width:9%;">비고</th>
@@ -1353,7 +1359,7 @@ function makeBudgetRow(){
   tr.innerHTML = `
     <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
     <td contenteditable="true" data-ph="항목"></td>
-    <td contenteditable="true" data-ph="내용" style="text-align:left;"></td>
+    <td class="naeyong-cell" contenteditable="true" data-ph="내용" style="text-align:left;"></td>
     <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="note-cell">
@@ -2497,7 +2503,7 @@ function addDay2(prefillLabel){
             <th style="width:10%;">출발장소</th>
             <th style="width:10%;">도착장소</th>
             <th style="width:16%;">소요시간</th>
-            <th>내용</th>
+            <th class="naeyong-th">내용</th>
             <th style="width:9%;">예산(원)</th>
             <th style="width:9%;">실금액(원)</th>
             <th style="width:9%;">비고</th>
@@ -2528,7 +2534,7 @@ function makeBudgetRow2(){
   tr.innerHTML = `
     <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
     <td contenteditable="true" data-ph="항목"></td>
-    <td contenteditable="true" data-ph="내용" style="text-align:left;"></td>
+    <td class="naeyong-cell" contenteditable="true" data-ph="내용" style="text-align:left;"></td>
     <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="note-cell">
@@ -2916,7 +2922,7 @@ function addDay3(prefillLabel){
             <th style="width:10%;">출발장소</th>
             <th style="width:10%;">도착장소</th>
             <th style="width:16%;">소요시간</th>
-            <th>내용</th>
+            <th class="naeyong-th">내용</th>
             <th style="width:9%;">예산(원)</th>
             <th style="width:9%;">실금액(원)</th>
             <th style="width:9%;">비고</th>
@@ -2947,7 +2953,7 @@ function makeBudgetRow3(){
   tr.innerHTML = `
     <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
     <td contenteditable="true" data-ph="항목"></td>
-    <td contenteditable="true" data-ph="내용" style="text-align:left;"></td>
+    <td class="naeyong-cell" contenteditable="true" data-ph="내용" style="text-align:left;"></td>
     <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
     <td class="note-cell">
@@ -3193,7 +3199,9 @@ function makeWantPlaceCard(place){
     <div class="want-photo-grid"></div>
   `;
   const noteEl = card.querySelector('.want-place-note');
-  noteEl.addEventListener('input', ()=>{ place.note = noteEl.value; });
+  const autoGrowNote = ()=>{ noteEl.style.height = 'auto'; noteEl.style.height = noteEl.scrollHeight + 'px'; };
+  noteEl.addEventListener('input', ()=>{ place.note = noteEl.value; autoGrowNote(); });
+  requestAnimationFrame(autoGrowNote);
   const photoBtn = card.querySelector('.want-photo-btn');
   const photoInput = card.querySelector('input[type=file]');
   const photoGrid = card.querySelector('.want-photo-grid');
