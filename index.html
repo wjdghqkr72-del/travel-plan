@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <style>
   :root{
     --paper:#F5F0E3;
@@ -39,8 +40,6 @@
     padding:0 0 60px;
     transition:background-color .2s;
   }
-
-  /* ---------- dark mode (night work) ---------- */
   body.dark-mode{
     --paper:#22262B;
     --paper-line:#3B4148;
@@ -53,9 +52,7 @@
       repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 42px),
       linear-gradient(180deg, #16181B 0%, #111214 100%);
   }
-  body.dark-mode .idea-board{
-    background:#26221A; border-color:#4A4230;
-  }
+  body.dark-mode .idea-board{ background:#26221A; border-color:#4A4230; }
   body.dark-mode .idea-board-title{ color:#D8C48A; }
   body.dark-mode .idea-board-hint{ color:#A69465; }
   body.dark-mode #ideaInput{ background:#1D1B15; border-color:#4A4230; color:#E7E3D6; }
@@ -71,11 +68,7 @@
   body.dark-mode .trash-empty{ color:#847F6E; }
   body.dark-mode .seal-stamp{ opacity:0.7; }
   body.dark-mode table.doc-table th{ background:var(--header-fill); }
-  body.dark-mode input, body.dark-mode textarea, body.dark-mode [contenteditable="true"]{
-    color:var(--ink);
-  }
-
-  /* ---------- toolbar (screen only) ---------- */
+  body.dark-mode input, body.dark-mode textarea, body.dark-mode [contenteditable="true"]{ color:var(--ink); }
   .toolbar{
     position:sticky; top:0; z-index:50;
     display:flex; align-items:center; flex-wrap:wrap; gap:8px;
@@ -85,49 +78,29 @@
     box-shadow:0 4px 14px rgba(0,0,0,0.25);
   }
   .toolbar .app-name{
-    font-family:'Noto Serif KR', serif;
-    font-weight:900;
-    font-size:15px;
-    color:var(--gold-soft);
-    margin-right:auto;
-    letter-spacing:0.5px;
-    white-space:nowrap;
+    font-family:'Noto Serif KR', serif; font-weight:900; font-size:15px;
+    color:var(--gold-soft); margin-right:auto; letter-spacing:0.5px; white-space:nowrap;
   }
   .toolbar button{
-    font-family:'Noto Sans KR', sans-serif;
-    font-weight:700;
-    font-size:12.5px;
-    color:#EFE9D8;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(201,168,87,0.4);
-    border-radius:6px;
-    padding:8px 12px;
-    cursor:pointer;
-    transition:background .15s, border-color .15s;
-    white-space:nowrap;
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:12.5px;
+    color:#EFE9D8; background:rgba(255,255,255,0.06); border:1px solid rgba(201,168,87,0.4);
+    border-radius:6px; padding:8px 12px; cursor:pointer;
+    transition:background .15s, border-color .15s; white-space:nowrap;
   }
   .toolbar button:hover{ background:rgba(201,168,87,0.18); border-color:var(--gold-soft); }
   .toolbar button.primary{
     background:linear-gradient(135deg, var(--seal), var(--seal-dark));
-    border-color:var(--seal);
-    color:#F7ECE9;
+    border-color:var(--seal); color:#F7ECE9;
   }
   .toolbar button.primary:hover{ filter:brightness(1.12); }
-
-  #syncStatus{
-    font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:600;
-    color:#B8D6CE; white-space:nowrap;
-  }
+  #syncStatus{ font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:600; color:#B8D6CE; white-space:nowrap; }
   #syncStatus.ok{ color:#8FE3B0; }
   #syncStatus.err{ color:#F2A18B; }
   .sync-badge{
     font-family:'JetBrains Mono', monospace; font-size:11px;
-    color:#B8D6CE; cursor:pointer; text-decoration:underline; text-underline-offset:2px;
-    white-space:nowrap;
+    color:#B8D6CE; cursor:pointer; text-decoration:underline; text-underline-offset:2px; white-space:nowrap;
   }
   .sync-badge:hover{ color:var(--gold-soft); }
-
-  /* ---------- tab nav ---------- */
   nav.tabs{
     position:sticky; top:45px; z-index:45;
     display:flex; gap:2px; padding:0 12px;
@@ -136,8 +109,7 @@
     overflow-x:auto;
   }
   nav.tabs button{
-    flex:1; min-width:100px;
-    border:none; background:transparent;
+    flex:1; min-width:100px; border:none; background:transparent;
     font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:12.5px;
     color:#8B958E; padding:11px 8px 10px; cursor:pointer;
     position:relative; white-space:nowrap; transition:color .15s;
@@ -151,16 +123,11 @@
   .tab-page{ display:none; }
   .tab-page.active{ display:block; animation:tabFade .2s ease; }
   @keyframes tabFade{ from{opacity:0; transform:translateY(3px);} to{opacity:1; transform:translateY(0);} }
-
-  /* ---------- map link icon ---------- */
   .map-link{
     display:inline-flex; align-items:center; justify-content:center;
-    margin-left:5px; font-size:12px; text-decoration:none; cursor:pointer;
-    opacity:0.65; vertical-align:middle;
+    margin-left:5px; font-size:12px; text-decoration:none; cursor:pointer; opacity:0.65; vertical-align:middle;
   }
   .map-link:hover{ opacity:1; }
-
-  /* ---------- google maps import ---------- */
   .maps-import-btn{
     font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:11.5px;
     color:var(--seal-dark); background:rgba(166,54,44,0.08); border:1px solid rgba(166,54,44,0.3);
@@ -169,8 +136,6 @@
   .maps-import-btn:hover{ background:rgba(166,54,44,0.14); }
   .maps-import-hint{ font-size:11px; color:var(--ink-faint); line-height:1.6; margin-top:6px; }
   .maps-import-source{ font-size:10px; color:var(--ink-faint); opacity:0.75; margin-top:4px; }
-
-  /* ---------- sync gate modal ---------- */
   #syncGate{
     display:none; position:fixed; inset:0; z-index:200;
     background:rgba(10,14,17,0.6); align-items:center; justify-content:center; padding:20px;
@@ -179,9 +144,7 @@
     background:var(--panel); border:1px solid var(--paper-line); border-radius:10px;
     padding:26px 24px; max-width:340px; width:100%; box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);
   }
-  #syncGate h3{
-    font-family:'Noto Serif KR', serif; font-size:17px; margin:0 0 8px; color:var(--ink);
-  }
+  #syncGate h3{ font-family:'Noto Serif KR', serif; font-size:17px; margin:0 0 8px; color:var(--ink); }
   #syncGate p{ font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 16px; }
   #syncGate input{
     width:100%; box-sizing:border-box; font-family:'JetBrains Mono', monospace; font-size:14px;
@@ -196,23 +159,13 @@
   }
   #syncGate .btn:hover{ filter:brightness(1.1); }
   #syncGate .hint{ font-size:11px; color:var(--ink-faint); margin-top:10px; line-height:1.6; }
-
-  /* ---------- paper ---------- */
   .wrap{ max-width:920px; margin:26px auto 0; padding:0 16px; }
   .paper{
-    background:var(--paper);
-    border:1px solid var(--paper-line);
+    background:var(--paper); border:1px solid var(--paper-line);
     box-shadow:0 26px 60px -28px rgba(0,0,0,0.45), 0 0 0 1px rgba(169,129,47,0.06);
-    padding:44px 40px 50px;
-    position:relative;
+    padding:44px 40px 50px; position:relative;
   }
-  .paper::before{
-    content:"";
-    position:absolute; inset:10px;
-    border:1px solid rgba(169,129,47,0.28);
-    pointer-events:none;
-  }
-
+  .paper::before{ content:""; position:absolute; inset:10px; border:1px solid rgba(169,129,47,0.28); pointer-events:none; }
   .doc-head{ text-align:center; margin-bottom:30px; position:relative; z-index:1; padding:0 60px; }
   .doc-head .title-row{
     display:inline-flex; align-items:baseline; gap:10px; flex-wrap:wrap; justify-content:center;
@@ -224,9 +177,7 @@
     width:180px; max-width:45vw; border-bottom:1px dashed var(--ink-faint); padding:0 4px;
   }
   .dest-input::placeholder{ color:var(--ink-faint); font-weight:700; font-size:20px; }
-  .doc-head .fixed-label{
-    font-family:'Noto Serif KR', serif; font-weight:900; font-size:26px; color:var(--ink);
-  }
+  .doc-head .fixed-label{ font-family:'Noto Serif KR', serif; font-weight:900; font-size:26px; color:var(--ink); }
   .date-row{
     margin-top:10px; display:flex; align-items:center; justify-content:center; gap:8px;
     font-family:'JetBrains Mono', monospace; font-size:13.5px; color:var(--ink-soft);
@@ -235,28 +186,17 @@
     font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--ink);
     border:1px solid var(--paper-line); background:var(--panel); border-radius:4px; padding:4px 6px;
   }
-
   .block{ margin-bottom:28px; position:relative; z-index:1; }
   .block h2{
     font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:16px;
-    margin:0 0 12px; color:var(--ink);
-    display:flex; align-items:center; gap:8px;
+    margin:0 0 12px; color:var(--ink); display:flex; align-items:center; gap:8px;
   }
-  .block h2 .box{
-    width:11px; height:11px; border:2px solid var(--ink); display:inline-block; flex:none;
-  }
-
+  .block h2 .box{ width:11px; height:11px; border:2px solid var(--ink); display:inline-block; flex:none; }
   .field-list{ padding-left:20px; }
-  .field-line{
-    display:flex; align-items:baseline; gap:6px; font-size:14px; margin-bottom:7px; line-height:1.6;
-    flex-wrap:wrap;
-  }
+  .field-line{ display:flex; align-items:baseline; gap:6px; font-size:14px; margin-bottom:7px; line-height:1.6; flex-wrap:wrap; }
   .field-line .bullet{ color:var(--ink-soft); flex:none; }
   .field-line .sub{ margin-left:16px; }
-  .field-line [contenteditable]{
-    outline:none; border-bottom:1px dashed var(--paper-line); min-width:60px; flex:1;
-    padding:0 2px; color:var(--ink);
-  }
+  .field-line [contenteditable]{ outline:none; border-bottom:1px dashed var(--paper-line); min-width:60px; flex:1; padding:0 2px; color:var(--ink); }
   .field-line [contenteditable]:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
   .field-line [contenteditable]:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
   .field-line .auto-field{
@@ -264,41 +204,19 @@
     color:var(--ink); font-family:'JetBrains Mono', monospace; font-size:13px;
   }
   .field-line .auto-field:empty::before{ content:attr(data-ph); color:var(--ink-faint); font-family:'Noto Sans KR', sans-serif; }
-
-  /* ---------- checklist ---------- */
-  .checklist-progress{
-    font-family:'JetBrains Mono', monospace; font-weight:400; font-size:12.5px; color:var(--ink-soft);
-    margin-left:auto;
-  }
+  .checklist-progress{ font-family:'JetBrains Mono', monospace; font-weight:400; font-size:12.5px; color:var(--ink-soft); margin-left:auto; }
   ul.checklist{ list-style:none; margin:0; padding:0; }
-  ul.checklist li{
-    display:flex; align-items:center; gap:9px;
-    padding:7px 4px; border-bottom:1px dashed var(--paper-line);
-    font-size:14px;
-  }
+  ul.checklist li{ display:flex; align-items:center; gap:9px; padding:7px 4px; border-bottom:1px dashed var(--paper-line); font-size:14px; }
   ul.checklist li:last-child{ border-bottom:none; }
-  ul.checklist input[type=checkbox]{
-    width:17px; height:17px; flex:none; accent-color:var(--seal); cursor:pointer;
-  }
-  ul.checklist li span.item-text{
-    flex:1; outline:none; padding:2px 3px; border-bottom:1px dashed transparent;
-  }
+  ul.checklist input[type=checkbox]{ width:17px; height:17px; flex:none; accent-color:var(--seal); cursor:pointer; }
+  ul.checklist li span.item-text{ flex:1; outline:none; padding:2px 3px; border-bottom:1px dashed transparent; }
   ul.checklist li span.item-text:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
   ul.checklist li.checked span.item-text{ color:var(--ink-faint); text-decoration:line-through; }
   ul.checklist li .row-del{ flex:none; }
-
-  /* ---------- tables ---------- */
   .tbl-scroll{ overflow-x:auto; border:1px solid var(--ink); }
-  table.doc-table{
-    width:100%; border-collapse:collapse; font-size:13px; background:var(--panel);
-    min-width:600px;
-  }
-  table.doc-table th, table.doc-table td{
-    border:1px solid #B9AF93; padding:7px 8px; text-align:center; vertical-align:middle;
-  }
-  table.doc-table th{
-    background:var(--header-fill); font-weight:700; color:var(--ink); font-size:12.5px;
-  }
+  table.doc-table{ width:100%; border-collapse:collapse; font-size:13px; background:var(--panel); min-width:600px; }
+  table.doc-table th, table.doc-table td{ border:1px solid #B9AF93; padding:7px 8px; text-align:center; vertical-align:middle; }
+  table.doc-table th{ background:var(--header-fill); font-weight:700; color:var(--ink); font-size:12.5px; }
   table.doc-table td[contenteditable]{ outline:none; text-align:left; }
   table.doc-table td[contenteditable]:focus{ background:rgba(166,54,44,0.05); }
   table.doc-table td[contenteditable]:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
@@ -316,6 +234,8 @@
   table.doc-table select.note-select:focus{ border-color:var(--seal); }
   table.doc-table tr.total-row td{ background:#EFE8D5; font-weight:700; }
   table.doc-table td.rm-cell{ border:none; background:transparent; width:26px; padding:2px; }
+  table.doc-table td.chk-cell, table.doc-table th.chk-cell{ border:none; background:transparent; width:22px; padding:2px; text-align:center; }
+  table.doc-table td.chk-cell input{ width:15px; height:15px; accent-color:var(--seal); cursor:pointer; }
   table.doc-table td.time-cell, table.doc-table th.time-cell{ border:none; background:transparent; width:22px; padding:2px; }
   table.doc-table td.time-cell .time-link{ margin:0; font-size:14px; }
   .row-del{
@@ -324,18 +244,13 @@
     align-items:center; justify-content:center;
   }
   .row-del:hover{ background:var(--seal); color:#fff; }
-
   .add-row-btn{
     margin-top:8px; font-family:'Noto Sans KR',sans-serif; font-size:12.5px; font-weight:700;
     color:var(--gold); background:var(--panel); border:1px dashed var(--gold-soft); border-radius:5px;
     padding:6px 12px; cursor:pointer;
   }
   .add-row-btn:hover{ background:#F3E9CE; }
-
-  /* ---------- 소요시간 / 예산 셀 ---------- */
-  table.doc-table td.dur-cell{
-    display:flex; align-items:center; gap:4px; padding:4px 5px;
-  }
+  table.doc-table td.dur-cell{ display:flex; align-items:center; gap:4px; padding:4px 5px; }
   table.doc-table td.dur-cell .dur-input{
     flex:1; min-width:0; border:1px dashed var(--paper-line); background:transparent;
     font-family:'JetBrains Mono', monospace; font-size:12px; text-align:center;
@@ -350,11 +265,7 @@
     padding:4px 2px; outline:none; text-align:center; text-align-last:center;
   }
   table.doc-table select.gubun-select:focus{ border-color:var(--seal); }
-
-  /* ---------- 일정 비고 칸: 결제방식 선택 + 비고 텍스트 ---------- */
-  table.doc-table td.bigo-cell{
-    display:flex; flex-direction:column; gap:3px; padding:4px 5px; text-align:left;
-  }
+  table.doc-table td.bigo-cell{ display:flex; flex-direction:column; gap:3px; padding:4px 5px; text-align:left; }
   table.doc-table td.bigo-cell select.payment-select{
     width:100%; font-family:'Noto Sans KR', sans-serif; font-size:11px; color:var(--ink);
     border:1px solid var(--paper-line); background:var(--panel); border-radius:4px;
@@ -366,37 +277,19 @@
   }
   table.doc-table td.bigo-cell .bigo-text:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
   table.doc-table td.bigo-cell .bigo-text:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
-
-  /* ---------- 소요예산: 결제 완료 체크 ---------- */
   table.doc-table td.note-cell{ display:flex; flex-direction:column; gap:4px; align-items:stretch; }
-  table.doc-table .paid-check-label{
-    display:flex; align-items:center; gap:4px; font-size:11px; color:var(--ink-soft); cursor:pointer; justify-content:center;
-  }
+  table.doc-table .paid-check-label{ display:flex; align-items:center; gap:4px; font-size:11px; color:var(--ink-soft); cursor:pointer; justify-content:center; }
   table.doc-table .paid-check-label input{ width:13px; height:13px; accent-color:var(--seal); cursor:pointer; }
   table.doc-table tr.paid-done td.note-cell .paid-check-label{ color:#2E7D4F; font-weight:700; }
-
-  /* ---------- 소계 행: 예산 대비 실금액 초과/절약 표시 ---------- */
   table.doc-table tr.budget-group-header td.diff-cell{ text-align:left; font-weight:700; }
   table.doc-table tr.budget-group-header td.diff-cell.over{ color:var(--seal); }
   table.doc-table tr.budget-group-header td.diff-cell.under{ color:#2E7D4F; }
   table.doc-table tr.budget-group-header td.diff-cell.even{ color:var(--ink-faint); font-weight:400; }
-
-  .day-budget-total{
-    margin-top:8px; text-align:right; font-family:'JetBrains Mono', monospace;
-    font-size:12.5px; color:var(--ink-soft);
-  }
+  .day-budget-total{ margin-top:8px; text-align:right; font-family:'JetBrains Mono', monospace; font-size:12.5px; color:var(--ink-soft); }
   .day-budget-total b{ color:var(--ink); font-size:13.5px; }
-  .grand-budget-total{
-    margin:14px 0 0; text-align:right; font-family:'JetBrains Mono', monospace;
-    font-size:13.5px; color:var(--ink-soft); border-top:1px dashed var(--paper-line); padding-top:10px;
-  }
+  .grand-budget-total{ margin:14px 0 0; text-align:right; font-family:'JetBrains Mono', monospace; font-size:13.5px; color:var(--ink-soft); border-top:1px dashed var(--paper-line); padding-top:10px; }
   .grand-budget-total b{ color:var(--seal-dark); font-size:15px; }
-
-  /* ---------- 구분 항목 관리 패널 ---------- */
-  .gubun-manager{
-    background:var(--panel); border:1px dashed var(--gold-soft); border-radius:8px;
-    padding:10px 12px; margin-bottom:16px;
-  }
+  .gubun-manager{ background:var(--panel); border:1px dashed var(--gold-soft); border-radius:8px; padding:10px 12px; margin-bottom:16px; }
   .gubun-manager-head{
     display:flex; align-items:center; gap:8px; flex-wrap:wrap;
     font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:13px; color:var(--ink);
@@ -412,10 +305,7 @@
     display:flex; align-items:center; gap:6px; background:var(--paper); border:1px solid var(--paper-line);
     border-radius:14px; padding:5px 6px 5px 12px; font-size:12.5px; color:var(--ink);
   }
-  .gubun-chip input{
-    border:none; background:transparent; font-family:'Noto Sans KR', sans-serif; font-size:12.5px;
-    color:var(--ink); outline:none; width:70px;
-  }
+  .gubun-chip input{ border:none; background:transparent; font-family:'Noto Sans KR', sans-serif; font-size:12.5px; color:var(--ink); outline:none; width:70px; }
   .gubun-chip .chip-del{ font-size:12px; color:#B08968; cursor:pointer; line-height:1; flex:none; }
   .gubun-chip .chip-del:hover{ color:var(--seal); }
   .gubun-add-row{ display:flex; gap:6px; }
@@ -430,43 +320,46 @@
     cursor:pointer; white-space:nowrap;
   }
   .gubun-add-row button:hover{ background:#F3E9CE; }
-
   body.dark-mode .gubun-manager{ background:#1D1B15; border-color:#4A4230; }
   body.dark-mode .gubun-chip{ background:#26221A; border-color:#4A4230; color:#DCD2BC; }
   body.dark-mode .gubun-chip input{ color:#DCD2BC; }
   body.dark-mode .gubun-add-row input{ background:#1D1B15; border-color:#4A4230; color:#E7E3D6; }
   body.dark-mode .gubun-add-row button{ background:#3A331F; border-color:#4A4230; color:#E9D9A4; }
-
-  /* ---------- 소요예산: 구분별 합계 / 자동연동 표시 ---------- */
-  /* 구분별 pill 표시는 제거됨 (표 안 소계 행으로 대체) */
   .sync-hint{ font-size:11.5px; color:var(--ink-faint); line-height:1.6; margin-bottom:10px; }
   table.doc-table tr.synced-row td{ background:rgba(169,129,47,0.07); }
   table.doc-table tr.synced-row td[contenteditable="false"]{ color:var(--ink-soft); cursor:default; }
   table.doc-table tr.synced-row input.amt[readonly]{ color:var(--ink-soft); cursor:default; }
-  table.doc-table tr.synced-row .row-del{
-    background:#FDF3DC; border-color:var(--gold-soft); color:var(--gold);
-  }
+  table.doc-table tr.synced-row .row-del{ background:#FDF3DC; border-color:var(--gold-soft); color:var(--gold); }
   table.doc-table tr.synced-row .row-del:hover{ background:var(--gold); color:#fff; }
   body.dark-mode table.doc-table tr.synced-row td{ background:rgba(255,255,255,0.04); }
-
   table.doc-table tr.budget-group-header td{
     background:var(--header-fill); font-weight:700; color:var(--gold); font-size:12px;
     padding:6px 8px; border-top:2px solid var(--gold-soft); text-align:left;
   }
   table.doc-table tr.budget-group-header td.num{ text-align:right; color:var(--ink); }
-
   .day-block{ margin-bottom:26px; position:relative; }
-  .day-head{
-    display:flex; align-items:center; gap:10px; margin-bottom:12px;
-  }
+  .day-head{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .day-head h2{ margin:0; flex:1; }
-  .day-del{
-    font-size:11.5px; font-weight:700; color:var(--seal); background:#FBEBE7;
-    border:1px solid #C6907F; border-radius:5px; padding:4px 9px; cursor:pointer;
-  }
+  .day-del{ font-size:11.5px; font-weight:700; color:var(--seal); background:#FBEBE7; border:1px solid #C6907F; border-radius:5px; padding:4px 9px; cursor:pointer; }
   .day-del:hover{ background:var(--seal); color:#fff; }
-
   .add-day-wrap{ text-align:center; margin:6px 0 30px; }
+  .row-copy-bar{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    background:var(--panel); border:1px dashed var(--gold-soft); border-radius:8px;
+    padding:9px 12px; margin-bottom:14px; font-size:12.5px; color:var(--ink-soft);
+  }
+  .row-copy-bar select{
+    font-family:'Noto Sans KR', sans-serif; font-size:12.5px; color:var(--ink);
+    border:1px solid var(--paper-line); background:var(--panel); border-radius:5px; padding:4px 6px; outline:none;
+  }
+  .row-copy-bar select:focus{ border-color:var(--seal); }
+  .row-copy-btn{
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:12px; color:var(--gold);
+    background:var(--panel); border:1px dashed var(--gold-soft); border-radius:6px; padding:6px 12px; cursor:pointer;
+  }
+  .row-copy-btn:hover{ background:#F3E9CE; }
+  body.dark-mode .row-copy-bar{ background:#1D1B15; border-color:#4A4230; }
+  body.dark-mode .row-copy-bar select{ background:#1D1B15; border-color:#4A4230; color:#E7E3D6; }
   .add-day-btn{
     font-family:'Noto Serif KR', serif; font-weight:700; font-size:14px;
     color:#F7ECE9; background:linear-gradient(135deg, var(--seal), var(--seal-dark));
@@ -474,38 +367,26 @@
     box-shadow:0 8px 18px -8px rgba(122,38,32,0.6);
   }
   .add-day-btn:hover{ filter:brightness(1.08); }
-
   .foot-note{ font-size:13px; line-height:1.9; }
   .foot-note [contenteditable]{ outline:none; border-bottom:1px dashed transparent; }
   .foot-note [contenteditable]:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
-
   .seal-stamp{
     position:absolute; right:36px; top:36px; width:64px; height:64px; border-radius:50%;
     border:2.5px solid var(--seal); color:var(--seal); font-family:'Noto Serif KR', serif;
     font-weight:900; font-size:12px; display:flex; align-items:center; justify-content:center;
-    text-align:center; line-height:1.15; opacity:0.85; transform:rotate(-8deg);
-    letter-spacing:0.5px;
+    text-align:center; line-height:1.15; opacity:0.85; transform:rotate(-8deg); letter-spacing:0.5px;
   }
-
-  /* ---------- horizontal layout row ---------- */
-  .layout-row{
-    display:flex; align-items:flex-start; gap:20px;
-    max-width:1320px; margin:22px auto 0; padding:0 16px; box-sizing:border-box;
-  }
+  .layout-row{ display:flex; align-items:flex-start; gap:20px; max-width:1320px; margin:22px auto 0; padding:0 16px; box-sizing:border-box; }
   .layout-row .idea-board{ margin:0 !important; }
   .layout-row .main-col{ flex:1 1 auto; min-width:0; }
   .layout-row .wrap{ margin-top:16px; }
-
-  /* ---------- idea board ---------- */
   .idea-board{
     background:#FFF7DA; border:1px solid #E3CD84; border-radius:10px;
     padding:16px 18px 18px; margin:22px auto 0; max-width:920px;
     box-shadow:0 10px 24px -16px rgba(0,0,0,0.35);
     flex:0 0 300px; position:sticky; top:52px; max-height:calc(100vh - 72px); overflow-y:auto;
   }
-  .idea-board-head{
-    display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; margin-bottom:10px;
-  }
+  .idea-board-head{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; margin-bottom:10px; }
   .idea-board-title{ font-family:'Noto Serif KR', serif; font-weight:700; font-size:14.5px; color:#6B4E1E; }
   .idea-board-hint{ font-size:11.5px; color:#8A7237; }
   #ideaInput{
@@ -516,13 +397,10 @@
   #ideaInput:focus{ border-color:#C9A857; }
   .idea-build-btn{
     margin-top:8px; font-family:'Noto Sans KR', sans-serif; font-size:12.5px; font-weight:700;
-    color:#6B4E1E; background:#FCEAA9; border:1px solid #E3CD84; border-radius:16px;
-    padding:6px 14px; cursor:pointer;
+    color:#6B4E1E; background:#FCEAA9; border:1px solid #E3CD84; border-radius:16px; padding:6px 14px; cursor:pointer;
   }
   .idea-build-btn:hover{ background:#F8DD84; }
-  .idea-select-hint{
-    margin-top:10px; font-size:12px; color:var(--seal); font-weight:700; min-height:16px;
-  }
+  .idea-select-hint{ margin-top:10px; font-size:12px; color:var(--seal); font-weight:700; min-height:16px; }
   .idea-chips{ margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; }
   .idea-chip{
     display:flex; align-items:center; gap:7px; background:#FFFDF4; border:1px solid #E3CD84;
@@ -530,22 +408,16 @@
     cursor:grab; user-select:none; transition:box-shadow .12s, border-color .12s, opacity .12s;
   }
   .idea-chip:active{ cursor:grabbing; }
-  .idea-chip .chip-text{ }
-  .idea-chip.selected{
-    border-color:var(--seal); box-shadow:0 0 0 2px rgba(166,54,44,0.18); background:#FFF1EC;
-  }
+  .idea-chip.selected{ border-color:var(--seal); box-shadow:0 0 0 2px rgba(166,54,44,0.18); background:#FFF1EC; }
   .idea-chip.used{ opacity:0.5; text-decoration:line-through; }
   .idea-chip .chip-del{ font-size:12px; color:#B08968; cursor:pointer; line-height:1; }
   .idea-chip .chip-del:hover{ color:var(--seal); }
-
   .idea-undo-btn{
     margin-top:8px; font-family:'Noto Sans KR', sans-serif; font-size:12px; font-weight:700;
-    color:#3D6B4A; background:#E7F3E9; border:1px solid #BFDCC5; border-radius:14px;
-    padding:6px 12px; cursor:pointer;
+    color:#3D6B4A; background:#E7F3E9; border:1px solid #BFDCC5; border-radius:14px; padding:6px 12px; cursor:pointer;
   }
   .idea-undo-btn:hover:not(:disabled){ background:#D7ECDB; }
   .idea-undo-btn:disabled{ opacity:0.4; cursor:default; }
-
   .trash-panel{ margin-top:14px; border-top:1px dashed #E3CD84; padding-top:10px; }
   .trash-head{
     font-family:'Noto Sans KR', sans-serif; font-size:12.5px; font-weight:700; color:#6B4E1E;
@@ -555,10 +427,7 @@
   .trash-panel.collapsed .trash-arrow{ transform:rotate(-90deg); }
   .trash-panel.collapsed .trash-list{ display:none; }
   .trash-list{ margin-top:8px; display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto; }
-  .trash-item{
-    display:flex; align-items:center; gap:6px; background:#FFFDF4; border:1px solid #E3CD84;
-    border-radius:6px; padding:5px 9px; font-size:12px; color:#4A3A15;
-  }
+  .trash-item{ display:flex; align-items:center; gap:6px; background:#FFFDF4; border:1px solid #E3CD84; border-radius:6px; padding:5px 9px; font-size:12px; color:#4A3A15; }
   .trash-item .trash-text{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .trash-item button{ font-size:11px; font-weight:700; border:none; background:transparent; cursor:pointer; padding:2px 4px; white-space:nowrap; }
   .trash-restore{ color:#2E7D4F; }
@@ -566,11 +435,75 @@
   .trash-purge{ color:#A6362C; }
   .trash-purge:hover{ text-decoration:underline; }
   .trash-empty{ font-size:11.5px; color:#8A7237; opacity:0.75; margin-top:8px; }
-
-  [contenteditable="true"].drop-target{
-    background:rgba(166,54,44,0.08) !important; outline:1px dashed var(--seal); outline-offset:-1px;
+  [contenteditable="true"].drop-target{ background:rgba(166,54,44,0.08) !important; outline:1px dashed var(--seal); outline-offset:-1px; }
+  /* ---------- 가고싶은곳 메모장 ---------- */
+  .want-board{ background:#EAF3FF; border-color:#AECBEF; }
+  .want-board .idea-board-title{ color:#28517E; }
+  .want-board .idea-board-hint{ color:#4A6E96; }
+  .want-board #wantToGoInput{ border-color:#AECBEF; }
+  .want-board #wantToGoInput:focus{ border-color:#4A78B0; }
+  .want-board .idea-build-btn{ color:#28517E; background:#DCEBFF; border-color:#AECBEF; }
+  .want-board .idea-build-btn:hover{ background:#C7DEFB; }
+  .want-board .maps-import-btn{ color:#28517E; background:rgba(40,81,126,0.08); border-color:rgba(40,81,126,0.3); }
+  .want-board .maps-import-btn:hover{ background:rgba(40,81,126,0.14); }
+  .want-board .idea-chip{ background:#F5FAFF; border-color:#AECBEF; color:#20395A; }
+  .want-board .idea-chip.overlap-chip{ background:#FFF1EC; border-color:var(--seal); box-shadow:0 0 0 1px rgba(166,54,44,0.25); }
+  .want-board .idea-chip.overlap-chip .chip-text::after{ content:" ✓ 겹침"; color:var(--seal); font-weight:700; font-size:11px; }
+  .want-board .idea-chip .chip-del{ color:#7A93AE; }
+  .want-board .idea-chip .chip-del:hover{ color:var(--seal); }
+  .boards-col{ display:flex; flex-direction:column; gap:16px; flex:0 0 300px; position:sticky; top:52px; max-height:calc(100vh - 72px); overflow-y:auto; }
+  .boards-col .idea-board{ position:static; flex:none; max-height:none; overflow-y:visible; margin:0 !important; }
+  body.dark-mode .want-board{ background:#1B2430; border-color:#324A63; }
+  body.dark-mode .want-board .idea-board-title{ color:#9CC4EF; }
+  body.dark-mode .want-board .idea-board-hint{ color:#7FA0C4; }
+  body.dark-mode .want-board #wantToGoInput{ background:#141C24; border-color:#324A63; color:#E7E3D6; }
+  body.dark-mode .want-board .idea-build-btn{ background:#233246; border-color:#324A63; color:#BBD8F7; }
+  body.dark-mode .want-board .idea-chip{ background:#141C24; border-color:#324A63; color:#CBDCEF; }
+  body.dark-mode .want-board .idea-chip.overlap-chip{ background:#2E1F1C; border-color:var(--seal); }
+  /* ---------- 가고싶은곳 탭 ---------- */
+  .want-place-card{
+    border:1px solid var(--paper-line); border-radius:8px; background:var(--panel);
+    padding:14px 16px; margin-bottom:14px;
   }
-
+  .want-place-card.overlap-card{ border-color:var(--seal); background:rgba(166,54,44,0.04); }
+  .want-place-head{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .want-place-name{ font-family:'Noto Serif KR', serif; font-weight:700; font-size:15px; color:var(--ink); }
+  .want-place-card.overlap-card .want-place-name::after{
+    content:"하고싶은 것과 겹침"; margin-left:8px; font-family:'Noto Sans KR',sans-serif; font-weight:700;
+    font-size:11px; color:var(--seal); background:#FBEBE7; border:1px solid #C6907F; border-radius:10px; padding:2px 8px;
+  }
+  .want-place-note{
+    width:100%; box-sizing:border-box; border:1px solid var(--paper-line); border-radius:6px; background:var(--panel);
+    font-family:'Noto Sans KR', sans-serif; font-size:13px; color:var(--ink); padding:6px 8px; margin-bottom:10px; outline:none;
+  }
+  .want-place-note:focus{ border-color:var(--seal); }
+  .want-photo-btn{
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:12px; color:var(--gold);
+    background:var(--panel); border:1px dashed var(--gold-soft); border-radius:6px; padding:5px 10px; cursor:pointer;
+  }
+  .want-photo-btn:hover{ background:#F3E9CE; }
+  .want-photo-grid{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .want-photo-thumb{ position:relative; width:92px; }
+  .want-photo-thumb img{ width:92px; height:92px; object-fit:cover; border-radius:6px; border:1px solid var(--paper-line); display:block; }
+  .want-photo-thumb .photo-fname{
+    font-size:10px; color:var(--ink-faint); text-align:center; margin-top:2px; overflow:hidden;
+    text-overflow:ellipsis; white-space:nowrap;
+  }
+  .want-photo-thumb .photo-del{
+    position:absolute; top:-6px; right:-6px; width:18px; height:18px; border-radius:50%;
+    background:var(--seal); color:#fff; border:none; font-size:11px; line-height:1; cursor:pointer;
+  }
+  .want-tab-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:16px 0 4px; }
+  .ppt-export-btn{
+    font-family:'Noto Serif KR', serif; font-weight:700; font-size:14px;
+    color:#F7ECE9; background:linear-gradient(135deg, #2E6B4F, #1F4E38);
+    border:none; border-radius:24px; padding:10px 22px; cursor:pointer;
+    box-shadow:0 8px 18px -8px rgba(31,78,56,0.6);
+  }
+  .ppt-export-btn:hover{ filter:brightness(1.08); }
+  .ppt-export-btn:disabled{ opacity:0.5; cursor:default; filter:none; }
+  .want-photo-note{ font-size:11.5px; color:var(--ink-faint); line-height:1.6; margin-bottom:14px; }
+  .want-empty-hint{ font-size:12.5px; color:var(--ink-faint); padding:8px 2px; }
   @media (max-width:640px){
     .paper{ padding:30px 16px 40px; }
     .paper::before{ inset:6px; }
@@ -585,14 +518,15 @@
     nav.tabs button{ font-size:11.5px; padding:10px 4px 9px; min-width:0; }
     .layout-row{ flex-direction:column; padding:0; max-width:none; }
     .layout-row .idea-board{ flex:none; position:static; max-height:none; overflow-y:visible; width:auto; margin:16px 16px 0 !important; }
+    .layout-row .boards-col{ flex:none; position:static; max-height:none; overflow-y:visible; width:auto; margin:0 !important; gap:16px; }
+    .boards-col .idea-board{ margin:16px 16px 0 !important; }
     .layout-row .wrap{ margin-top:0; }
   }
-
-  /* ---------- print ---------- */
   @media print{
     body{ background:#fff; padding:0; }
     .toolbar{ display:none; }
     .idea-board{ display:none !important; }
+    .boards-col{ display:none !important; }
     nav.tabs{ display:none !important; }
     .tab-page{ display:block !important; }
     .layout-row{ display:block !important; max-width:none; padding:0; }
@@ -600,6 +534,8 @@
     .paper{ box-shadow:none; border:none; padding:16px 6mm; }
     .paper::before{ display:none; }
     .row-del, .add-row-btn, .day-del, .add-day-wrap{ display:none !important; }
+    .row-copy-bar{ display:none !important; }
+    table.doc-table td.chk-cell, table.doc-table th.chk-cell{ display:none !important; }
     ul.checklist li .row-del{ display:none !important; }
     .gubun-manager{ display:none !important; }
     table.doc-table{ font-size:11.5px; }
@@ -609,7 +545,6 @@
 </style>
 </head>
 <body>
-
 <div class="toolbar">
   <span class="app-name">✈ 여행계획표</span>
   <span id="syncStatus">연결 중...</span>
@@ -618,7 +553,6 @@
   <button id="darkModeBtn" title="다크 모드 (밤 작업용)">🌙</button>
   <button id="resetBtn">초기화</button>
 </div>
-
 <div id="syncGate">
   <div class="gate-box">
     <h3>기기 간 동기화</h3>
@@ -630,8 +564,8 @@
     <div class="hint">※ 코드를 아는 사람은 누구나 이 계획표를 보고 수정할 수 있어요. 남들이 짐작하기 어려운 코드를 사용하세요.</div>
   </div>
 </div>
-
 <div class="layout-row">
+<div class="boards-col">
 <div class="idea-board" id="ideaBoard">
   <div class="idea-board-head">
     <span class="idea-board-title">💡 하고 싶은 것 메모장</span>
@@ -648,24 +582,38 @@
   <div class="maps-import-hint">구글 지도는 저장한 장소 목록을 실시간으로 자동 연동해주는 기능은 제공하지 않아요. 대신 구글 지도 앱 → <b>저장됨</b> → 목록 선택 → 내보내기(또는 <b>Google Takeout</b>)로 CSV/KML 파일을 받아서 여기로 불러오면, 장소 이름이 위 메모장에 자동으로 채워져요.</div>
   <div class="idea-select-hint" id="ideaSelectHint"></div>
   <div class="idea-chips" id="ideaChips"></div>
-
   <div class="trash-panel collapsed" id="trashPanel">
     <div class="trash-head" id="trashToggle">🗑 휴지통 (<span id="trashCount">0</span>) <span class="trash-arrow">▾</span></div>
     <div class="trash-list" id="trashList"></div>
   </div>
 </div>
-
+<div class="idea-board want-board" id="wantToGoBoard">
+  <div class="idea-board-head">
+    <span class="idea-board-title">📌 가고싶은곳 메모장</span>
+    <span class="idea-board-hint">CSV/KML로 불러오거나 직접 적어주세요. "하고 싶은 것 메모장"과 겹치는 이름은 색이 다르게 표시돼요.</span>
+  </div>
+  <textarea id="wantToGoInput" placeholder="한 줄에 하나씩 적어주세요&#10;예) 흑돼지 맛집&#10;성산일출봉"></textarea>
+  <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;">
+    <button class="idea-build-btn" id="wantToGoBuildBtn" style="margin:0;">목록 만들기</button>
+    <button type="button" class="maps-import-btn" id="wantToGoImportBtn">📍 구글지도 목록 가져오기</button>
+    <input type="file" id="wantToGoImportInput" accept=".csv,.txt,.kml" style="display:none;">
+  </div>
+  <div class="maps-import-source">↳ takeout.google.com 에서 "저장됨" 내보내기</div>
+  <div class="idea-chips" id="wantToGoChips"></div>
+</div>
+</div>
 <div class="main-col">
 <nav class="tabs">
   <button class="tab" data-tab="checklist">✅ 준비 체크리스트</button>
   <button class="tab" data-tab="budget">💰 소요예산</button>
-  <button class="tab active" data-tab="plan">✈ 여행계획표</button>
+  <button class="tab active" data-tab="plan">✈ 여행계획표1</button>
+  <button class="tab" data-tab="plan2">✈ 여행계획표2</button>
+  <button class="tab" data-tab="plan3">✈ 여행계획표3</button>
+  <button class="tab" data-tab="wantToGo">📌 가고싶은곳</button>
 </nav>
-
 <div class="wrap">
   <div class="paper" id="paper">
     <div class="seal-stamp">여행<br>확정</div>
-
     <header class="doc-head">
       <div class="title-row">
         <input class="dest-input" id="destInput" placeholder="여행지명" value="">
@@ -675,7 +623,6 @@
         [ <input type="date" id="dateStart"> ~ <input type="date" id="dateEnd"> ]
       </div>
     </header>
-
     <section class="block">
       <h2><span class="box"></span>여행개요</h2>
       <div class="field-list">
@@ -695,7 +642,6 @@
         </div>
       </div>
     </section>
-
     <div class="tab-page active" data-tab-page="plan">
       <div class="gubun-manager collapsed" id="gubunManager">
         <div class="gubun-manager-head" id="gubunManagerToggle">
@@ -711,13 +657,55 @@
           </div>
         </div>
       </div>
+      <div class="row-copy-bar" data-plan="1">
+        <span>체크한 일정 행을</span>
+        <select class="row-copy-target">
+          <option value="2">여행계획표2</option>
+          <option value="3">여행계획표3</option>
+        </select>
+        <span>로 복사</span>
+        <button type="button" class="row-copy-btn">선택한 행 복사</button>
+      </div>
       <section id="daysContainer"></section>
       <div class="add-day-wrap">
         <button class="add-day-btn" id="addDayBtn">+ 일차 추가</button>
       </div>
       <div class="grand-budget-total" id="grandBudgetTotal">전체 일정 예산 합계 : <b>0원</b></div>
     </div>
-
+    <div class="tab-page" data-tab-page="plan2">
+      <div class="maps-import-source">🏷 "구분" 항목은 여행계획표1 탭에서 공통으로 관리돼요.</div>
+      <div class="row-copy-bar" data-plan="2">
+        <span>체크한 일정 행을</span>
+        <select class="row-copy-target">
+          <option value="1">여행계획표1</option>
+          <option value="3">여행계획표3</option>
+        </select>
+        <span>로 복사</span>
+        <button type="button" class="row-copy-btn">선택한 행 복사</button>
+      </div>
+      <section id="daysContainer2"></section>
+      <div class="add-day-wrap">
+        <button class="add-day-btn" id="addDayBtn2">+ 일차 추가</button>
+      </div>
+      <div class="grand-budget-total" id="grandBudgetTotal2">전체 일정 예산 합계 : <b>0원</b></div>
+    </div>
+    <div class="tab-page" data-tab-page="plan3">
+      <div class="maps-import-source">🏷 "구분" 항목은 여행계획표1 탭에서 공통으로 관리돼요.</div>
+      <div class="row-copy-bar" data-plan="3">
+        <span>체크한 일정 행을</span>
+        <select class="row-copy-target">
+          <option value="1">여행계획표1</option>
+          <option value="2">여행계획표2</option>
+        </select>
+        <span>로 복사</span>
+        <button type="button" class="row-copy-btn">선택한 행 복사</button>
+      </div>
+      <section id="daysContainer3"></section>
+      <div class="add-day-wrap">
+        <button class="add-day-btn" id="addDayBtn3">+ 일차 추가</button>
+      </div>
+      <div class="grand-budget-total" id="grandBudgetTotal3">전체 일정 예산 합계 : <b>0원</b></div>
+    </div>
     <div class="tab-page" data-tab-page="checklist">
       <section class="block">
         <h2><span class="box"></span>여행 준비 체크리스트 <span id="checklistProgress" class="checklist-progress"></span></h2>
@@ -725,10 +713,9 @@
         <button class="add-row-btn" id="addChecklistItem">+ 항목 추가</button>
       </section>
     </div>
-
     <div class="tab-page" data-tab-page="budget">
       <section class="block">
-        <h2><span class="box"></span>소요예산</h2>
+        <h2><span class="box"></span>소요예산 (여행계획표1)</h2>
         <div class="field-list" style="margin-bottom:12px;">
           <div class="field-line">
             <span class="bullet">o</span> 총예산 : <b id="totalBudgetLabel">0원</b>
@@ -741,7 +728,7 @@
             <span id="perPersonCost" contenteditable="true" data-ph="원" style="min-width:60px;"></span>
           </div>
         </div>
-        <div class="sync-hint">🔗 배경이 표시된 행은 여행계획표의 일정과 자동으로 연동된 항목이에요. 여행계획표에서 구분·내용·예산·실금액을 수정하면 여기도 함께 바뀌어요. 직접 고쳐 쓰고 싶으면 해당 행의 × 버튼을 눌러 연동을 해제하세요. 같은 구분끼리는 표에서 자동으로 모아서 보여주고, 각 구분의 소계는 그 구분의 마지막 행에 예산 대비 실금액이 얼마나 남았는지/초과했는지와 함께 나와요. 결제 방식(사전결제/현장결제)은 여행계획표의 비고에서 선택하고, 여기서는 그 결제가 완료됐는지만 체크해요.</div>
+        <div class="sync-hint">🔗 배경이 표시된 행은 여행계획표1의 일정과 자동으로 연동된 항목이에요. 여행계획표1에서 구분·내용·예산·실금액을 수정하면 여기도 함께 바뀌어요. 직접 고쳐 쓰고 싶으면 해당 행의 × 버튼을 눌러 연동을 해제하세요. 같은 구분끼리는 표에서 자동으로 모아서 보여주고, 각 구분의 소계는 그 구분의 마지막 행에 예산 대비 실금액이 얼마나 남았는지/초과했는지와 함께 나와요. 결제 방식(사전결제/현장결제)은 여행계획표의 비고에서 선택하고, 여기서는 그 결제가 완료됐는지만 체크해요.</div>
         <div class="tbl-scroll">
           <table class="doc-table" id="budgetTable">
             <thead>
@@ -769,8 +756,98 @@
         </div>
         <button class="add-row-btn" id="addBudgetRow">+ 예산 항목 추가</button>
       </section>
+      <section class="block">
+        <h2><span class="box"></span>소요예산 (여행계획표2)</h2>
+        <div class="field-list" style="margin-bottom:12px;">
+          <div class="field-line">
+            <span class="bullet">o</span> 총예산 : <b id="totalBudgetLabel2">0원</b>
+            &nbsp;&nbsp;<span class="bullet">o</span> 총실금액 : <b id="totalActualLabel2">0원</b>
+          </div>
+          <div class="field-line">
+            <span class="bullet">o</span> 사전결제 : <b id="prepaidLabel2">0원</b>
+            &nbsp;&nbsp;<span class="bullet">o</span> 현장결제 : <b id="onsiteLabel2">0원</b>
+          </div>
+        </div>
+        <div class="sync-hint">🔗 배경이 표시된 행은 여행계획표2의 일정과 자동으로 연동돼요. (여행계획표1과는 별도로 계산돼요.)</div>
+        <div class="tbl-scroll">
+          <table class="doc-table" id="budgetTable2">
+            <thead>
+              <tr>
+                <th style="width:12%;">구분</th>
+                <th style="width:16%;">항목</th>
+                <th>내용</th>
+                <th style="width:12%;">예산(원)</th>
+                <th style="width:12%;">실금액(원)</th>
+                <th style="width:12%;">비고</th>
+                <th class="rm-cell"></th>
+              </tr>
+            </thead>
+            <tbody id="budgetBody2"></tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="3">합&nbsp;&nbsp;계</td>
+                <td class="num" id="budgetTotal2">0</td>
+                <td class="num" id="budgetActualTotal2">0</td>
+                <td></td>
+                <td class="rm-cell"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <button class="add-row-btn" id="addBudgetRow2">+ 예산 항목 추가</button>
+      </section>
+      <section class="block">
+        <h2><span class="box"></span>소요예산 (여행계획표3)</h2>
+        <div class="field-list" style="margin-bottom:12px;">
+          <div class="field-line">
+            <span class="bullet">o</span> 총예산 : <b id="totalBudgetLabel3">0원</b>
+            &nbsp;&nbsp;<span class="bullet">o</span> 총실금액 : <b id="totalActualLabel3">0원</b>
+          </div>
+          <div class="field-line">
+            <span class="bullet">o</span> 사전결제 : <b id="prepaidLabel3">0원</b>
+            &nbsp;&nbsp;<span class="bullet">o</span> 현장결제 : <b id="onsiteLabel3">0원</b>
+          </div>
+        </div>
+        <div class="sync-hint">🔗 배경이 표시된 행은 여행계획표3의 일정과 자동으로 연동돼요. (여행계획표1, 2와는 별도로 계산돼요.)</div>
+        <div class="tbl-scroll">
+          <table class="doc-table" id="budgetTable3">
+            <thead>
+              <tr>
+                <th style="width:12%;">구분</th>
+                <th style="width:16%;">항목</th>
+                <th>내용</th>
+                <th style="width:12%;">예산(원)</th>
+                <th style="width:12%;">실금액(원)</th>
+                <th style="width:12%;">비고</th>
+                <th class="rm-cell"></th>
+              </tr>
+            </thead>
+            <tbody id="budgetBody3"></tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="3">합&nbsp;&nbsp;계</td>
+                <td class="num" id="budgetTotal3">0</td>
+                <td class="num" id="budgetActualTotal3">0</td>
+                <td></td>
+                <td class="rm-cell"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <button class="add-row-btn" id="addBudgetRow3">+ 예산 항목 추가</button>
+      </section>
     </div>
-
+    <div class="tab-page" data-tab-page="wantToGo">
+      <section class="block">
+        <h2><span class="box"></span>가고싶은곳</h2>
+        <div class="want-photo-note">장소마다 사진을 올려두면, 파일명이 그대로 사진 아래 라벨로 붙어서 어떤 사진인지 쉽게 구분돼요. 사진은 이 기기에서만 보이고 다른 기기와는 동기화되지 않으니, PPT로 내보내기 전에 이 화면에서 확인해주세요.</div>
+        <div id="wantToGoPlacesList"></div>
+        <div class="want-empty-hint" id="wantToGoEmptyHint">왼쪽 "가고싶은곳 메모장"에 장소를 추가하면 여기에 카드로 나타나요.</div>
+        <div class="want-tab-actions">
+          <button class="ppt-export-btn" id="wantToGoPptBtn" disabled>🖼 사진 있는 장소 PPT로 내보내기</button>
+        </div>
+      </section>
+    </div>
     <section class="block foot-note">
       <div>붙임&nbsp;&nbsp;1. <span id="attachment1" contenteditable="true" data-ph="여행준비물 사전체크리스트 1부."></span></div>
       <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. <span id="attachment2" contenteditable="true" data-ph="항공(교통)티켓 / 렌트계약서 / 숙박예약 내역서 3부.  끝."></span></div>
@@ -779,12 +856,10 @@
 </div>
 </div>
 </div>
-
 <script>
 let dayCount = 0;
 let budgetRowCount = 0;
-
-// ---- 다크 모드 (밤 작업용) ----
+let planEngines = {};
 (function(){
   const btn = document.getElementById('darkModeBtn');
   function apply(on){
@@ -800,8 +875,6 @@ let budgetRowCount = 0;
     try{ localStorage.setItem('travelPlanDarkMode', on ? '1' : '0'); }catch(e){}
   });
 })();
-
-
 const dayColDefs = [
   { label:'구분', ph:'', width:'8%' },
   { label:'일시', ph:'예: 09:00', width:'10%' },
@@ -812,15 +885,11 @@ const dayColDefs = [
   { label:'예산', ph:'0', width:'' },
   { label:'비고', ph:'비고', width:'12%' },
 ];
-
-// ---- 구분(항목) 목록 관리 ----
 const DEFAULT_GUBUN_OPTIONS = ['출발','도착','식사','관광','이동','레저','렌트','숙소'];
 let GUBUN_OPTIONS = DEFAULT_GUBUN_OPTIONS.slice();
-
 function gubunOptionsHTML(){
   return '<option value="">선택</option>' + GUBUN_OPTIONS.map(o=>`<option value="${escapeHtmlSafe(o)}">${escapeHtmlSafe(o)}</option>`).join('');
 }
-// escapeHtml()은 아래쪽(휴지통 파트)에서 정의되므로, 초기 로드 순서에 안전하도록 별도의 얇은 래퍼를 둠
 function escapeHtmlSafe(str){
   const div = document.createElement('div');
   div.textContent = str == null ? '' : str;
@@ -866,8 +935,6 @@ function renderGubunManager(){
     list.appendChild(chip);
   });
 }
-
-// ---- 여행계획표 ↔ 소요예산 자동 연동 ----
 let scheduleRowIdCounter = 0;
 const SCHEDULE_TO_BUDGET_CATEGORY = {
   '출발':'교통', '도착':'교통', '이동':'교통',
@@ -880,7 +947,6 @@ const CATEGORY_ORDER = ['교통','식비','숙박','관광/레저','렌트','기
 function budgetCategoryFor(gubun){
   return SCHEDULE_TO_BUDGET_CATEGORY[gubun] || '기타';
 }
-
 function applySyncedLockUI(tr, locked){
   const tds = tr.querySelectorAll('td[contenteditable]');
   if(tds[0]) tds[0].contentEditable = locked ? 'false' : 'true';
@@ -890,7 +956,7 @@ function applySyncedLockUI(tr, locked){
   const actualAmt = tr.querySelector('.actual-amt-input');
   if(actualAmt) actualAmt.readOnly = !!locked;
   const noteSelect = tr.querySelector('.note-select');
-  if(noteSelect) noteSelect.disabled = !!locked; // 결제방식은 여행계획표에서 정함 — '완료' 체크는 항상 직접 편집 가능
+  if(noteSelect) noteSelect.disabled = !!locked;
   tr.classList.toggle('synced-row', !!locked);
   if(locked){
     tr.querySelector('.row-del').title = '🔗 여행계획표와 자동연동됨 — 클릭하면 연동 해제';
@@ -898,7 +964,6 @@ function applySyncedLockUI(tr, locked){
     tr.querySelector('.row-del').title = '행 삭제';
   }
 }
-
 function unlinkSyncedBudgetRow(tr){
   if(!confirm('여행계획표와의 자동연동을 해제할까요? 해제하면 이 항목은 더 이상 자동으로 갱신되지 않고, 직접 수정/삭제할 수 있어요.')) return;
   const srcRow = document.querySelector(`.day-block tr[data-row-id="${tr.dataset.syncId}"]`);
@@ -907,7 +972,6 @@ function unlinkSyncedBudgetRow(tr){
   applySyncedLockUI(tr, false);
   scheduleSave();
 }
-
 function bumpRowIdCounterFromExisting(){
   let max = 0;
   document.querySelectorAll('[data-row-id]').forEach(el=>{
@@ -916,7 +980,6 @@ function bumpRowIdCounterFromExisting(){
   });
   scheduleRowIdCounter = Math.max(scheduleRowIdCounter, max);
 }
-
 function resyncBudgetFromSchedule(){
   const activeIds = new Set();
   document.querySelectorAll('#daysContainer .day-block').forEach(block=>{
@@ -935,7 +998,6 @@ function resyncBudgetFromSchedule(){
       const content = tr.querySelector('.naeyong-cell').textContent.trim();
       const budgetCategory = budgetCategoryFor(gubun);
       const itemName = content ? `${dayLabel} ${content}` : `${dayLabel} ${gubun || '일정'}`;
-
       let row = document.querySelector(`#budgetBody tr[data-sync-id="${rowId}"]`);
       if(!row){
         row = makeBudgetRow();
@@ -962,17 +1024,12 @@ function resyncBudgetFromSchedule(){
   });
   recalcBudget();
 }
-
-// (구분별 pill 표시 기능은 제거됨 — 표 안 소계 행으로 대체)
-
-// ---- 소요예산: 같은 구분끼리 묶어서 보여주기 (구분 셀 병합 + 소계는 그 구분의 마지막 행) ----
 function regroupBudgetRows(){
   const tbody = document.getElementById('budgetBody');
   if(!tbody) return;
-  if(tbody.contains(document.activeElement)) return; // 편집 중인 행은 재배열하지 않음 (포커스/커서 끊김 방지)
+  if(tbody.contains(document.activeElement)) return;
   tbody.querySelectorAll('tr.budget-group-header').forEach(h=> h.remove());
   const rows = Array.from(tbody.querySelectorAll('tr:not(.budget-group-header)'));
-  // 이전에 병합(rowspan)했던 셀들을 원상복구
   rows.forEach(tr=>{
     const cell = tr.querySelectorAll('td[contenteditable]')[0];
     if(cell){ cell.style.display = ''; cell.removeAttribute('rowspan'); }
@@ -1000,7 +1057,6 @@ function regroupBudgetRows(){
       sumBudget += Number((tr.querySelector('.amt').value||'0').replace(/[^0-9]/g,''));
       sumActual += Number((tr.querySelector('.actual-amt-input').value||'0').replace(/[^0-9]/g,''));
     });
-    // 구분이 비어있지 않고 같은 구분이 여러 행이면, 구분 셀을 하나로 병합해서 보여줌
     if(cat !== '__none__' && rowsInCat.length > 1){
       const headCell = rowsInCat[0].querySelectorAll('td[contenteditable]')[0];
       headCell.rowSpan = rowsInCat.length;
@@ -1028,8 +1084,6 @@ function regroupBudgetRows(){
     tbody.appendChild(footer);
   });
 }
-
-// ---- 일시 자동계산 (일시 + 소요시간 → 다음 행 일시) ----
 function parseTimeHM(text){
   const m = (text||'').match(/([01]?\d|2[0-3]):([0-5]\d)/);
   if(!m) return null;
@@ -1076,8 +1130,6 @@ function recalcDayChain(dayBlock){
     nextIlsi.dataset.timeSource = 'auto';
   }
 }
-
-// ---- 일자별 / 전체 예산 합계 ----
 function updateDayBudgetTotal(block){
   let sum = 0;
   block.querySelectorAll('.budget-input').forEach(inp=>{
@@ -1093,11 +1145,11 @@ function recalcAllDayBudgets(){
   const grandEl = document.querySelector('#grandBudgetTotal b');
   if(grandEl) grandEl.textContent = grand.toLocaleString('ko-KR') + '원';
 }
-
 function makeDayTableRow(){
   const tr = document.createElement('tr');
   tr.dataset.rowId = 'r' + (++scheduleRowIdCounter);
   tr.innerHTML = `
+    <td class="chk-cell"><input type="checkbox" class="row-select-chk" title="선택(다른 여행계획표로 복사)"></td>
     <td class="gubun-cell"><select class="gubun-select">${gubunOptionsHTML()}</select></td>
     <td class="ilsi-cell" contenteditable="true" data-ph="예: 09:00"></td>
     <td class="chulbal-cell" contenteditable="true" data-ph="출발"></td>
@@ -1124,30 +1176,24 @@ function makeDayTableRow(){
   const durInput = tr.querySelector('.dur-input');
   const budgetInput = tr.querySelector('.budget-input');
   const actualInput = tr.querySelector('.actual-input');
-
-  // 일시를 사용자가 직접 수정하면 '수동' 표시 (프로그램이 자동으로 채운 경우는 input 이벤트가 발생하지 않음)
   ilsiTd.addEventListener('input', ()=>{
     if(ilsiTd.textContent.trim() === ''){ delete ilsiTd.dataset.timeSource; }
     else{ ilsiTd.dataset.timeSource = 'manual'; }
     recalcDayChain(tr.closest('.day-block'));
   });
-  // 소요시간이 바뀌면 다음 행의 일시를 다시 계산
   durInput.addEventListener('input', ()=>{ recalcDayChain(tr.closest('.day-block')); });
-  // 예산 입력: 숫자만 남기고 천단위 콤마, 일자별/전체 합계 갱신
   budgetInput.addEventListener('input', ()=>{
     let v = budgetInput.value.replace(/[^0-9]/g,'');
     budgetInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
     recalcAllDayBudgets();
   });
-  // 실금액 입력: 숫자만 남기고 천단위 콤마
   actualInput.addEventListener('input', ()=>{
     let v = actualInput.value.replace(/[^0-9]/g,'');
     actualInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
   });
-
-    let travelResult = null;   // { walkSeconds, transitSeconds, carSeconds }
-  let travelMode = null;     // 'transit' | 'walk' | 'car'
-  let lastTravelText = '';   // 지금 일시 칸에 들어가 있는, 이 기능이 넣은 텍스트 (전환 시 이걸 지우고 새로 넣음)
+  let travelResult = null;
+  let travelMode = null;
+  let lastTravelText = '';
   const MODE_ORDER = ['transit', 'walk', 'car'];
   const MODE_LABEL = { transit: '대중교통', walk: '도보', car: '자동차' };
   const MODE_ICON  = { transit: '🚌', walk: '🚶', car: '🚗' };
@@ -1187,7 +1233,6 @@ function makeDayTableRow(){
       : label + ' ' + formatMinutes(seconds);
     scheduleSave();
   }
-  // 출발/도착 장소가 바뀌면 이전 계산 결과는 무효화 (다시 누르면 새로 계산)
   function invalidateTravelResult(){
     if(!travelResult) return;
     travelResult = null;
@@ -1199,7 +1244,6 @@ function makeDayTableRow(){
   dochakTd.addEventListener('input', invalidateTravelResult);
   timeLink.addEventListener('click', async (e)=>{
     e.preventDefault();
-    // 이미 계산된 결과가 있으면: 대중교통 → 도보 → 자동차 순으로 전환만 하고 끝
     if(travelResult){
       const next = nextAvailableMode(travelMode);
       if(!next){
@@ -1243,11 +1287,9 @@ function makeDayTableRow(){
       timeLink.textContent = originalIcon;
     }
   });
-
   tr.querySelector('.row-del').addEventListener('click', ()=>{ sendToTrash(tr, 'dayRow'); });
   return tr;
 }
-
 function addDay(prefillLabel){
   dayCount++;
   const id = dayCount;
@@ -1263,6 +1305,7 @@ function addDay(prefillLabel){
       <table class="doc-table">
         <thead>
           <tr>
+            <th class="chk-cell"></th>
             <th style="width:6%;">구분</th>
             <th style="width:8%;">일시</th>
             <th style="width:10%;">출발장소</th>
@@ -1283,7 +1326,6 @@ function addDay(prefillLabel){
   `;
   const tbody = wrap.querySelector('tbody');
   for(let i=0;i<5;i++) tbody.appendChild(makeDayTableRow());
-
   wrap.querySelector('.day-del').addEventListener('click', ()=>{
     if(confirm('이 일차를 삭제할까요? (휴지통에서 다시 복원할 수 있어요)')){ sendToTrash(wrap, 'dayBlock'); }
   });
@@ -1292,11 +1334,9 @@ function addDay(prefillLabel){
     recalcDayChain(wrap);
     scheduleSave();
   });
-
   document.getElementById('daysContainer').appendChild(wrap);
   return wrap;
 }
-
 function makeBudgetRow(){
   const tr = document.createElement('tr');
   tr.innerHTML = `
@@ -1338,12 +1378,10 @@ function makeBudgetRow(){
   });
   return tr;
 }
-
 function addBudgetRow(){
   document.getElementById('budgetBody').appendChild(makeBudgetRow());
   regroupBudgetRows();
 }
-// 예산 표의 어떤 셀이든 포커스를 벗어나면(편집 종료) 그 즉시 구분별로 재배열
 document.getElementById('budgetBody').addEventListener('blur', (e)=>{
   const cell = e.target;
   if(cell && cell.classList && cell.classList.contains('budget-gubun-cell') && cell._groupRows && cell._groupRows.length > 1){
@@ -1355,7 +1393,6 @@ document.getElementById('budgetBody').addEventListener('blur', (e)=>{
   }
   regroupBudgetRows();
 }, true);
-
 function recalcBudget(){
   let sum = 0, actualSum = 0, prepaid = 0, onsite = 0;
   document.querySelectorAll('#budgetBody tr:not(.budget-group-header)').forEach(tr=>{
@@ -1376,8 +1413,6 @@ function recalcBudget(){
   document.getElementById('onsiteLabel').textContent = onsite.toLocaleString('ko-KR') + '원';
   regroupBudgetRows();
 }
-
-// ---- checklist ----
 const DEFAULT_CHECKLIST = [
   '여권 유효기간 확인 (해외여행 시, 잔여 6개월 이상)',
   '항공권/기차표 예약',
@@ -1392,7 +1427,6 @@ const DEFAULT_CHECKLIST = [
   '충전기·보조배터리 챙기기',
   '현지 날씨 확인 후 옷 준비',
 ];
-
 function makeChecklistItem(text){
   const li = document.createElement('li');
   li.innerHTML = `
@@ -1410,23 +1444,18 @@ function makeChecklistItem(text){
   });
   return li;
 }
-
 function updateChecklistProgress(){
   const items = document.querySelectorAll('#checklist li');
   const done = document.querySelectorAll('#checklist input:checked').length;
   document.getElementById('checklistProgress').textContent = items.length ? `${done} / ${items.length}` : '';
 }
-
 document.getElementById('addChecklistItem').addEventListener('click', ()=>{
   document.getElementById('checklist').appendChild(makeChecklistItem(''));
   updateChecklistProgress();
   scheduleSave();
 });
-
 DEFAULT_CHECKLIST.forEach(t=> document.getElementById('checklist').appendChild(makeChecklistItem(t)));
 updateChecklistProgress();
-
-// ---- date auto-link ----
 const WEEKDAYS_KO = ['일','월','화','수','목','금','토'];
 function fmtDate(d){
   return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}.(${WEEKDAYS_KO[d.getDay()]})`;
@@ -1446,8 +1475,6 @@ function updateDateField(){
 }
 document.getElementById('dateStart').addEventListener('change', updateDateField);
 document.getElementById('dateEnd').addEventListener('change', updateDateField);
-
-// init
 document.getElementById('addDayBtn').addEventListener('click', ()=>{ addDay(); scheduleSave(); });
 document.getElementById('addBudgetRow').addEventListener('click', ()=>{ addBudgetRow(); scheduleSave(); });
 document.getElementById('printBtn').addEventListener('click', ()=> window.print());
@@ -1460,11 +1487,8 @@ document.getElementById('resetBtn').addEventListener('click', async ()=>{
   }
   location.reload();
 });
-
-// ---- idea board (drag & tap-to-insert) ----
 let selectedIdeaChip = null;
 let ideaChipCounter = 0;
-
 function updateIdeaHint(){
   const hint = document.getElementById('ideaSelectHint');
   if(selectedIdeaChip){
@@ -1473,43 +1497,32 @@ function updateIdeaHint(){
     hint.textContent = '';
   }
 }
-
 function deselectIdeaChip(){
   if(selectedIdeaChip){ selectedIdeaChip.classList.remove('selected'); selectedIdeaChip = null; }
   updateIdeaHint();
 }
-
 function googleMapsSearchUrl(text){
   return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(text || '');
 }
-
 function googleMapsDirectionsUrl(origin, destination){
   return 'https://www.google.com/maps/dir/?api=1'
     + '&origin=' + encodeURIComponent(origin || '')
     + '&destination=' + encodeURIComponent(destination || '');
 }
-
-// ---- 이동시간 자동 계산 ----
-// 카카오 경로 조회 API는 브라우저에서 직접 호출할 수 없어(CORS 차단), 같은 사이트의
-// Netlify 서버리스 함수(/.netlify/functions/kakao-travel-time)를 통해 대신 요청해요.
-// 카카오 REST API 키는 이 파일이 아니라 Netlify 환경변수에 안전하게 보관돼요.
 async function kakaoTravelTime(origin, destination){
   const url = '/.netlify/functions/kakao-travel-time'
     + '?origin=' + encodeURIComponent(origin) + '&destination=' + encodeURIComponent(destination);
   const res = await fetch(url);
   const data = await res.json();
   if(!res.ok && !data.error) throw new Error('이동시간 계산 요청 실패: ' + res.status);
-  return data; // { walkSeconds, transitSeconds } 또는 { error }
+  return data;
 }
-
 function formatMinutes(seconds){
   const min = Math.round(seconds / 60);
   if(min < 60) return min + '분';
   const h = Math.floor(min / 60), m = min % 60;
   return h + '시간' + (m ? ' ' + m + '분' : '');
 }
-
-// 여행개요의 장소/숙소 필드 옆 지도 아이콘을 현재 입력값에 맞춰 갱신
 function updateOverviewMapLinks(){
   const placeText = document.getElementById('overviewPlace').textContent.trim();
   const lodgingText = document.getElementById('overviewLodging').textContent.trim();
@@ -1520,16 +1533,10 @@ document.getElementById('overviewPlace').addEventListener('input', updateOvervie
 document.getElementById('overviewLodging').addEventListener('input', updateOverviewMapLinks);
 document.getElementById('overviewPlaceMapLink').addEventListener('click', (e)=>{ if(!document.getElementById('overviewPlace').textContent.trim()) e.preventDefault(); });
 document.getElementById('overviewLodgingMapLink').addEventListener('click', (e)=>{ if(!document.getElementById('overviewLodging').textContent.trim()) e.preventDefault(); });
-
-// ---- 구글지도 저장 목록 가져오기 (CSV / KML / TXT) ----
-// 구글은 개인 계정에 저장된 장소 목록을 실시간으로 읽어오는 공개 API를 제공하지 않아요.
-// 그래서 "자동 동기화"는 불가능하고, 구글 지도 웹(내 장소 → 저장됨 → 목록 내보내기)이나
-// Google Takeout으로 내려받은 파일을 이 버튼으로 불러오는 방식으로 지원합니다.
 function extractPlaceNamesFromCsv(text){
   const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
   const names = [];
   lines.forEach((line, idx)=>{
-    // 헤더로 보이는 첫 줄(Title/Name 등)은 건너뜀
     if(idx === 0 && /title|name|이름|장소/i.test(line)) return;
     const firstCol = line.split(',')[0].replace(/^"|"$/g, '').trim();
     if(firstCol) names.push(firstCol);
@@ -1543,7 +1550,6 @@ function extractPlaceNamesFromKml(text){
   let first = true;
   while((m = re.exec(text)) !== null){
     const val = m[1].trim();
-    // 최상단 <Document><name>파일명</name>은 제외하고 <Placemark> 안의 이름만 사용
     if(first){ first = false; continue; }
     if(val) names.push(val);
   }
@@ -1559,7 +1565,6 @@ document.getElementById('mapsImportInput').addEventListener('change', async (e)=
   let names = [];
   if(/\.kml$/i.test(file.name)) names = extractPlaceNamesFromKml(text);
   else names = extractPlaceNamesFromCsv(text);
-
   if(!names.length){
     alert('파일에서 장소 이름을 찾지 못했어요. CSV라면 첫 번째 열에 장소명이 있는지 확인해주세요.');
   } else {
@@ -1571,7 +1576,6 @@ document.getElementById('mapsImportInput').addEventListener('change', async (e)=
   }
   e.target.value = '';
 });
-
 function makeIdeaChip(text, used){
   ideaChipCounter++;
   const id = 'idea-' + ideaChipCounter;
@@ -1580,13 +1584,11 @@ function makeIdeaChip(text, used){
   chip.draggable = true;
   chip.dataset.id = id;
   chip.innerHTML = `<span class="chip-text">${text}</span><a href="${googleMapsSearchUrl(text)}" target="_blank" rel="noopener" draggable="false" class="map-link" title="구글 지도에서 보기" onclick="event.stopPropagation()">📍</a><span class="chip-del" title="삭제">×</span>`;
-
   chip.addEventListener('dragstart', (e)=>{
     e.dataTransfer.setData('text/plain', text);
     e.dataTransfer.setData('application/x-idea-id', id);
     e.dataTransfer.effectAllowed = 'copy';
   });
-
   chip.addEventListener('click', (e)=>{
     if(e.target.closest('.chip-del')) return;
     e.stopPropagation();
@@ -1606,7 +1608,6 @@ function makeIdeaChip(text, used){
   });
   return chip;
 }
-
 function buildIdeaChips(){
   const raw = document.getElementById('ideaInput').value;
   const lines = raw.split('\n').map(s=>s.trim()).filter(Boolean);
@@ -1615,14 +1616,13 @@ function buildIdeaChips(){
   deselectIdeaChip();
   lines.forEach(text => box.appendChild(makeIdeaChip(text)));
   scheduleSave();
+  refreshWantToGoOverlap();
 }
 document.getElementById('ideaBuildBtn').addEventListener('click', buildIdeaChips);
 document.getElementById('ideaBoard').addEventListener('input', scheduleSave);
-
 function findEditableTarget(el){
   return el && el.closest ? el.closest('[contenteditable="true"]') : null;
 }
-
 function insertTextIntoField(field, text){
   if(!text) return field.textContent;
   const prevText = field.textContent;
@@ -1637,21 +1637,16 @@ function insertTextIntoField(field, text){
   sel.addRange(range);
   return prevText;
 }
-
-// ---- 방금 넣은거 취소 (실행취소) ----
 let insertHistory = [];
-
 function recordInsert(field, prevText, chipId){
   insertHistory.push({ field, prevText, chipId });
   if(insertHistory.length > 30) insertHistory.shift();
   updateUndoBtn();
 }
-
 function updateUndoBtn(){
   const btn = document.getElementById('undoInsertBtn');
   if(btn) btn.disabled = insertHistory.length === 0;
 }
-
 function undoLastInsert(){
   const last = insertHistory.pop();
   updateUndoBtn();
@@ -1664,8 +1659,6 @@ function undoLastInsert(){
   scheduleSave();
 }
 document.getElementById('undoInsertBtn').addEventListener('click', undoLastInsert);
-
-// click / tap to insert (also works on desktop as an alternative to dragging)
 document.addEventListener('click', (e)=>{
   if(!selectedIdeaChip) return;
   if(e.target.closest('.idea-chip') || e.target.closest('.idea-board')) return;
@@ -1679,8 +1672,6 @@ document.addEventListener('click', (e)=>{
     scheduleSave();
   }
 });
-
-// native mouse drag & drop
 document.addEventListener('dragover', (e)=>{
   const target = findEditableTarget(e.target);
   if(target){ e.preventDefault(); target.classList.add('drop-target'); }
@@ -1704,17 +1695,13 @@ document.addEventListener('drop', (e)=>{
   recordInsert(target, prevText, chipId);
   scheduleSave();
 });
-
-// ---- 휴지통 (실수로 삭제한 항목 복원) ----
 let trashItems = [];
 let trashCounter = 0;
-
 function escapeHtml(str){
   const div = document.createElement('div');
   div.textContent = str == null ? '' : str;
   return div.innerHTML;
 }
-
 function trashLabelFor(type, node){
   if(type === 'chip'){
     return node.querySelector('.chip-text')?.textContent.trim() || '(빈 메모)';
@@ -1734,7 +1721,6 @@ function trashLabelFor(type, node){
   }
   return '삭제된 항목';
 }
-
 function sendToTrash(node, type){
   const parent = node.parentNode;
   if(!parent) return;
@@ -1749,8 +1735,8 @@ function sendToTrash(node, type){
   if(type === 'budgetRow') recalcBudget();
   if(type === 'checklistItem') updateChecklistProgress();
   if(type === 'dayRow' || type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); }
+  if(type === 'chip') refreshWantToGoOverlap();
 }
-
 function restoreTrashItem(id){
   const idx = trashItems.findIndex(t=>t.id===id);
   if(idx<0) return;
@@ -1765,16 +1751,15 @@ function restoreTrashItem(id){
   if(item.type === 'budgetRow') recalcBudget();
   if(item.type === 'checklistItem') updateChecklistProgress();
   if(item.type === 'dayRow' || item.type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); }
+  if(item.type === 'chip') refreshWantToGoOverlap();
   scheduleSave();
 }
-
 function purgeTrashItem(id){
   const idx = trashItems.findIndex(t=>t.id===id);
   if(idx<0) return;
   trashItems.splice(idx,1);
   renderTrash();
 }
-
 function renderTrash(){
   const countEl = document.getElementById('trashCount');
   const listEl = document.getElementById('trashList');
@@ -1801,13 +1786,9 @@ function renderTrash(){
   });
 }
 renderTrash();
-
 document.getElementById('trashToggle').addEventListener('click', ()=>{
   document.getElementById('trashPanel').classList.toggle('collapsed');
 });
-
-
-// ---- state serialize / deserialize (for sync) ----
 function collectState(){
   return {
     dest: document.getElementById('destInput').value,
@@ -1850,6 +1831,60 @@ function collectState(){
         };
       }),
     })),
+    days2: Array.from(document.querySelectorAll('#daysContainer2 .day-block')).map(block=>({
+      label: block.querySelector('.day-label').textContent,
+      rows: Array.from(block.querySelectorAll('tbody tr')).map(tr=>({
+        id: tr.dataset.rowId || '',
+        syncDisabled: tr.dataset.syncDisabled === 'true',
+        gubun: tr.querySelector('.gubun-select').value,
+        ilsi: tr.querySelector('.ilsi-cell').textContent,
+        chulbal: tr.querySelector('.chulbal-cell').textContent,
+        dochak: tr.querySelector('.dochak-cell').textContent,
+        dur: tr.querySelector('.dur-input').value,
+        naeyong: tr.querySelector('.naeyong-cell').textContent,
+        budget: tr.querySelector('.budget-input').value,
+        actual: tr.querySelector('.actual-input').value,
+        payment: tr.querySelector('.payment-select').value,
+        bigo: tr.querySelector('.bigo-text').textContent,
+      })),
+    })),
+    days3: Array.from(document.querySelectorAll('#daysContainer3 .day-block')).map(block=>({
+      label: block.querySelector('.day-label').textContent,
+      rows: Array.from(block.querySelectorAll('tbody tr')).map(tr=>({
+        id: tr.dataset.rowId || '',
+        syncDisabled: tr.dataset.syncDisabled === 'true',
+        gubun: tr.querySelector('.gubun-select').value,
+        ilsi: tr.querySelector('.ilsi-cell').textContent,
+        chulbal: tr.querySelector('.chulbal-cell').textContent,
+        dochak: tr.querySelector('.dochak-cell').textContent,
+        dur: tr.querySelector('.dur-input').value,
+        naeyong: tr.querySelector('.naeyong-cell').textContent,
+        budget: tr.querySelector('.budget-input').value,
+        actual: tr.querySelector('.actual-input').value,
+        payment: tr.querySelector('.payment-select').value,
+        bigo: tr.querySelector('.bigo-text').textContent,
+      })),
+    })),
+    budgetRows2: Array.from(document.querySelectorAll('#budgetBody2 tr:not(.budget-group-header)')).map(tr=>{
+      const tds = tr.querySelectorAll('td[contenteditable]');
+      return {
+        gubun: tds[0].textContent, hangmok: tds[1].textContent, naeyong: tds[2].textContent,
+        amt: tr.querySelector('.amt').value, actualAmt: tr.querySelector('.actual-amt-input').value,
+        note: tr.querySelector('.note-select').value,
+        paid: tr.querySelector('.paid-check').checked,
+        syncId: tr.dataset.syncId || '',
+      };
+    }),
+    budgetRows3: Array.from(document.querySelectorAll('#budgetBody3 tr:not(.budget-group-header)')).map(tr=>{
+      const tds = tr.querySelectorAll('td[contenteditable]');
+      return {
+        gubun: tds[0].textContent, hangmok: tds[1].textContent, naeyong: tds[2].textContent,
+        amt: tr.querySelector('.amt').value, actualAmt: tr.querySelector('.actual-amt-input').value,
+        note: tr.querySelector('.note-select').value,
+        paid: tr.querySelector('.paid-check').checked,
+        syncId: tr.dataset.syncId || '',
+      };
+    }),
     attachment1: document.getElementById('attachment1').textContent,
     attachment2: document.getElementById('attachment2').textContent,
     ideaText: document.getElementById('ideaInput').value,
@@ -1859,7 +1894,6 @@ function collectState(){
     })),
   };
 }
-
 function defaultState(){
   const blankRows = () => Array.from({length:5}, ()=>({gubun:'',ilsi:'',chulbal:'',dochak:'',dur:'',naeyong:'',budget:'',actual:'',payment:'',bigo:''}));
   return {
@@ -1873,11 +1907,22 @@ function defaultState(){
       {label:'2일차', rows: blankRows()},
       {label:'3일차', rows: blankRows()},
     ],
+    days2: [
+      {label:'1일차', rows: blankRows()},
+      {label:'2일차', rows: blankRows()},
+      {label:'3일차', rows: blankRows()},
+    ],
+    days3: [
+      {label:'1일차', rows: blankRows()},
+      {label:'2일차', rows: blankRows()},
+      {label:'3일차', rows: blankRows()},
+    ],
+    budgetRows2: [0,0,0].map(()=>({gubun:'',hangmok:'',naeyong:'',amt:'',actualAmt:'',note:'',paid:false})),
+    budgetRows3: [0,0,0].map(()=>({gubun:'',hangmok:'',naeyong:'',amt:'',actualAmt:'',note:'',paid:false})),
     attachment1:'', attachment2:'',
     ideaText:'', ideaChips: [],
   };
 }
-
 function applyState(state){
   document.getElementById('destInput').value = state.dest || '';
   document.getElementById('dateStart').value = state.dateStart || '';
@@ -1889,13 +1934,11 @@ function applyState(state){
   document.getElementById('perPersonCost').textContent = state.perPersonCost || '';
   document.getElementById('attachment1').textContent = state.attachment1 || '';
   document.getElementById('attachment2').textContent = state.attachment2 || '';
-
   document.getElementById('ideaInput').value = state.ideaText || '';
   deselectIdeaChip();
   const ic = document.getElementById('ideaChips');
   ic.innerHTML = '';
   (state.ideaChips||[]).forEach(item=> ic.appendChild(makeIdeaChip(item.text, item.used)));
-
   const cl = document.getElementById('checklist');
   cl.innerHTML = '';
   (state.checklist||[]).forEach(item=>{
@@ -1904,7 +1947,6 @@ function applyState(state){
     cl.appendChild(li);
   });
   updateChecklistProgress();
-
   const bb = document.getElementById('budgetBody');
   bb.innerHTML = '';
   (state.budgetRows||[]).forEach(r=>{
@@ -1917,10 +1959,8 @@ function applyState(state){
     bb.appendChild(tr);
   });
   recalcBudget();
-
   GUBUN_OPTIONS = Array.isArray(state.gubunOptions) ? state.gubunOptions.slice() : DEFAULT_GUBUN_OPTIONS.slice();
   renderGubunManager();
-
   dayCount = 0;
   document.getElementById('daysContainer').innerHTML = '';
   (state.days||[]).forEach(d=>{
@@ -1931,7 +1971,6 @@ function applyState(state){
       const tr = makeDayTableRow();
       if(r.id) tr.dataset.rowId = r.id;
       if(r.syncDisabled) tr.dataset.syncDisabled = 'true';
-      // 예전 저장 데이터(장소 한 칸)와의 호환: chulbal/dochak이 없으면 기존 jangso 값을 도착장소로 옮겨줌
       const dochakVal = (r.dochak !== undefined) ? r.dochak : (r.jangso || '');
       setGubunValue(tr.querySelector('.gubun-select'), r.gubun||'');
       tr.querySelector('.ilsi-cell').textContent = r.ilsi||'';
@@ -1950,9 +1989,87 @@ function applyState(state){
   recalcAllDayBudgets();
   bumpRowIdCounterFromExisting();
   resyncBudgetFromSchedule();
-}
 
-// ---- Firebase sync ----
+  const bb2 = document.getElementById('budgetBody2');
+  bb2.innerHTML = '';
+  (state.budgetRows2||[]).forEach(r=>{
+    const tr = makeBudgetRow2();
+    const tds = tr.querySelectorAll('td[contenteditable]');
+    tds[0].textContent = r.gubun||''; tds[1].textContent = r.hangmok||''; tds[2].textContent = r.naeyong||'';
+    tr.querySelector('.amt').value = r.amt||''; tr.querySelector('.actual-amt-input').value = r.actualAmt||''; tr.querySelector('.note-select').value = r.note||'';
+    if(r.paid){ tr.querySelector('.paid-check').checked = true; tr.classList.add('paid-done'); }
+    if(r.syncId){ tr.dataset.syncId = r.syncId; applySyncedLockUI2(tr, true); }
+    bb2.appendChild(tr);
+  });
+  recalcBudget2();
+  dayCount2 = 0;
+  document.getElementById('daysContainer2').innerHTML = '';
+  (state.days2||[]).forEach(d=>{
+    const block = addDay2(d.label);
+    const tbody = block.querySelector('tbody');
+    tbody.innerHTML = '';
+    (d.rows||[]).forEach(r=>{
+      const tr = makeDayTableRow2();
+      if(r.id) tr.dataset.rowId = r.id;
+      if(r.syncDisabled) tr.dataset.syncDisabled = 'true';
+      setGubunValue(tr.querySelector('.gubun-select'), r.gubun||'');
+      tr.querySelector('.ilsi-cell').textContent = r.ilsi||'';
+      if((r.ilsi||'').trim()) tr.querySelector('.ilsi-cell').dataset.timeSource = 'manual';
+      tr.querySelector('.chulbal-cell').textContent = r.chulbal||'';
+      tr.querySelector('.dochak-cell').textContent = r.dochak||'';
+      tr.querySelector('.dur-input').value = r.dur||'';
+      tr.querySelector('.naeyong-cell').textContent = r.naeyong||'';
+      tr.querySelector('.budget-input').value = r.budget||'';
+      tr.querySelector('.actual-input').value = r.actual||'';
+      tr.querySelector('.payment-select').value = r.payment||'';
+      tr.querySelector('.bigo-text').textContent = r.bigo||'';
+      tbody.appendChild(tr);
+    });
+  });
+  recalcAllDayBudgets2();
+  bumpRowIdCounterFromExisting2();
+  resyncBudgetFromSchedule2();
+
+  const bb3 = document.getElementById('budgetBody3');
+  bb3.innerHTML = '';
+  (state.budgetRows3||[]).forEach(r=>{
+    const tr = makeBudgetRow3();
+    const tds = tr.querySelectorAll('td[contenteditable]');
+    tds[0].textContent = r.gubun||''; tds[1].textContent = r.hangmok||''; tds[2].textContent = r.naeyong||'';
+    tr.querySelector('.amt').value = r.amt||''; tr.querySelector('.actual-amt-input').value = r.actualAmt||''; tr.querySelector('.note-select').value = r.note||'';
+    if(r.paid){ tr.querySelector('.paid-check').checked = true; tr.classList.add('paid-done'); }
+    if(r.syncId){ tr.dataset.syncId = r.syncId; applySyncedLockUI3(tr, true); }
+    bb3.appendChild(tr);
+  });
+  recalcBudget3();
+  dayCount3 = 0;
+  document.getElementById('daysContainer3').innerHTML = '';
+  (state.days3||[]).forEach(d=>{
+    const block = addDay3(d.label);
+    const tbody = block.querySelector('tbody');
+    tbody.innerHTML = '';
+    (d.rows||[]).forEach(r=>{
+      const tr = makeDayTableRow3();
+      if(r.id) tr.dataset.rowId = r.id;
+      if(r.syncDisabled) tr.dataset.syncDisabled = 'true';
+      setGubunValue(tr.querySelector('.gubun-select'), r.gubun||'');
+      tr.querySelector('.ilsi-cell').textContent = r.ilsi||'';
+      if((r.ilsi||'').trim()) tr.querySelector('.ilsi-cell').dataset.timeSource = 'manual';
+      tr.querySelector('.chulbal-cell').textContent = r.chulbal||'';
+      tr.querySelector('.dochak-cell').textContent = r.dochak||'';
+      tr.querySelector('.dur-input').value = r.dur||'';
+      tr.querySelector('.naeyong-cell').textContent = r.naeyong||'';
+      tr.querySelector('.budget-input').value = r.budget||'';
+      tr.querySelector('.actual-input').value = r.actual||'';
+      tr.querySelector('.payment-select').value = r.payment||'';
+      tr.querySelector('.bigo-text').textContent = r.bigo||'';
+      tbody.appendChild(tr);
+    });
+  });
+  recalcAllDayBudgets3();
+  bumpRowIdCounterFromExisting3();
+  resyncBudgetFromSchedule3();
+}
 const firebaseConfig = {
   apiKey: "AIzaSyD5VyaPCt7keqrZvHe6-LyzdavXZUNan7I",
   authDomain: "delop-9fb63.firebaseapp.com",
@@ -1968,24 +2085,20 @@ try{
 }catch(e){
   console.error('Firebase 초기화 실패 (오프라인으로 계속 사용 가능):', e);
 }
-
 let syncCode = localStorage.getItem('travel_sync_code');
 let docRef = null;
 let suppressNextSave = false;
 let saveTimer = null;
-
 function setStatus(text, cls){
   const el = document.getElementById('syncStatus');
   el.textContent = text;
   el.className = cls || '';
 }
-
 function scheduleSave(){
   if(!docRef) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveState, 500);
 }
-
 async function saveState(){
   if(!docRef) return;
   suppressNextSave = true;
@@ -1997,7 +2110,6 @@ async function saveState(){
     setStatus('저장 실패 (연결 확인)', 'err');
   }
 }
-
 function startSync(){
   if(!db){ setStatus('동기화 연결 불가 (오프라인)', 'err'); return; }
   document.getElementById('syncCodeBadge').textContent = `코드: ${syncCode} (변경)`;
@@ -2016,7 +2128,6 @@ function startSync(){
     setStatus('연결 실패 (규칙/인터넷 확인)', 'err');
   });
 }
-
 document.getElementById('syncGateForm').addEventListener('submit', e=>{
   e.preventDefault();
   const val = document.getElementById('syncCodeInput').value.trim();
@@ -2030,14 +2141,10 @@ document.getElementById('syncCodeBadge').addEventListener('click', ()=>{
   document.getElementById('syncCodeInput').value = syncCode || '';
   document.getElementById('syncGate').style.display = 'flex';
 });
-
-// any edit inside the document schedules a sync save
 document.getElementById('paper').addEventListener('input', scheduleSave);
 document.getElementById('paper').addEventListener('change', scheduleSave);
-// 여행계획표 ↔ 소요예산 자동 연동 (구분/내용/예산/일차명이 바뀔 때마다 다시 계산)
 document.getElementById('paper').addEventListener('input', resyncBudgetFromSchedule);
 document.getElementById('paper').addEventListener('change', resyncBudgetFromSchedule);
-
 for(let i=0;i<3;i++) addBudgetRow();
 renderGubunManager();
 addDay('1일차');
@@ -2046,8 +2153,857 @@ addDay('3일차');
 recalcBudget();
 recalcAllDayBudgets();
 resyncBudgetFromSchedule();
-updateOverviewMapLinks();
+planEngines[1] = { addDay: addDay, makeDayTableRow: makeDayTableRow, recalcAllDayBudgets: recalcAllDayBudgets, resyncBudgetFromSchedule: resyncBudgetFromSchedule };
 
+// ===== 여행계획표2 + 소요예산2 엔진 =====
+let dayCount2 = 0;
+let scheduleRowIdCounter2 = 0;
+function bumpRowIdCounterFromExisting2(){
+  let max = 0;
+  document.getElementById('daysContainer2').querySelectorAll('[data-row-id]').forEach(el=>{
+    const m = /^p2r(\d+)$/.exec(el.dataset.rowId||'');
+    if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  scheduleRowIdCounter2 = Math.max(scheduleRowIdCounter2, max);
+}
+function applySyncedLockUI2(tr, locked){
+  const tds = tr.querySelectorAll('td[contenteditable]');
+  if(tds[0]) tds[0].contentEditable = locked ? 'false' : 'true';
+  if(tds[1]) tds[1].contentEditable = locked ? 'false' : 'true';
+  const amt = tr.querySelector('.amt');
+  if(amt) amt.readOnly = !!locked;
+  const actualAmt = tr.querySelector('.actual-amt-input');
+  if(actualAmt) actualAmt.readOnly = !!locked;
+  const noteSelect = tr.querySelector('.note-select');
+  if(noteSelect) noteSelect.disabled = !!locked;
+  tr.classList.toggle('synced-row', !!locked);
+  if(locked){
+    tr.querySelector('.row-del').title = '🔗 여행계획표2와 자동연동됨 — 클릭하면 연동 해제';
+  } else {
+    tr.querySelector('.row-del').title = '행 삭제';
+  }
+}
+function unlinkSyncedBudgetRow2(tr){
+  if(!confirm('여행계획표2와의 자동연동을 해제할까요? 해제하면 이 항목은 더 이상 자동으로 갱신되지 않고, 직접 수정/삭제할 수 있어요.')) return;
+  const srcRow = document.querySelector(`#daysContainer2 tr[data-row-id="${tr.dataset.syncId}"]`);
+  if(srcRow) srcRow.dataset.syncDisabled = 'true';
+  delete tr.dataset.syncId;
+  applySyncedLockUI2(tr, false);
+  scheduleSave();
+}
+function resyncBudgetFromSchedule2(){
+  const activeIds = new Set();
+  document.querySelectorAll('#daysContainer2 .day-block').forEach(block=>{
+    const dayLabel = block.querySelector('.day-label').textContent.trim() || '미지정';
+    block.querySelectorAll('tbody tr').forEach(tr=>{
+      if(tr.dataset.syncDisabled === 'true') return;
+      const budgetInput = tr.querySelector('.budget-input');
+      const actualInput = tr.querySelector('.actual-input');
+      const budgetNum = Number((budgetInput.value||'0').replace(/[^0-9]/g,''));
+      const actualNum = Number((actualInput.value||'0').replace(/[^0-9]/g,''));
+      if(budgetNum <= 0 && actualNum <= 0) return;
+      const rowId = tr.dataset.rowId;
+      if(!rowId) return;
+      activeIds.add(rowId);
+      const gubun = tr.querySelector('.gubun-select').value;
+      const content = tr.querySelector('.naeyong-cell').textContent.trim();
+      const budgetCategory = budgetCategoryFor(gubun);
+      const itemName = content ? `${dayLabel} ${content}` : `${dayLabel} ${gubun || '일정'}`;
+      let row = document.querySelector(`#budgetBody2 tr[data-sync-id="${rowId}"]`);
+      if(!row){
+        row = makeBudgetRow2();
+        row.dataset.syncId = rowId;
+        document.getElementById('budgetBody2').appendChild(row);
+        applySyncedLockUI2(row, true);
+      }
+      const tds = row.querySelectorAll('td[contenteditable]');
+      if(tds[0].textContent !== budgetCategory) tds[0].textContent = budgetCategory;
+      if(tds[1].textContent !== itemName) tds[1].textContent = itemName;
+      const amt = row.querySelector('.amt');
+      const newAmt = budgetNum.toLocaleString('ko-KR');
+      if(amt.value !== newAmt) amt.value = newAmt;
+      const actualAmt = row.querySelector('.actual-amt-input');
+      const newActual = actualNum.toLocaleString('ko-KR');
+      if(actualAmt.value !== newActual) actualAmt.value = newActual;
+      const paymentVal = tr.querySelector('.payment-select').value;
+      const noteSelect = row.querySelector('.note-select');
+      if(noteSelect.value !== paymentVal) noteSelect.value = paymentVal;
+    });
+  });
+  document.querySelectorAll(`#budgetBody2 tr[data-sync-id]`).forEach(row=>{
+    if(!activeIds.has(row.dataset.syncId)) row.remove();
+  });
+  recalcBudget2();
+}
+function regroupBudgetRows2(){
+  const tbody = document.getElementById('budgetBody2');
+  if(!tbody) return;
+  if(tbody.contains(document.activeElement)) return;
+  tbody.querySelectorAll('tr.budget-group-header').forEach(h=> h.remove());
+  const rows = Array.from(tbody.querySelectorAll('tr:not(.budget-group-header)'));
+  rows.forEach(tr=>{
+    const cell = tr.querySelectorAll('td[contenteditable]')[0];
+    if(cell){ cell.style.display = ''; cell.removeAttribute('rowspan'); }
+  });
+  const groups = new Map();
+  rows.forEach(tr=>{
+    const cat = tr.querySelectorAll('td[contenteditable]')[0].textContent.trim() || '__none__';
+    if(!groups.has(cat)) groups.set(cat, []);
+    groups.get(cat).push(tr);
+  });
+  const catKeys = Array.from(groups.keys());
+  catKeys.sort((a,b)=>{
+    if(a === '__none__') return 1;
+    if(b === '__none__') return -1;
+    const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+    if(ia === -1 && ib === -1) return a.localeCompare(b, 'ko');
+    if(ia === -1) return 1;
+    if(ib === -1) return -1;
+    return ia - ib;
+  });
+  catKeys.forEach(cat=>{
+    const rowsInCat = groups.get(cat);
+    let sumBudget = 0, sumActual = 0;
+    rowsInCat.forEach(tr=>{
+      sumBudget += Number((tr.querySelector('.amt').value||'0').replace(/[^0-9]/g,''));
+      sumActual += Number((tr.querySelector('.actual-amt-input').value||'0').replace(/[^0-9]/g,''));
+    });
+    if(cat !== '__none__' && rowsInCat.length > 1){
+      const headCell = rowsInCat[0].querySelectorAll('td[contenteditable]')[0];
+      headCell.rowSpan = rowsInCat.length;
+      headCell._groupRows = rowsInCat;
+      for(let i=1;i<rowsInCat.length;i++){
+        rowsInCat[i].querySelectorAll('td[contenteditable]')[0].style.display = 'none';
+      }
+    }
+    rowsInCat.forEach(tr=> tbody.appendChild(tr));
+    const label = cat === '__none__' ? '미분류' : cat;
+    const footer = document.createElement('tr');
+    footer.className = 'budget-group-header';
+    const diff = sumActual - sumBudget;
+    let diffText = '', diffClass = 'even';
+    if(sumBudget <= 0 && sumActual <= 0){
+      diffText = '';
+    } else if(diff > 0){
+      diffText = `▲ 예산 초과 ${diff.toLocaleString('ko-KR')}원`; diffClass = 'over';
+    } else if(diff < 0){
+      diffText = `▼ 예산보다 절약 ${Math.abs(diff).toLocaleString('ko-KR')}원`; diffClass = 'under';
+    } else {
+      diffText = '예산과 동일';
+    }
+    footer.innerHTML = `<td colspan="3">${escapeHtmlSafe(label)} 소계</td><td class="num">${sumBudget.toLocaleString('ko-KR')}</td><td class="num">${sumActual.toLocaleString('ko-KR')}</td><td class="diff-cell ${diffClass}">${diffText}</td><td class="rm-cell"></td>`;
+    tbody.appendChild(footer);
+  });
+}
+function makeDayTableRow2(){
+  const tr = document.createElement('tr');
+  tr.dataset.rowId = 'p2r' + (++scheduleRowIdCounter2);
+  tr.innerHTML = `
+    <td class="chk-cell"><input type="checkbox" class="row-select-chk" title="선택(다른 여행계획표로 복사)"></td>
+    <td class="gubun-cell"><select class="gubun-select">${gubunOptionsHTML()}</select></td>
+    <td class="ilsi-cell" contenteditable="true" data-ph="예: 09:00"></td>
+    <td class="chulbal-cell" contenteditable="true" data-ph="출발"></td>
+    <td class="dochak-cell" contenteditable="true" data-ph="도착"></td>
+    <td class="dur-cell">
+      <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
+      <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)">🕒</a>
+    </td>
+    <td class="naeyong-cell" contenteditable="true" data-ph="내용 / 세부 일정" style="text-align:left;"></td>
+    <td class="budget-cell num"><input class="amt budget-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="actual-cell num"><input class="amt actual-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="bigo-cell">
+      <select class="payment-select" title="결제 방식">
+        <option value="">결제선택</option>
+        <option value="사전결제">사전결제</option>
+        <option value="현장결제">현장결제</option>
+      </select>
+      <span class="bigo-text" contenteditable="true" data-ph="비고"></span>
+    </td>
+    <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
+  `;
+  const ilsiTd = tr.querySelector('.ilsi-cell'), chulbalTd = tr.querySelector('.chulbal-cell'), dochakTd = tr.querySelector('.dochak-cell');
+  const timeLink = tr.querySelector('.time-link');
+  const durInput = tr.querySelector('.dur-input');
+  const budgetInput = tr.querySelector('.budget-input');
+  const actualInput = tr.querySelector('.actual-input');
+  ilsiTd.addEventListener('input', ()=>{
+    if(ilsiTd.textContent.trim() === ''){ delete ilsiTd.dataset.timeSource; }
+    else{ ilsiTd.dataset.timeSource = 'manual'; }
+    recalcDayChain(tr.closest('.day-block'));
+  });
+  durInput.addEventListener('input', ()=>{ recalcDayChain(tr.closest('.day-block')); });
+  budgetInput.addEventListener('input', ()=>{
+    let v = budgetInput.value.replace(/[^0-9]/g,'');
+    budgetInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcAllDayBudgets2();
+  });
+  actualInput.addEventListener('input', ()=>{
+    let v = actualInput.value.replace(/[^0-9]/g,'');
+    actualInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
+  });
+  let travelResult = null;
+  let travelMode = null;
+  let lastTravelText = '';
+  const MODE_ORDER = ['transit', 'walk', 'car'];
+  const MODE_LABEL = { transit: '대중교통', walk: '도보', car: '자동차' };
+  const MODE_ICON  = { transit: '🚌', walk: '🚶', car: '🚗' };
+  function secondsFor(mode){
+    if(mode === 'transit') return travelResult.transitSeconds;
+    if(mode === 'walk') return travelResult.walkSeconds;
+    return travelResult.carSeconds;
+  }
+  function nextAvailableMode(fromMode){
+    const startIdx = MODE_ORDER.indexOf(fromMode);
+    for(let i=1;i<=MODE_ORDER.length;i++){
+      const candidate = MODE_ORDER[(startIdx + i) % MODE_ORDER.length];
+      if(secondsFor(candidate) != null) return candidate;
+    }
+    return null;
+  }
+  function applyTravelMode(mode){
+    const seconds = secondsFor(mode);
+    const label = MODE_LABEL[mode];
+    const newText = '(' + label + ' ' + formatMinutes(seconds) + ')';
+    let current = ilsiTd.textContent;
+    if(lastTravelText){
+      current = current.split(' / ' + lastTravelText).join('');
+      current = current.split(lastTravelText + ' / ').join('');
+      current = current.split(lastTravelText).join('');
+    }
+    const merged = current.trim() ? (current.trim() + ' / ' + newText) : newText;
+    ilsiTd.textContent = merged;
+    lastTravelText = newText;
+    travelMode = mode;
+    const otherMode = nextAvailableMode(mode);
+    timeLink.textContent = MODE_ICON[mode];
+    timeLink.title = otherMode
+      ? label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + MODE_LABEL[otherMode] + '로 전환'
+      : label + ' ' + formatMinutes(seconds);
+    scheduleSave();
+  }
+  function invalidateTravelResult(){
+    if(!travelResult) return;
+    travelResult = null;
+    travelMode = null;
+    timeLink.textContent = '🕒';
+    timeLink.title = '클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)';
+  }
+  chulbalTd.addEventListener('input', invalidateTravelResult);
+  dochakTd.addEventListener('input', invalidateTravelResult);
+  timeLink.addEventListener('click', async (e)=>{
+    e.preventDefault();
+    if(travelResult){
+      const next = nextAvailableMode(travelMode);
+      if(!next){ alert('이 구간은 다른 이동수단 경로 정보가 없어요.'); return; }
+      applyTravelMode(next);
+      return;
+    }
+    const origin = chulbalTd.textContent.trim();
+    const destination = dochakTd.textContent.trim();
+    if(!origin || !destination){ alert('출발장소와 도착장소를 먼저 입력해주세요.'); return; }
+    const originalIcon = timeLink.textContent;
+    timeLink.textContent = '⏳';
+    try{
+      const result = await kakaoTravelTime(origin, destination);
+      if(result.error === 'not-found'){
+        alert('출발지 또는 도착지를 카카오맵에서 찾지 못했어요. 장소 이름을 조금 더 정확히 입력해보세요 (예: "OO역", "OO공항", "OO시청").');
+        timeLink.textContent = originalIcon;
+        return;
+      }
+      if(result.error){
+        alert('이동시간 계산에 실패했어요: ' + result.error);
+        timeLink.textContent = originalIcon;
+        return;
+      }
+      if(result.transitSeconds == null && result.walkSeconds == null && result.carSeconds == null){
+        alert('이동시간을 계산하지 못했어요. 거리가 너무 멀거나 경로가 없는 구간일 수 있어요.');
+        timeLink.textContent = originalIcon;
+        return;
+      }
+      travelResult = result;
+      const firstMode = result.transitSeconds != null ? 'transit' : (result.walkSeconds != null ? 'walk' : 'car');
+      applyTravelMode(firstMode);
+    } catch(err){
+      console.error(err);
+      alert('이동시간 계산 중 문제가 발생했어요. 인터넷 연결을 확인하거나 잠시 후 다시 시도해주세요.');
+      timeLink.textContent = originalIcon;
+    }
+  });
+  tr.querySelector('.row-del').addEventListener('click', ()=>{
+    if(confirm('이 행을 삭제할까요?')){ tr.remove(); recalcAllDayBudgets2(); resyncBudgetFromSchedule2(); scheduleSave(); }
+  });
+  return tr;
+}
+function addDay2(prefillLabel){
+  dayCount2++;
+  const id = dayCount2;
+  const wrap = document.createElement('div');
+  wrap.className = 'day-block';
+  wrap.dataset.day = id;
+  wrap.innerHTML = `
+    <div class="day-head">
+      <h2><span class="box"></span>여행 (<span class="day-label" contenteditable="true" data-ph="1일차">${prefillLabel||''}</span>)</h2>
+      <button class="day-del">일차 삭제</button>
+    </div>
+    <div class="tbl-scroll">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th class="chk-cell"></th>
+            <th style="width:6%;">구분</th>
+            <th style="width:8%;">일시</th>
+            <th style="width:10%;">출발장소</th>
+            <th style="width:10%;">도착장소</th>
+            <th style="width:12%;">소요시간</th>
+            <th>내용</th>
+            <th style="width:9%;">예산(원)</th>
+            <th style="width:9%;">실금액(원)</th>
+            <th style="width:9%;">비고</th>
+            <th class="rm-cell"></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button class="add-row-btn">+ 일정 행 추가</button>
+    <div class="day-budget-total">이 날짜 예산 합계 : <b>0원</b></div>
+  `;
+  const tbody = wrap.querySelector('tbody');
+  for(let i=0;i<5;i++) tbody.appendChild(makeDayTableRow2());
+  wrap.querySelector('.day-del').addEventListener('click', ()=>{
+    if(confirm('이 일차를 삭제할까요?')){ wrap.remove(); recalcAllDayBudgets2(); resyncBudgetFromSchedule2(); scheduleSave(); }
+  });
+  wrap.querySelector('.add-row-btn').addEventListener('click', ()=>{
+    tbody.appendChild(makeDayTableRow2());
+    recalcDayChain(wrap);
+    scheduleSave();
+  });
+  document.getElementById('daysContainer2').appendChild(wrap);
+  return wrap;
+}
+function makeBudgetRow2(){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
+    <td contenteditable="true" data-ph="항목"></td>
+    <td contenteditable="true" data-ph="내용" style="text-align:left;"></td>
+    <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="note-cell">
+      <select class="note-select">
+        <option value="">선택</option>
+        <option value="사전결제">사전결제</option>
+        <option value="현장결제">현장결제</option>
+      </select>
+      <label class="paid-check-label"><input type="checkbox" class="paid-check"> 완료</label>
+    </td>
+    <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
+  `;
+  const amt = tr.querySelector('.amt');
+  amt.addEventListener('input', ()=>{
+    let v = amt.value.replace(/[^0-9]/g,'');
+    amt.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcBudget2();
+  });
+  const actualAmt = tr.querySelector('.actual-amt-input');
+  actualAmt.addEventListener('input', ()=>{
+    let v = actualAmt.value.replace(/[^0-9]/g,'');
+    actualAmt.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcBudget2();
+  });
+  tr.querySelector('.note-select').addEventListener('change', recalcBudget2);
+  tr.querySelector('.paid-check').addEventListener('change', (e)=>{
+    tr.classList.toggle('paid-done', e.target.checked);
+    scheduleSave();
+  });
+  tr.querySelector('.row-del').addEventListener('click', ()=>{
+    if(tr.dataset.syncId){ unlinkSyncedBudgetRow2(tr); }
+    else{ if(confirm('이 예산 행을 삭제할까요?')){ tr.remove(); recalcBudget2(); scheduleSave(); } }
+  });
+  return tr;
+}
+function addBudgetRow2(){
+  document.getElementById('budgetBody2').appendChild(makeBudgetRow2());
+  regroupBudgetRows2();
+}
+document.getElementById('budgetBody2').addEventListener('blur', (e)=>{
+  const cell = e.target;
+  if(cell && cell.classList && cell.classList.contains('budget-gubun-cell') && cell._groupRows && cell._groupRows.length > 1){
+    const newVal = cell.textContent;
+    cell._groupRows.forEach(memberTr=>{
+      const memberCell = memberTr.querySelectorAll('td[contenteditable]')[0];
+      if(memberCell !== cell) memberCell.textContent = newVal;
+    });
+  }
+  regroupBudgetRows2();
+}, true);
+function recalcBudget2(){
+  let sum = 0, actualSum = 0, prepaid = 0, onsite = 0;
+  document.querySelectorAll('#budgetBody2 tr:not(.budget-group-header)').forEach(tr=>{
+    const inp = tr.querySelector('.amt');
+    const n = Number((inp.value||'0').replace(/[^0-9]/g,''));
+    sum += n;
+    const actualInp = tr.querySelector('.actual-amt-input');
+    actualSum += Number((actualInp.value||'0').replace(/[^0-9]/g,''));
+    const note = tr.querySelector('.note-select').value;
+    if(note === '사전결제') prepaid += n;
+    else if(note === '현장결제') onsite += n;
+  });
+  document.getElementById('budgetTotal2').textContent = sum.toLocaleString('ko-KR');
+  document.getElementById('budgetActualTotal2').textContent = actualSum.toLocaleString('ko-KR');
+  document.getElementById('totalBudgetLabel2').textContent = sum.toLocaleString('ko-KR') + '원';
+  document.getElementById('totalActualLabel2').textContent = actualSum.toLocaleString('ko-KR') + '원';
+  document.getElementById('prepaidLabel2').textContent = prepaid.toLocaleString('ko-KR') + '원';
+  document.getElementById('onsiteLabel2').textContent = onsite.toLocaleString('ko-KR') + '원';
+  regroupBudgetRows2();
+}
+function recalcAllDayBudgets2(){
+  let grand = 0;
+  document.querySelectorAll('#daysContainer2 .day-block').forEach(block=>{ grand += updateDayBudgetTotal(block); });
+  const grandEl = document.querySelector('#grandBudgetTotal2 b');
+  if(grandEl) grandEl.textContent = grand.toLocaleString('ko-KR') + '원';
+}
+document.getElementById('addDayBtn2').addEventListener('click', ()=>{ addDay2(); scheduleSave(); });
+document.getElementById('addBudgetRow2').addEventListener('click', ()=>{ addBudgetRow2(); scheduleSave(); });
+for(let i=0;i<3;i++) addBudgetRow2();
+addDay2('1일차');
+addDay2('2일차');
+addDay2('3일차');
+recalcBudget2();
+recalcAllDayBudgets2();
+resyncBudgetFromSchedule2();
+planEngines[2] = {
+  addDay: addDay2,
+  makeDayTableRow: makeDayTableRow2,
+  recalcAllDayBudgets: recalcAllDayBudgets2,
+  resyncBudgetFromSchedule: resyncBudgetFromSchedule2,
+};
+
+// ===== 여행계획표3 + 소요예산3 엔진 =====
+let dayCount3 = 0;
+let scheduleRowIdCounter3 = 0;
+function bumpRowIdCounterFromExisting3(){
+  let max = 0;
+  document.getElementById('daysContainer3').querySelectorAll('[data-row-id]').forEach(el=>{
+    const m = /^p3r(\d+)$/.exec(el.dataset.rowId||'');
+    if(m) max = Math.max(max, parseInt(m[1],10));
+  });
+  scheduleRowIdCounter3 = Math.max(scheduleRowIdCounter3, max);
+}
+function applySyncedLockUI3(tr, locked){
+  const tds = tr.querySelectorAll('td[contenteditable]');
+  if(tds[0]) tds[0].contentEditable = locked ? 'false' : 'true';
+  if(tds[1]) tds[1].contentEditable = locked ? 'false' : 'true';
+  const amt = tr.querySelector('.amt');
+  if(amt) amt.readOnly = !!locked;
+  const actualAmt = tr.querySelector('.actual-amt-input');
+  if(actualAmt) actualAmt.readOnly = !!locked;
+  const noteSelect = tr.querySelector('.note-select');
+  if(noteSelect) noteSelect.disabled = !!locked;
+  tr.classList.toggle('synced-row', !!locked);
+  if(locked){
+    tr.querySelector('.row-del').title = '🔗 여행계획표3와 자동연동됨 — 클릭하면 연동 해제';
+  } else {
+    tr.querySelector('.row-del').title = '행 삭제';
+  }
+}
+function unlinkSyncedBudgetRow3(tr){
+  if(!confirm('여행계획표3와의 자동연동을 해제할까요? 해제하면 이 항목은 더 이상 자동으로 갱신되지 않고, 직접 수정/삭제할 수 있어요.')) return;
+  const srcRow = document.querySelector(`#daysContainer3 tr[data-row-id="${tr.dataset.syncId}"]`);
+  if(srcRow) srcRow.dataset.syncDisabled = 'true';
+  delete tr.dataset.syncId;
+  applySyncedLockUI3(tr, false);
+  scheduleSave();
+}
+function resyncBudgetFromSchedule3(){
+  const activeIds = new Set();
+  document.querySelectorAll('#daysContainer3 .day-block').forEach(block=>{
+    const dayLabel = block.querySelector('.day-label').textContent.trim() || '미지정';
+    block.querySelectorAll('tbody tr').forEach(tr=>{
+      if(tr.dataset.syncDisabled === 'true') return;
+      const budgetInput = tr.querySelector('.budget-input');
+      const actualInput = tr.querySelector('.actual-input');
+      const budgetNum = Number((budgetInput.value||'0').replace(/[^0-9]/g,''));
+      const actualNum = Number((actualInput.value||'0').replace(/[^0-9]/g,''));
+      if(budgetNum <= 0 && actualNum <= 0) return;
+      const rowId = tr.dataset.rowId;
+      if(!rowId) return;
+      activeIds.add(rowId);
+      const gubun = tr.querySelector('.gubun-select').value;
+      const content = tr.querySelector('.naeyong-cell').textContent.trim();
+      const budgetCategory = budgetCategoryFor(gubun);
+      const itemName = content ? `${dayLabel} ${content}` : `${dayLabel} ${gubun || '일정'}`;
+      let row = document.querySelector(`#budgetBody3 tr[data-sync-id="${rowId}"]`);
+      if(!row){
+        row = makeBudgetRow3();
+        row.dataset.syncId = rowId;
+        document.getElementById('budgetBody3').appendChild(row);
+        applySyncedLockUI3(row, true);
+      }
+      const tds = row.querySelectorAll('td[contenteditable]');
+      if(tds[0].textContent !== budgetCategory) tds[0].textContent = budgetCategory;
+      if(tds[1].textContent !== itemName) tds[1].textContent = itemName;
+      const amt = row.querySelector('.amt');
+      const newAmt = budgetNum.toLocaleString('ko-KR');
+      if(amt.value !== newAmt) amt.value = newAmt;
+      const actualAmt = row.querySelector('.actual-amt-input');
+      const newActual = actualNum.toLocaleString('ko-KR');
+      if(actualAmt.value !== newActual) actualAmt.value = newActual;
+      const paymentVal = tr.querySelector('.payment-select').value;
+      const noteSelect = row.querySelector('.note-select');
+      if(noteSelect.value !== paymentVal) noteSelect.value = paymentVal;
+    });
+  });
+  document.querySelectorAll(`#budgetBody3 tr[data-sync-id]`).forEach(row=>{
+    if(!activeIds.has(row.dataset.syncId)) row.remove();
+  });
+  recalcBudget3();
+}
+function regroupBudgetRows3(){
+  const tbody = document.getElementById('budgetBody3');
+  if(!tbody) return;
+  if(tbody.contains(document.activeElement)) return;
+  tbody.querySelectorAll('tr.budget-group-header').forEach(h=> h.remove());
+  const rows = Array.from(tbody.querySelectorAll('tr:not(.budget-group-header)'));
+  rows.forEach(tr=>{
+    const cell = tr.querySelectorAll('td[contenteditable]')[0];
+    if(cell){ cell.style.display = ''; cell.removeAttribute('rowspan'); }
+  });
+  const groups = new Map();
+  rows.forEach(tr=>{
+    const cat = tr.querySelectorAll('td[contenteditable]')[0].textContent.trim() || '__none__';
+    if(!groups.has(cat)) groups.set(cat, []);
+    groups.get(cat).push(tr);
+  });
+  const catKeys = Array.from(groups.keys());
+  catKeys.sort((a,b)=>{
+    if(a === '__none__') return 1;
+    if(b === '__none__') return -1;
+    const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+    if(ia === -1 && ib === -1) return a.localeCompare(b, 'ko');
+    if(ia === -1) return 1;
+    if(ib === -1) return -1;
+    return ia - ib;
+  });
+  catKeys.forEach(cat=>{
+    const rowsInCat = groups.get(cat);
+    let sumBudget = 0, sumActual = 0;
+    rowsInCat.forEach(tr=>{
+      sumBudget += Number((tr.querySelector('.amt').value||'0').replace(/[^0-9]/g,''));
+      sumActual += Number((tr.querySelector('.actual-amt-input').value||'0').replace(/[^0-9]/g,''));
+    });
+    if(cat !== '__none__' && rowsInCat.length > 1){
+      const headCell = rowsInCat[0].querySelectorAll('td[contenteditable]')[0];
+      headCell.rowSpan = rowsInCat.length;
+      headCell._groupRows = rowsInCat;
+      for(let i=1;i<rowsInCat.length;i++){
+        rowsInCat[i].querySelectorAll('td[contenteditable]')[0].style.display = 'none';
+      }
+    }
+    rowsInCat.forEach(tr=> tbody.appendChild(tr));
+    const label = cat === '__none__' ? '미분류' : cat;
+    const footer = document.createElement('tr');
+    footer.className = 'budget-group-header';
+    const diff = sumActual - sumBudget;
+    let diffText = '', diffClass = 'even';
+    if(sumBudget <= 0 && sumActual <= 0){
+      diffText = '';
+    } else if(diff > 0){
+      diffText = `▲ 예산 초과 ${diff.toLocaleString('ko-KR')}원`; diffClass = 'over';
+    } else if(diff < 0){
+      diffText = `▼ 예산보다 절약 ${Math.abs(diff).toLocaleString('ko-KR')}원`; diffClass = 'under';
+    } else {
+      diffText = '예산과 동일';
+    }
+    footer.innerHTML = `<td colspan="3">${escapeHtmlSafe(label)} 소계</td><td class="num">${sumBudget.toLocaleString('ko-KR')}</td><td class="num">${sumActual.toLocaleString('ko-KR')}</td><td class="diff-cell ${diffClass}">${diffText}</td><td class="rm-cell"></td>`;
+    tbody.appendChild(footer);
+  });
+}
+function makeDayTableRow3(){
+  const tr = document.createElement('tr');
+  tr.dataset.rowId = 'p3r' + (++scheduleRowIdCounter3);
+  tr.innerHTML = `
+    <td class="chk-cell"><input type="checkbox" class="row-select-chk" title="선택(다른 여행계획표로 복사)"></td>
+    <td class="gubun-cell"><select class="gubun-select">${gubunOptionsHTML()}</select></td>
+    <td class="ilsi-cell" contenteditable="true" data-ph="예: 09:00"></td>
+    <td class="chulbal-cell" contenteditable="true" data-ph="출발"></td>
+    <td class="dochak-cell" contenteditable="true" data-ph="도착"></td>
+    <td class="dur-cell">
+      <input class="dur-input" type="text" placeholder="예: 1시간" title="예상 소요시간 (예: 1시간, 30분, 1시간 30분)">
+      <a href="#" class="map-link time-link" title="클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)">🕒</a>
+    </td>
+    <td class="naeyong-cell" contenteditable="true" data-ph="내용 / 세부 일정" style="text-align:left;"></td>
+    <td class="budget-cell num"><input class="amt budget-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="actual-cell num"><input class="amt actual-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="bigo-cell">
+      <select class="payment-select" title="결제 방식">
+        <option value="">결제선택</option>
+        <option value="사전결제">사전결제</option>
+        <option value="현장결제">현장결제</option>
+      </select>
+      <span class="bigo-text" contenteditable="true" data-ph="비고"></span>
+    </td>
+    <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
+  `;
+  const ilsiTd = tr.querySelector('.ilsi-cell'), chulbalTd = tr.querySelector('.chulbal-cell'), dochakTd = tr.querySelector('.dochak-cell');
+  const timeLink = tr.querySelector('.time-link');
+  const durInput = tr.querySelector('.dur-input');
+  const budgetInput = tr.querySelector('.budget-input');
+  const actualInput = tr.querySelector('.actual-input');
+  ilsiTd.addEventListener('input', ()=>{
+    if(ilsiTd.textContent.trim() === ''){ delete ilsiTd.dataset.timeSource; }
+    else{ ilsiTd.dataset.timeSource = 'manual'; }
+    recalcDayChain(tr.closest('.day-block'));
+  });
+  durInput.addEventListener('input', ()=>{ recalcDayChain(tr.closest('.day-block')); });
+  budgetInput.addEventListener('input', ()=>{
+    let v = budgetInput.value.replace(/[^0-9]/g,'');
+    budgetInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcAllDayBudgets3();
+  });
+  actualInput.addEventListener('input', ()=>{
+    let v = actualInput.value.replace(/[^0-9]/g,'');
+    actualInput.value = v ? Number(v).toLocaleString('ko-KR') : '';
+  });
+  let travelResult = null;
+  let travelMode = null;
+  let lastTravelText = '';
+  const MODE_ORDER = ['transit', 'walk', 'car'];
+  const MODE_LABEL = { transit: '대중교통', walk: '도보', car: '자동차' };
+  const MODE_ICON  = { transit: '🚌', walk: '🚶', car: '🚗' };
+  function secondsFor(mode){
+    if(mode === 'transit') return travelResult.transitSeconds;
+    if(mode === 'walk') return travelResult.walkSeconds;
+    return travelResult.carSeconds;
+  }
+  function nextAvailableMode(fromMode){
+    const startIdx = MODE_ORDER.indexOf(fromMode);
+    for(let i=1;i<=MODE_ORDER.length;i++){
+      const candidate = MODE_ORDER[(startIdx + i) % MODE_ORDER.length];
+      if(secondsFor(candidate) != null) return candidate;
+    }
+    return null;
+  }
+  function applyTravelMode(mode){
+    const seconds = secondsFor(mode);
+    const label = MODE_LABEL[mode];
+    const newText = '(' + label + ' ' + formatMinutes(seconds) + ')';
+    let current = ilsiTd.textContent;
+    if(lastTravelText){
+      current = current.split(' / ' + lastTravelText).join('');
+      current = current.split(lastTravelText + ' / ').join('');
+      current = current.split(lastTravelText).join('');
+    }
+    const merged = current.trim() ? (current.trim() + ' / ' + newText) : newText;
+    ilsiTd.textContent = merged;
+    lastTravelText = newText;
+    travelMode = mode;
+    const otherMode = nextAvailableMode(mode);
+    timeLink.textContent = MODE_ICON[mode];
+    timeLink.title = otherMode
+      ? label + ' ' + formatMinutes(seconds) + ' — 클릭하면 ' + MODE_LABEL[otherMode] + '로 전환'
+      : label + ' ' + formatMinutes(seconds);
+    scheduleSave();
+  }
+  function invalidateTravelResult(){
+    if(!travelResult) return;
+    travelResult = null;
+    travelMode = null;
+    timeLink.textContent = '🕒';
+    timeLink.title = '클릭하면 이동시간을 계산해요 (대중교통/도보/자동차)';
+  }
+  chulbalTd.addEventListener('input', invalidateTravelResult);
+  dochakTd.addEventListener('input', invalidateTravelResult);
+  timeLink.addEventListener('click', async (e)=>{
+    e.preventDefault();
+    if(travelResult){
+      const next = nextAvailableMode(travelMode);
+      if(!next){ alert('이 구간은 다른 이동수단 경로 정보가 없어요.'); return; }
+      applyTravelMode(next);
+      return;
+    }
+    const origin = chulbalTd.textContent.trim();
+    const destination = dochakTd.textContent.trim();
+    if(!origin || !destination){ alert('출발장소와 도착장소를 먼저 입력해주세요.'); return; }
+    const originalIcon = timeLink.textContent;
+    timeLink.textContent = '⏳';
+    try{
+      const result = await kakaoTravelTime(origin, destination);
+      if(result.error === 'not-found'){
+        alert('출발지 또는 도착지를 카카오맵에서 찾지 못했어요. 장소 이름을 조금 더 정확히 입력해보세요 (예: "OO역", "OO공항", "OO시청").');
+        timeLink.textContent = originalIcon;
+        return;
+      }
+      if(result.error){
+        alert('이동시간 계산에 실패했어요: ' + result.error);
+        timeLink.textContent = originalIcon;
+        return;
+      }
+      if(result.transitSeconds == null && result.walkSeconds == null && result.carSeconds == null){
+        alert('이동시간을 계산하지 못했어요. 거리가 너무 멀거나 경로가 없는 구간일 수 있어요.');
+        timeLink.textContent = originalIcon;
+        return;
+      }
+      travelResult = result;
+      const firstMode = result.transitSeconds != null ? 'transit' : (result.walkSeconds != null ? 'walk' : 'car');
+      applyTravelMode(firstMode);
+    } catch(err){
+      console.error(err);
+      alert('이동시간 계산 중 문제가 발생했어요. 인터넷 연결을 확인하거나 잠시 후 다시 시도해주세요.');
+      timeLink.textContent = originalIcon;
+    }
+  });
+  tr.querySelector('.row-del').addEventListener('click', ()=>{
+    if(confirm('이 행을 삭제할까요?')){ tr.remove(); recalcAllDayBudgets3(); resyncBudgetFromSchedule3(); scheduleSave(); }
+  });
+  return tr;
+}
+function addDay3(prefillLabel){
+  dayCount3++;
+  const id = dayCount3;
+  const wrap = document.createElement('div');
+  wrap.className = 'day-block';
+  wrap.dataset.day = id;
+  wrap.innerHTML = `
+    <div class="day-head">
+      <h2><span class="box"></span>여행 (<span class="day-label" contenteditable="true" data-ph="1일차">${prefillLabel||''}</span>)</h2>
+      <button class="day-del">일차 삭제</button>
+    </div>
+    <div class="tbl-scroll">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th class="chk-cell"></th>
+            <th style="width:6%;">구분</th>
+            <th style="width:8%;">일시</th>
+            <th style="width:10%;">출발장소</th>
+            <th style="width:10%;">도착장소</th>
+            <th style="width:12%;">소요시간</th>
+            <th>내용</th>
+            <th style="width:9%;">예산(원)</th>
+            <th style="width:9%;">실금액(원)</th>
+            <th style="width:9%;">비고</th>
+            <th class="rm-cell"></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <button class="add-row-btn">+ 일정 행 추가</button>
+    <div class="day-budget-total">이 날짜 예산 합계 : <b>0원</b></div>
+  `;
+  const tbody = wrap.querySelector('tbody');
+  for(let i=0;i<5;i++) tbody.appendChild(makeDayTableRow3());
+  wrap.querySelector('.day-del').addEventListener('click', ()=>{
+    if(confirm('이 일차를 삭제할까요?')){ wrap.remove(); recalcAllDayBudgets3(); resyncBudgetFromSchedule3(); scheduleSave(); }
+  });
+  wrap.querySelector('.add-row-btn').addEventListener('click', ()=>{
+    tbody.appendChild(makeDayTableRow3());
+    recalcDayChain(wrap);
+    scheduleSave();
+  });
+  document.getElementById('daysContainer3').appendChild(wrap);
+  return wrap;
+}
+function makeBudgetRow3(){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="budget-gubun-cell" contenteditable="true" data-ph="교통/식비/숙박/기타"></td>
+    <td contenteditable="true" data-ph="항목"></td>
+    <td contenteditable="true" data-ph="내용" style="text-align:left;"></td>
+    <td class="num"><input class="amt" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="num"><input class="amt actual-amt-input" type="text" inputmode="numeric" placeholder="0"></td>
+    <td class="note-cell">
+      <select class="note-select">
+        <option value="">선택</option>
+        <option value="사전결제">사전결제</option>
+        <option value="현장결제">현장결제</option>
+      </select>
+      <label class="paid-check-label"><input type="checkbox" class="paid-check"> 완료</label>
+    </td>
+    <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
+  `;
+  const amt = tr.querySelector('.amt');
+  amt.addEventListener('input', ()=>{
+    let v = amt.value.replace(/[^0-9]/g,'');
+    amt.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcBudget3();
+  });
+  const actualAmt = tr.querySelector('.actual-amt-input');
+  actualAmt.addEventListener('input', ()=>{
+    let v = actualAmt.value.replace(/[^0-9]/g,'');
+    actualAmt.value = v ? Number(v).toLocaleString('ko-KR') : '';
+    recalcBudget3();
+  });
+  tr.querySelector('.note-select').addEventListener('change', recalcBudget3);
+  tr.querySelector('.paid-check').addEventListener('change', (e)=>{
+    tr.classList.toggle('paid-done', e.target.checked);
+    scheduleSave();
+  });
+  tr.querySelector('.row-del').addEventListener('click', ()=>{
+    if(tr.dataset.syncId){ unlinkSyncedBudgetRow3(tr); }
+    else{ if(confirm('이 예산 행을 삭제할까요?')){ tr.remove(); recalcBudget3(); scheduleSave(); } }
+  });
+  return tr;
+}
+function addBudgetRow3(){
+  document.getElementById('budgetBody3').appendChild(makeBudgetRow3());
+  regroupBudgetRows3();
+}
+document.getElementById('budgetBody3').addEventListener('blur', (e)=>{
+  const cell = e.target;
+  if(cell && cell.classList && cell.classList.contains('budget-gubun-cell') && cell._groupRows && cell._groupRows.length > 1){
+    const newVal = cell.textContent;
+    cell._groupRows.forEach(memberTr=>{
+      const memberCell = memberTr.querySelectorAll('td[contenteditable]')[0];
+      if(memberCell !== cell) memberCell.textContent = newVal;
+    });
+  }
+  regroupBudgetRows3();
+}, true);
+function recalcBudget3(){
+  let sum = 0, actualSum = 0, prepaid = 0, onsite = 0;
+  document.querySelectorAll('#budgetBody3 tr:not(.budget-group-header)').forEach(tr=>{
+    const inp = tr.querySelector('.amt');
+    const n = Number((inp.value||'0').replace(/[^0-9]/g,''));
+    sum += n;
+    const actualInp = tr.querySelector('.actual-amt-input');
+    actualSum += Number((actualInp.value||'0').replace(/[^0-9]/g,''));
+    const note = tr.querySelector('.note-select').value;
+    if(note === '사전결제') prepaid += n;
+    else if(note === '현장결제') onsite += n;
+  });
+  document.getElementById('budgetTotal3').textContent = sum.toLocaleString('ko-KR');
+  document.getElementById('budgetActualTotal3').textContent = actualSum.toLocaleString('ko-KR');
+  document.getElementById('totalBudgetLabel3').textContent = sum.toLocaleString('ko-KR') + '원';
+  document.getElementById('totalActualLabel3').textContent = actualSum.toLocaleString('ko-KR') + '원';
+  document.getElementById('prepaidLabel3').textContent = prepaid.toLocaleString('ko-KR') + '원';
+  document.getElementById('onsiteLabel3').textContent = onsite.toLocaleString('ko-KR') + '원';
+  regroupBudgetRows3();
+}
+function recalcAllDayBudgets3(){
+  let grand = 0;
+  document.querySelectorAll('#daysContainer3 .day-block').forEach(block=>{ grand += updateDayBudgetTotal(block); });
+  const grandEl = document.querySelector('#grandBudgetTotal3 b');
+  if(grandEl) grandEl.textContent = grand.toLocaleString('ko-KR') + '원';
+}
+document.getElementById('addDayBtn3').addEventListener('click', ()=>{ addDay3(); scheduleSave(); });
+document.getElementById('addBudgetRow3').addEventListener('click', ()=>{ addBudgetRow3(); scheduleSave(); });
+for(let i=0;i<3;i++) addBudgetRow3();
+addDay3('1일차');
+addDay3('2일차');
+addDay3('3일차');
+recalcBudget3();
+recalcAllDayBudgets3();
+resyncBudgetFromSchedule3();
+planEngines[3] = {
+  addDay: addDay3,
+  makeDayTableRow: makeDayTableRow3,
+  recalcAllDayBudgets: recalcAllDayBudgets3,
+  resyncBudgetFromSchedule: resyncBudgetFromSchedule3,
+};
+
+updateOverviewMapLinks();
 document.getElementById('gubunAddBtn').addEventListener('click', ()=>{
   const inp = document.getElementById('gubunNewInput');
   const v = inp.value.trim();
@@ -2065,8 +3021,6 @@ document.getElementById('gubunNewInput').addEventListener('keydown', (e)=>{
 document.getElementById('gubunManagerToggle').addEventListener('click', ()=>{
   document.getElementById('gubunManager').classList.toggle('collapsed');
 });
-
-// ---- 탭 전환 ----
 document.querySelectorAll('nav.tabs button').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
@@ -2075,12 +3029,303 @@ document.querySelectorAll('nav.tabs button').forEach(btn=>{
     document.querySelector(`.tab-page[data-tab-page="${btn.dataset.tab}"]`).classList.add('active');
   });
 });
-
 if(syncCode){
   startSync();
 } else {
   document.getElementById('syncGate').style.display = 'flex';
 }
+// =====================================================================
+// ---- 가고싶은곳 메모장 + 겹침 표시 + 사진 업로드 + PPT 내보내기 ----
+// (사진은 이 기기 메모리(브라우저)에서만 다루고, Firebase 동기화 대상에는
+//  포함하지 않아요 — 사진을 base64로 저장하면 문서 용량 제한을 금방
+//  넘어서기 때문. 그래서 다른 기기에서는 사진이 안 보이고, 새로고침하면
+//  사진은 사라져요. PPT로 내보내기 전에 이 화면에서 바로 작업해주세요.)
+let wantToGoChipCounter = 0;
+let wantToGoPlaces = [];   // { id, name, note, overlap, photos:[{name, dataUrl}] }
+let wantPlaceIdCounter = 0;
+
+function normalizePlaceName(s){
+  return (s || '').trim().toLowerCase().replace(/\s+/g, '');
+}
+function currentIdeaNameSet(){
+  const set = new Set();
+  document.querySelectorAll('#ideaChips .idea-chip .chip-text').forEach(el=>{
+    set.add(normalizePlaceName(el.textContent));
+  });
+  return set;
+}
+function makeWantToGoChip(text, overlap){
+  wantToGoChipCounter++;
+  const id = 'want-' + wantToGoChipCounter;
+  const chip = document.createElement('div');
+  chip.className = 'idea-chip' + (overlap ? ' overlap-chip' : '');
+  chip.draggable = true;
+  chip.dataset.id = id;
+  chip.innerHTML = `<span class="chip-text">${text}</span><span class="chip-del" title="삭제">×</span>`;
+  chip.addEventListener('dragstart', (e)=>{
+    e.dataTransfer.setData('text/plain', text);
+    e.dataTransfer.setData('application/x-idea-id', id);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+  chip.querySelector('.chip-del').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    chip.remove();
+    wantToGoPlaces = wantToGoPlaces.filter(p => p.id !== id);
+    renderWantToGoPlaces();
+  });
+  return chip;
+}
+function buildWantToGoChips(){
+  const raw = document.getElementById('wantToGoInput').value;
+  const lines = raw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const box = document.getElementById('wantToGoChips');
+  box.innerHTML = '';
+  const ideaNames = currentIdeaNameSet();
+  const existingByName = {};
+  wantToGoPlaces.forEach(p => existingByName[normalizePlaceName(p.name)] = p);
+  const newPlaces = [];
+  lines.forEach(text=>{
+    const norm = normalizePlaceName(text);
+    const overlap = ideaNames.has(norm);
+    const chip = makeWantToGoChip(text, overlap);
+    box.appendChild(chip);
+    const prev = existingByName[norm];
+    if(prev){
+      prev.name = text; prev.overlap = overlap; prev.id = chip.dataset.id;
+      newPlaces.push(prev);
+    } else {
+      newPlaces.push({ id: chip.dataset.id, name: text, note:'', overlap, photos:[] });
+    }
+  });
+  wantToGoPlaces = newPlaces;
+  renderWantToGoPlaces();
+}
+function refreshWantToGoOverlap(){
+  const ideaNames = currentIdeaNameSet();
+  wantToGoPlaces.forEach(p => p.overlap = ideaNames.has(normalizePlaceName(p.name)));
+  document.querySelectorAll('#wantToGoChips .idea-chip').forEach(chip=>{
+    const place = wantToGoPlaces.find(p => p.id === chip.dataset.id);
+    if(place) chip.classList.toggle('overlap-chip', !!place.overlap);
+  });
+  renderWantToGoPlaces();
+}
+document.getElementById('wantToGoBuildBtn').addEventListener('click', buildWantToGoChips);
+document.getElementById('wantToGoImportBtn').addEventListener('click', ()=>{
+  document.getElementById('wantToGoImportInput').click();
+});
+document.getElementById('wantToGoImportInput').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const text = await file.text();
+  let names = [];
+  if(/\.kml$/i.test(file.name)) names = extractPlaceNamesFromKml(text);
+  else names = extractPlaceNamesFromCsv(text);
+  if(!names.length){
+    alert('파일에서 장소 이름을 찾지 못했어요. CSV라면 첫 번째 열에 장소명이 있는지 확인해주세요.');
+  } else {
+    const ta = document.getElementById('wantToGoInput');
+    const existing = ta.value.trim();
+    ta.value = (existing ? existing + '\n' : '') + names.join('\n');
+    buildWantToGoChips();
+    alert(`${names.length}개 장소를 가고싶은곳 메모장에 추가했어요.`);
+  }
+  e.target.value = '';
+});
+// ---- 가고싶은곳 탭: 장소별 카드 (메모 + 사진 업로드) ----
+function readFileAsDataUrl(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function makeWantPlaceCard(place){
+  const card = document.createElement('div');
+  card.className = 'want-place-card' + (place.overlap ? ' overlap-card' : '');
+  card.innerHTML = `
+    <div class="want-place-head">
+      <span class="want-place-name">${escapeHtmlSafe(place.name)}</span>
+    </div>
+    <textarea class="want-place-note" rows="2" placeholder="메모 (선택)">${escapeHtmlSafe(place.note||'')}</textarea>
+    <div>
+      <button type="button" class="want-photo-btn">📷 사진 추가</button>
+      <input type="file" accept="image/*" multiple style="display:none;">
+    </div>
+    <div class="want-photo-grid"></div>
+  `;
+  const noteEl = card.querySelector('.want-place-note');
+  noteEl.addEventListener('input', ()=>{ place.note = noteEl.value; });
+  const photoBtn = card.querySelector('.want-photo-btn');
+  const photoInput = card.querySelector('input[type=file]');
+  const photoGrid = card.querySelector('.want-photo-grid');
+  photoBtn.addEventListener('click', ()=> photoInput.click());
+  photoInput.addEventListener('change', async (e)=>{
+    const files = Array.from(e.target.files || []);
+    for(const file of files){
+      try{
+        const dataUrl = await readFileAsDataUrl(file);
+        place.photos.push({ name: file.name, dataUrl });
+      }catch(err){ console.error(err); }
+    }
+    photoInput.value = '';
+    renderPhotoGrid(photoGrid, place);
+    updatePptBtnState();
+  });
+  renderPhotoGrid(photoGrid, place);
+  return card;
+}
+function renderPhotoGrid(gridEl, place){
+  gridEl.innerHTML = '';
+  place.photos.forEach((photo, idx)=>{
+    const thumb = document.createElement('div');
+    thumb.className = 'want-photo-thumb';
+    thumb.innerHTML = `
+      <img src="${photo.dataUrl}" alt="${escapeHtmlSafe(photo.name)}">
+      <div class="photo-fname" title="${escapeHtmlSafe(photo.name)}">${escapeHtmlSafe(photo.name)}</div>
+      <button type="button" class="photo-del" title="사진 삭제">×</button>
+    `;
+    thumb.querySelector('.photo-del').addEventListener('click', ()=>{
+      place.photos.splice(idx, 1);
+      renderPhotoGrid(gridEl, place);
+      updatePptBtnState();
+    });
+    gridEl.appendChild(thumb);
+  });
+}
+function renderWantToGoPlaces(){
+  const list = document.getElementById('wantToGoPlacesList');
+  const emptyHint = document.getElementById('wantToGoEmptyHint');
+  list.innerHTML = '';
+  wantToGoPlaces.forEach(place=> list.appendChild(makeWantPlaceCard(place)));
+  emptyHint.style.display = wantToGoPlaces.length ? 'none' : '';
+  updatePptBtnState();
+}
+function updatePptBtnState(){
+  const hasPhotos = wantToGoPlaces.some(p => p.photos && p.photos.length);
+  document.getElementById('wantToGoPptBtn').disabled = !hasPhotos;
+}
+// ---- PPT로 내보내기 (장소 1곳당 슬라이드 1장, 사진 여러장 배치 + 파일명 라벨) ----
+function dataUrlToPptFormat(dataUrl){
+  const m = /^data:image\/(png|jpe?g|gif);base64,/i.exec(dataUrl);
+  if(!m) return 'png';
+  const ext = m[1].toLowerCase();
+  return ext === 'jpg' ? 'jpeg' : ext;
+}
+async function exportWantToGoPpt(){
+  const placesWithPhotos = wantToGoPlaces.filter(p => p.photos && p.photos.length);
+  if(!placesWithPhotos.length){ alert('사진이 등록된 장소가 없어요. 먼저 사진을 추가해주세요.'); return; }
+  if(typeof PptxGenJS === 'undefined'){ alert('PPT 생성 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해주세요.'); return; }
+  const btn = document.getElementById('wantToGoPptBtn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ PPT 만드는 중...';
+  try{
+    const pptx = new PptxGenJS();
+    pptx.defineLayout({ name: 'WIDE', width: 13.33, height: 7.5 });
+    pptx.layout = 'WIDE';
+    placesWithPhotos.forEach(place=>{
+      const photos = place.photos;
+      const perSlide = 6;
+      for(let start=0; start<photos.length; start+=perSlide){
+        const chunk = photos.slice(start, start+perSlide);
+        const slide = pptx.addSlide();
+        const title = photos.length > perSlide
+          ? `${place.name} (${Math.floor(start/perSlide)+1})`
+          : place.name;
+        slide.addText(title, { x:0.4, y:0.25, w:12.5, h:0.6, fontSize:24, bold:true, fontFace:'Arial', color:'20262B' });
+        if(place.note){
+          slide.addText(place.note, { x:0.4, y:0.85, w:12.5, h:0.4, fontSize:12, color:'5B6570', fontFace:'Arial' });
+        }
+        const cols = 3, rows = 2;
+        const gridTop = 1.4, gridLeft = 0.4;
+        const cellW = 4.0, cellH = 2.7, gap = 0.25;
+        chunk.forEach((photo, i)=>{
+          const col = i % cols, row = Math.floor(i / cols);
+          const x = gridLeft + col * (cellW + gap);
+          const y = gridTop + row * (cellH + gap);
+          try{
+            slide.addImage({ data: photo.dataUrl, x, y, w: cellW, h: cellH - 0.3, sizing:{ type:'contain', w:cellW, h:cellH-0.3 } });
+          }catch(err){ console.error('이미지 삽입 실패:', photo.name, err); }
+          slide.addText(photo.name, { x, y: y + cellH - 0.28, w: cellW, h:0.26, fontSize:9, color:'93998E', fontFace:'Arial', align:'center' });
+        });
+      }
+    });
+    await pptx.writeFile({ fileName: '가고싶은곳.pptx' });
+  }catch(err){
+    console.error(err);
+    alert('PPT를 만드는 중 문제가 발생했어요: ' + (err && err.message ? err.message : err));
+  }finally{
+    btn.disabled = false;
+    btn.textContent = originalText;
+    updatePptBtnState();
+  }
+}
+document.getElementById('wantToGoPptBtn').addEventListener('click', exportWantToGoPpt);
+renderWantToGoPlaces();
+// ---- 여행계획표1/2/3 간 행 복사 (체크박스 → 대상 탭 선택 → 복사) ----
+function extractRowData(tr){
+  return {
+    gubun: tr.querySelector('.gubun-select').value,
+    ilsi: tr.querySelector('.ilsi-cell').textContent,
+    chulbal: tr.querySelector('.chulbal-cell').textContent,
+    dochak: tr.querySelector('.dochak-cell').textContent,
+    dur: tr.querySelector('.dur-input').value,
+    naeyong: tr.querySelector('.naeyong-cell').textContent,
+    budget: tr.querySelector('.budget-input').value,
+    actual: tr.querySelector('.actual-input').value,
+    payment: tr.querySelector('.payment-select').value,
+    bigo: tr.querySelector('.bigo-text').textContent,
+  };
+}
+function applyRowDataToRow(tr, data){
+  setGubunValue(tr.querySelector('.gubun-select'), data.gubun||'');
+  const ilsiTd = tr.querySelector('.ilsi-cell');
+  ilsiTd.textContent = data.ilsi||'';
+  if((data.ilsi||'').trim()) ilsiTd.dataset.timeSource = 'manual';
+  tr.querySelector('.chulbal-cell').textContent = data.chulbal||'';
+  tr.querySelector('.dochak-cell').textContent = data.dochak||'';
+  tr.querySelector('.dur-input').value = data.dur||'';
+  tr.querySelector('.naeyong-cell').textContent = data.naeyong||'';
+  tr.querySelector('.budget-input').value = data.budget||'';
+  tr.querySelector('.actual-input').value = data.actual||'';
+  tr.querySelector('.payment-select').value = data.payment||'';
+  tr.querySelector('.bigo-text').textContent = data.bigo||'';
+}
+function planDaysContainerId(planId){ return planId === 1 ? 'daysContainer' : 'daysContainer' + planId; }
+function copyCheckedRowsToPlan(sourcePlanId, targetPlanId){
+  const sourceContainer = document.getElementById(planDaysContainerId(sourcePlanId));
+  const checked = Array.from(sourceContainer.querySelectorAll('.row-select-chk:checked'));
+  if(!checked.length){ alert('복사할 행을 먼저 체크해주세요.'); return; }
+  if(!confirm(`체크한 ${checked.length}개 행을 여행계획표${targetPlanId}로 복사할까요?`)) return;
+  const engine = planEngines[targetPlanId];
+  if(!engine){ alert('대상 여행계획표를 찾지 못했어요.'); return; }
+  const newDay = engine.addDay(`복사됨 (여행계획표${sourcePlanId}에서)`);
+  const tbody = newDay.querySelector('tbody');
+  tbody.innerHTML = '';
+  checked.forEach(chk=>{
+    const tr = chk.closest('tr');
+    const data = extractRowData(tr);
+    const newTr = engine.makeDayTableRow();
+    applyRowDataToRow(newTr, data);
+    tbody.appendChild(newTr);
+    chk.checked = false;
+  });
+  recalcDayChain(newDay);
+  engine.recalcAllDayBudgets();
+  engine.resyncBudgetFromSchedule();
+  scheduleSave();
+  alert(`${checked.length}개 행을 여행계획표${targetPlanId}로 복사했어요.`);
+}
+document.querySelectorAll('.row-copy-bar').forEach(bar=>{
+  const sourcePlan = Number(bar.dataset.plan);
+  const btn = bar.querySelector('.row-copy-btn');
+  const sel = bar.querySelector('.row-copy-target');
+  btn.addEventListener('click', ()=>{
+    const targetPlan = Number(sel.value);
+    copyCheckedRowsToPlan(sourcePlan, targetPlan);
+  });
+});
 </script>
 </body>
 </html>
