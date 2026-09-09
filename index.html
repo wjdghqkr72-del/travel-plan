@@ -27,6 +27,8 @@
     --gold-soft:#C9A857;
     --panel:#FBF8F0;
     --header-fill:#EDE4C8;
+    --confirm-bg:#FFE9A8;
+    --confirm-ink:#5C4200;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -49,6 +51,8 @@
     --ink-faint:#797463;
     --panel:#22262B;
     --header-fill:#2A2E27;
+    --confirm-bg:#4A3B12;
+    --confirm-ink:#FFE9A8;
     background:
       repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 42px),
       linear-gradient(180deg, #16181B 0%, #111214 100%);
@@ -274,8 +278,11 @@
   table.doc-table td.bigo-cell{ min-width:78px; }
   table.doc-table td.bigo-cell .bigo-text{ white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; line-height:1.5; }
   table.doc-table td.num{ text-align:right; font-family:'JetBrains Mono', monospace; }
+  table.doc-table td.budget-cell, table.doc-table td.actual-cell, table.doc-table td.num:has(input.amt){
+    min-width:90px; padding:8px 6px;
+  }
   table.doc-table input.amt{
-    width:100%; border:none; background:transparent; text-align:right; font-family:'JetBrains Mono', monospace;
+    width:100%; min-width:0; border:none; background:transparent; text-align:right; font-family:'JetBrains Mono', monospace;
     font-size:13px; outline:none; color:var(--ink);
   }
   table.doc-table td.note-cell{ padding:3px 4px; }
@@ -286,7 +293,33 @@
   }
   table.doc-table select.note-select:focus{ border-color:var(--seal); }
   table.doc-table tr.total-row td{ background:#EFE8D5; font-weight:700; }
-  table.doc-table td.rm-cell{ border:none; background:transparent; width:26px; padding:2px; }
+  table.doc-table td.rm-cell{
+    border:none; background:transparent; width:28px; padding:3px 2px;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+  }
+  table.doc-table td.drag-cell, table.doc-table th.drag-cell{ border:none; background:transparent; width:18px; padding:2px 0; text-align:center; }
+  .drag-handle{
+    cursor:grab; font-size:13px; line-height:1; color:var(--ink-faint); user-select:none;
+    display:inline-block; padding:4px 1px; letter-spacing:-1px;
+  }
+  .drag-handle:active{ cursor:grabbing; }
+  table.doc-table tr.row-dragging{ opacity:0.35; }
+  table.doc-table tr.row-dragging td{ background:rgba(169,129,47,0.12); }
+  .confirm-toggle-btn{
+    width:20px; height:20px; border-radius:50%; border:1px solid var(--gold-soft); background:var(--panel);
+    color:var(--gold); font-size:11px; line-height:1; cursor:pointer; display:inline-flex;
+    align-items:center; justify-content:center; padding:0; flex:none;
+  }
+  .confirm-toggle-btn:hover{ background:var(--gold); color:#fff; }
+  .confirm-toggle-btn.active{ background:var(--gold); border-color:var(--gold); color:#fff; }
+  table.doc-table tr.confirmed-row td{ background:var(--confirm-bg) !important; }
+  table.doc-table tr.confirmed-row td[contenteditable],
+  table.doc-table tr.confirmed-row .bigo-text,
+  table.doc-table tr.confirmed-row input.amt,
+  table.doc-table tr.confirmed-row .dur-input,
+  table.doc-table tr.confirmed-row .dur-arrival{ color:var(--confirm-ink); }
+  table.doc-table tr.confirmed-row .dur-arrival{ background:rgba(92,66,0,0.12); }
+  table.doc-table tr.confirmed-row td[contenteditable]:empty::before{ color:rgba(92,66,0,0.55); }
   table.doc-table td.chk-cell, table.doc-table th.chk-cell{ border:none; background:transparent; width:22px; padding:2px; text-align:center; }
   table.doc-table td.chk-cell input{ width:15px; height:15px; accent-color:var(--seal); cursor:pointer; }
   table.doc-table td.time-cell, table.doc-table th.time-cell{ border:none; background:transparent; width:22px; padding:2px; }
@@ -564,10 +597,24 @@
   .want-place-name:focus{ border-bottom-color:var(--seal); background:rgba(166,54,44,0.04); }
   .want-place-name:empty::before{ content:attr(data-ph); color:var(--ink-faint); }
   .want-place-del{
-    margin-left:auto; font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:11.5px;
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:11.5px;
     color:var(--seal); background:#FBEBE7; border:1px solid #C6907F; border-radius:6px; padding:4px 9px; cursor:pointer;
   }
   .want-place-del:hover{ background:var(--seal); color:#fff; }
+  .want-place-actions{ margin-left:auto; display:flex; align-items:center; gap:6px; }
+  .sync-refresh-btn{
+    font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:11.5px;
+    color:var(--gold); background:var(--panel); border:1px solid var(--gold-soft); border-radius:6px;
+    padding:4px 9px; cursor:pointer; white-space:nowrap;
+  }
+  .sync-refresh-btn:hover{ background:var(--gold); color:#fff; }
+  .sync-refresh-btn:disabled{ cursor:default; opacity:0.85; }
+  .want-place-refresh-btn{ font-size:13px; padding:4px 8px; line-height:1; }
+  .plan-tab-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    flex-wrap:wrap; margin-bottom:14px;
+  }
+  .plan-tab-title{ font-family:'Noto Serif KR', serif; font-weight:700; font-size:16px; color:var(--ink); }
   .want-place-group{
     font-family:'Noto Sans KR', sans-serif; font-weight:700; font-size:11px; color:#8A7237;
     background:rgba(169,129,47,0.12); border-radius:10px; padding:2px 8px;
@@ -667,8 +714,11 @@
     .paper{ box-shadow:none; border:none; padding:16px 6mm; }
     .paper::before{ display:none; }
     .row-del, .add-row-btn, .day-del, .add-day-wrap{ display:none !important; }
+    .sync-refresh-btn{ display:none !important; }
     .row-copy-bar{ display:none !important; }
     table.doc-table td.chk-cell, table.doc-table th.chk-cell{ display:none !important; }
+    table.doc-table td.drag-cell, table.doc-table th.drag-cell{ display:none !important; }
+    .confirm-toggle-btn{ display:none !important; }
     ul.checklist li .row-del{ display:none !important; }
     .gubun-manager{ display:none !important; }
     table.doc-table{ font-size:11.5px; }
@@ -852,8 +902,8 @@
                 <th style="width:12%;">구분</th>
                 <th style="width:16%;">항목</th>
                 <th class="naeyong-th">내용</th>
-                <th style="width:12%;">예산(원)</th>
-                <th style="width:12%;">실금액(원)</th>
+                <th style="width:13%;">예산(원)</th>
+                <th style="width:13%;">실금액(원)</th>
                 <th style="width:12%;">비고</th>
                 <th class="rm-cell"></th>
               </tr>
@@ -892,8 +942,8 @@
                 <th style="width:12%;">구분</th>
                 <th style="width:16%;">항목</th>
                 <th class="naeyong-th">내용</th>
-                <th style="width:12%;">예산(원)</th>
-                <th style="width:12%;">실금액(원)</th>
+                <th style="width:13%;">예산(원)</th>
+                <th style="width:13%;">실금액(원)</th>
                 <th style="width:12%;">비고</th>
                 <th class="rm-cell"></th>
               </tr>
@@ -932,8 +982,8 @@
                 <th style="width:12%;">구분</th>
                 <th style="width:16%;">항목</th>
                 <th class="naeyong-th">내용</th>
-                <th style="width:12%;">예산(원)</th>
-                <th style="width:12%;">실금액(원)</th>
+                <th style="width:13%;">예산(원)</th>
+                <th style="width:13%;">실금액(원)</th>
                 <th style="width:12%;">비고</th>
                 <th class="rm-cell"></th>
               </tr>
@@ -954,6 +1004,10 @@
       </section>
     </div>
     <div class="tab-page active" data-tab-page="plan">
+      <div class="plan-tab-head">
+        <span class="plan-tab-title">📋 여행계획표1</span>
+        <button type="button" class="sync-refresh-btn" id="planSyncRefreshBtn" title="여행계획표 내용을 다시 확인해서 겹침(✓) 표시를 최신 상태로 맞춰요">🔄 겹침 표시 새로고침</button>
+      </div>
       <div class="gubun-manager collapsed" id="gubunManager">
         <div class="gubun-manager-head" id="gubunManagerToggle">
           🏷 구분 항목 관리
@@ -984,6 +1038,10 @@
       <div class="grand-budget-total" id="grandBudgetTotal">전체 일정 예산 합계 : <b>0원</b></div>
     </div>
     <div class="tab-page" data-tab-page="plan2">
+      <div class="plan-tab-head">
+        <span class="plan-tab-title">📋 여행계획표2</span>
+        <button type="button" class="sync-refresh-btn" id="planSyncRefreshBtn2" title="여행계획표 내용을 다시 확인해서 겹침(✓) 표시를 최신 상태로 맞춰요">🔄 겹침 표시 새로고침</button>
+      </div>
       <div class="maps-import-source">🏷 "구분" 항목은 여행계획표1 탭에서 공통으로 관리돼요.</div>
       <div class="row-copy-bar" data-plan="2">
         <span>체크한 일정 행을</span>
@@ -1001,6 +1059,10 @@
       <div class="grand-budget-total" id="grandBudgetTotal2">전체 일정 예산 합계 : <b>0원</b></div>
     </div>
     <div class="tab-page" data-tab-page="plan3">
+      <div class="plan-tab-head">
+        <span class="plan-tab-title">📋 여행계획표3</span>
+        <button type="button" class="sync-refresh-btn" id="planSyncRefreshBtn3" title="여행계획표 내용을 다시 확인해서 겹침(✓) 표시를 최신 상태로 맞춰요">🔄 겹침 표시 새로고침</button>
+      </div>
       <div class="maps-import-source">🏷 "구분" 항목은 여행계획표1 탭에서 공통으로 관리돼요.</div>
       <div class="row-copy-bar" data-plan="3">
         <span>체크한 일정 행을</span>
@@ -1034,7 +1096,7 @@
         <h2><span class="box"></span>가고싶은곳</h2>
         <div class="want-photo-note">장소마다 사진을 올려두면, 파일명이 그대로 사진 아래 라벨로 붙어서 어떤 사진인지 쉽게 구분돼요. 사진은 이 기기에서만 보이고 다른 기기와는 동기화되지 않으니, PPT로 내보내기 전에 이 화면에서 확인해주세요.</div>
         <div class="want-places-scroll"><div id="wantToGoPlacesList"></div></div>
-        <div class="want-empty-hint" id="wantToGoEmptyHint">왼쪽 "가고싶은곳 메모장"에 장소를 추가하면 여기에 카드로 나타나요.</div>
+        <div class="want-empty-hint" id="wantToGoEmptyHint">"가고싶은곳 메모장"의 장소를 여행계획표의 출발/도착/내용 칸으로 드래그하거나 클릭해서 넣으면, 실제로 계획에 넣은 장소만 여기에 카드로 나타나요.</div>
         <div class="want-tab-actions">
           <button class="ppt-export-btn" id="wantToGoPptBtn" disabled>🖼 사진 있는 장소 PPT로 내보내기</button>
         </div>
@@ -1306,6 +1368,84 @@ function formatHM(totalMinutesRaw){
   const hh = String(h).padStart(2,'0'), mm = String(m).padStart(2,'0');
   return overflowDays > 0 ? `${hh}:${mm} (+${overflowDays}일)` : `${hh}:${mm}`;
 }
+// ---- 일정 행: 드래그로 순서/일차 이동 + 확정 표시 (여행계획표1·2·3 공통) ----
+// 같은 여행계획표(daysContainer/2/3) 안에서라면 1일차·2일차·3일차 표를 넘나들며
+// 행을 자유롭게 옮길 수 있어요. 서로 다른 여행계획표(1/2/3) 사이의 이동은
+// 기존 "다른 여행계획표로 복사" 기능을 쓰도록 막아둡니다.
+let __draggedScheduleRow = null;
+let __draggedScheduleOriginBlock = null;
+function scheduleRowsRoot(el){
+  return el ? el.closest('#daysContainer, #daysContainer2, #daysContainer3') : null;
+}
+function scheduleSetIndexOf(root){
+  if(!root) return null;
+  if(root.id === 'daysContainer') return 1;
+  if(root.id === 'daysContainer2') return 2;
+  if(root.id === 'daysContainer3') return 3;
+  return null;
+}
+function recalcAllDayBudgetsForSet(n){
+  if(n === 1) recalcAllDayBudgets();
+  else if(n === 2) recalcAllDayBudgets2();
+  else if(n === 3) recalcAllDayBudgets3();
+}
+function resyncBudgetFromScheduleForSet(n){
+  if(n === 1) resyncBudgetFromSchedule();
+  else if(n === 2) resyncBudgetFromSchedule2();
+  else if(n === 3) resyncBudgetFromSchedule3();
+}
+function attachRowDragReorder(tr){
+  const handle = tr.querySelector('.drag-handle');
+  if(!handle) return;
+  handle.addEventListener('dragstart', (e)=>{
+    __draggedScheduleRow = tr;
+    __draggedScheduleOriginBlock = tr.closest('.day-block');
+    tr.classList.add('row-dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    try{ e.dataTransfer.setData('text/plain', ''); }catch(err){}
+  });
+  handle.addEventListener('dragend', ()=>{
+    tr.classList.remove('row-dragging');
+    __draggedScheduleRow = null;
+    __draggedScheduleOriginBlock = null;
+  });
+  tr.addEventListener('dragover', (e)=>{
+    if(!__draggedScheduleRow || __draggedScheduleRow === tr) return;
+    const rootHere = scheduleRowsRoot(tr), rootDragged = scheduleRowsRoot(__draggedScheduleRow);
+    if(!rootHere || rootHere !== rootDragged) return;
+    const targetTbody = tr.closest('tbody');
+    if(!targetTbody) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'move';
+    const rect = tr.getBoundingClientRect();
+    const before = (e.clientY - rect.top) < rect.height / 2;
+    targetTbody.insertBefore(__draggedScheduleRow, before ? tr : tr.nextSibling);
+  });
+  tr.addEventListener('drop', (e)=>{
+    if(!__draggedScheduleRow) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const newBlock = __draggedScheduleRow.closest('.day-block');
+    const setN = scheduleSetIndexOf(scheduleRowsRoot(__draggedScheduleRow));
+    if(__draggedScheduleOriginBlock && __draggedScheduleOriginBlock !== newBlock){
+      recalcDayChain(__draggedScheduleOriginBlock);
+    }
+    if(newBlock) recalcDayChain(newBlock);
+    if(setN){ recalcAllDayBudgetsForSet(setN); resyncBudgetFromScheduleForSet(setN); }
+    scheduleSave();
+  });
+}
+function bindConfirmToggle(tr){
+  const btn = tr.querySelector('.confirm-toggle-btn');
+  if(!btn) return;
+  btn.addEventListener('click', ()=>{
+    const nowConfirmed = tr.classList.toggle('confirmed-row');
+    btn.classList.toggle('active', nowConfirmed);
+    btn.title = nowConfirmed ? '확정 해제하기' : '확정 일정으로 표시';
+    scheduleSave();
+  });
+}
 function recalcDayChain(dayBlock){
   if(!dayBlock) return;
   const rows = Array.from(dayBlock.querySelectorAll('tbody tr'));
@@ -1347,6 +1487,7 @@ function makeDayTableRow(){
   const tr = document.createElement('tr');
   tr.dataset.rowId = 'r' + (++scheduleRowIdCounter);
   tr.innerHTML = `
+    <td class="drag-cell"><span class="drag-handle" draggable="true" title="드래그해서 순서 이동">⋮⋮</span></td>
     <td class="chk-cell"><input type="checkbox" class="row-select-chk" title="선택(다른 여행계획표로 복사)"></td>
     <td class="gubun-cell"><select class="gubun-select">${gubunOptionsHTML()}</select></td>
     <td class="ilsi-cell" contenteditable="true" data-ph="예: 09:00"></td>
@@ -1371,7 +1512,10 @@ function makeDayTableRow(){
       </select>
       <span class="bigo-text" contenteditable="true" data-ph="비고"></span>
     </td>
-    <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
+    <td class="rm-cell">
+      <button type="button" class="confirm-toggle-btn" title="확정 일정으로 표시">✓</button>
+      <span class="row-del" title="행 삭제">×</span>
+    </td>
   `;
   const ilsiTd = tr.querySelector('.ilsi-cell'), chulbalTd = tr.querySelector('.chulbal-cell'), dochakTd = tr.querySelector('.dochak-cell');
   const timeLink = tr.querySelector('.time-link');
@@ -1480,6 +1624,8 @@ function makeDayTableRow(){
     }
   });
   tr.querySelector('.row-del').addEventListener('click', ()=>{ sendToTrash(tr, 'dayRow'); });
+  bindConfirmToggle(tr);
+  attachRowDragReorder(tr);
   return tr;
 }
 function addDay(prefillLabel){
@@ -1497,6 +1643,7 @@ function addDay(prefillLabel){
       <table class="doc-table">
         <thead>
           <tr>
+            <th class="drag-cell"></th>
             <th class="chk-cell"></th>
             <th style="width:9%;">구분</th>
             <th style="width:8%;">일시</th>
@@ -1505,8 +1652,8 @@ function addDay(prefillLabel){
             <th style="width:16%;">소요시간</th>
             <th class="naeyong-th">내용</th>
             <th class="daechaek-th">대책</th>
-            <th style="width:9%;">예산(원)</th>
-            <th style="width:9%;">실금액(원)</th>
+            <th style="width:11%;">예산(원)</th>
+            <th style="width:11%;">실금액(원)</th>
             <th style="width:9%;">비고</th>
             <th class="rm-cell"></th>
           </tr>
@@ -2143,6 +2290,82 @@ function syncUsedByName(text, used){
   ideaItems.forEach(it=>{ if(normalizePlaceNameEarly(it.text) === norm) it.used = used; });
   wantToGoPlaces.forEach(p=>{ if(normalizePlaceNameEarly(p.name) === norm) p.used = used; });
 }
+// ---- 여행계획표 실제 내용을 기준으로 "겹침/체크" 표시를 다시 맞추기 ----
+// 메모장/하고싶은것 칩을 드래그로 넣었다가, 나중에 여행계획표 칸에서 그 글자를
+// 직접 지우거나 고쳐써도 체크(취소선) 표시가 계속 남아있던 문제를 고치기 위한 함수예요.
+// 여행계획표 1·2·3일차의 모든 칸(일시/출발/도착/내용/대책/비고) 글자를 모아서,
+// 각 칩의 이름이 지금도 그 안에 실제로 남아있는지 다시 확인하고 표시를 맞춰줘요.
+// 칩을 드래그로 넣으면 항상 " / "로 구분해서 들어가기 때문에, 통짜 문자열 포함 여부가
+// 아니라 " / "로 나눈 조각과 정확히 일치하는지로 비교해요. (짧은 이름이 다른 칸의
+// 전혀 상관없는 문장 속 글자와 우연히 겹쳐서 잘못 "있음"으로 판정되는 걸 막기 위함)
+function collectAllItinerarySegmentNorms(){
+  const selector = [1,2,3].map(n=>{
+    const c = n === 1 ? '' : n;
+    return `#daysContainer${c} .ilsi-cell, #daysContainer${c} .chulbal-cell, #daysContainer${c} .dochak-cell, #daysContainer${c} .naeyong-cell, #daysContainer${c} .daechaek-cell, #daysContainer${c} .bigo-text`;
+  }).join(', ');
+  const segments = new Set();
+  document.querySelectorAll(selector).forEach(el=>{
+    const raw = el.textContent || '';
+    raw.split('/').forEach(seg=>{
+      const norm = normalizePlaceNameEarly(seg);
+      if(norm) segments.add(norm);
+    });
+  });
+  return segments;
+}
+function refreshUsedStatusFromItinerary(){
+  const segmentNorms = collectAllItinerarySegmentNorms();
+  const isPresentInItinerary = (norm)=> !!norm && segmentNorms.has(norm);
+  let changed = false;
+  ideaItems.forEach(it=>{
+    const norm = normalizePlaceNameEarly(it.text);
+    if(!norm) return;
+    const nowUsed = isPresentInItinerary(norm);
+    if(!!it.used !== nowUsed){ it.used = nowUsed; changed = true; }
+  });
+  wantToGoPlaces.forEach(p=>{
+    const norm = normalizePlaceNameEarly(p.name);
+    if(!norm) return;
+    const nowUsed = isPresentInItinerary(norm);
+    if(!!p.used !== nowUsed){ p.used = nowUsed; changed = true; }
+  });
+  if(!changed) return;
+  document.querySelectorAll('#ideaChips .idea-chip, #wantToGoChips .idea-chip').forEach(chip=>{
+    const chipText = chip.querySelector('.chip-text') ? chip.querySelector('.chip-text').textContent : '';
+    const norm = normalizePlaceNameEarly(chipText);
+    const matched = ideaItems.find(it=>normalizePlaceNameEarly(it.text) === norm)
+      || wantToGoPlaces.find(p=>normalizePlaceNameEarly(p.name) === norm);
+    if(matched) chip.classList.toggle('used', !!matched.used);
+  });
+  renderWantToGoPlaces();
+  scheduleSave();
+}
+function isItineraryTextFieldEl(el){
+  if(!el || !el.classList) return false;
+  return el.classList.contains('ilsi-cell') || el.classList.contains('chulbal-cell')
+    || el.classList.contains('dochak-cell') || el.classList.contains('naeyong-cell')
+    || el.classList.contains('daechaek-cell') || el.classList.contains('bigo-text');
+}
+['daysContainer','daysContainer2','daysContainer3'].forEach(id=>{
+  const containerEl = document.getElementById(id);
+  if(!containerEl) return;
+  containerEl.addEventListener('input', (e)=>{
+    if(isItineraryTextFieldEl(e.target)) refreshUsedStatusFromItinerary();
+  });
+});
+function bindSyncRefreshButton(btn){
+  if(!btn) return;
+  btn.addEventListener('click', ()=>{
+    refreshUsedStatusFromItinerary();
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '✅ 확인 완료';
+    setTimeout(()=>{ btn.textContent = original; btn.disabled = false; }, 900);
+  });
+}
+['planSyncRefreshBtn','planSyncRefreshBtn2','planSyncRefreshBtn3'].forEach(id=>{
+  bindSyncRefreshButton(document.getElementById(id));
+});
 let insertHistory = [];
 function recordInsert(field, prevText, chipId){
   insertHistory.push({ field, prevText, chipId });
@@ -2250,7 +2473,7 @@ function sendToTrash(node, type, extra){
   scheduleSave();
   if(type === 'budgetRow') recalcBudget();
   if(type === 'checklistItem') updateChecklistProgress();
-  if(type === 'dayRow' || type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); }
+  if(type === 'dayRow' || type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); refreshUsedStatusFromItinerary(); }
   if(type === 'chip') refreshWantToGoOverlap();
 }
 function restoreTrashItem(id){
@@ -2266,7 +2489,7 @@ function restoreTrashItem(id){
   renderTrash();
   if(item.type === 'budgetRow') recalcBudget();
   if(item.type === 'checklistItem') updateChecklistProgress();
-  if(item.type === 'dayRow' || item.type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); }
+  if(item.type === 'dayRow' || item.type === 'dayBlock') { recalcAllDayBudgets(); resyncBudgetFromSchedule(); refreshUsedStatusFromItinerary(); }
   if(item.type === 'chip'){
     refreshWantToGoOverlap();
     if(item.extra && item.extra.__wantPlace){
@@ -2361,6 +2584,7 @@ function collectState(){
           actual: tr.querySelector('.actual-input').value,
           payment: tr.querySelector('.payment-select').value,
           bigo: tr.querySelector('.bigo-text').textContent,
+          confirmed: tr.classList.contains('confirmed-row'),
         };
       }),
     })),
@@ -2380,6 +2604,7 @@ function collectState(){
         actual: tr.querySelector('.actual-input').value,
         payment: tr.querySelector('.payment-select').value,
         bigo: tr.querySelector('.bigo-text').textContent,
+        confirmed: tr.classList.contains('confirmed-row'),
       })),
     })),
     days3: Array.from(document.querySelectorAll('#daysContainer3 .day-block')).map(block=>({
@@ -2398,6 +2623,7 @@ function collectState(){
         actual: tr.querySelector('.actual-input').value,
         payment: tr.querySelector('.payment-select').value,
         bigo: tr.querySelector('.bigo-text').textContent,
+        confirmed: tr.classList.contains('confirmed-row'),
       })),
     })),
     budgetRows2: Array.from(document.querySelectorAll('#budgetBody2 tr:not(.budget-group-header)')).map(tr=>{
@@ -2550,6 +2776,7 @@ function applyState(state){
       tr.querySelector('.actual-input').value = r.actual||'';
       tr.querySelector('.payment-select').value = r.payment||'';
       tr.querySelector('.bigo-text').textContent = r.bigo||'';
+      if(r.confirmed){ tr.classList.add('confirmed-row'); const cbtn = tr.querySelector('.confirm-toggle-btn'); if(cbtn){ cbtn.classList.add('active'); cbtn.title = '확정 해제하기'; } }
       tbody.appendChild(tr);
     });
     recalcDayChain(block);
@@ -2592,6 +2819,7 @@ function applyState(state){
       tr.querySelector('.actual-input').value = r.actual||'';
       tr.querySelector('.payment-select').value = r.payment||'';
       tr.querySelector('.bigo-text').textContent = r.bigo||'';
+      if(r.confirmed){ tr.classList.add('confirmed-row'); const cbtn = tr.querySelector('.confirm-toggle-btn'); if(cbtn){ cbtn.classList.add('active'); cbtn.title = '확정 해제하기'; } }
       tbody.appendChild(tr);
     });
     recalcDayChain(block);
@@ -2634,6 +2862,7 @@ function applyState(state){
       tr.querySelector('.actual-input').value = r.actual||'';
       tr.querySelector('.payment-select').value = r.payment||'';
       tr.querySelector('.bigo-text').textContent = r.bigo||'';
+      if(r.confirmed){ tr.classList.add('confirmed-row'); const cbtn = tr.querySelector('.confirm-toggle-btn'); if(cbtn){ cbtn.classList.add('active'); cbtn.title = '확정 해제하기'; } }
       tbody.appendChild(tr);
     });
     recalcDayChain(block);
@@ -2641,6 +2870,7 @@ function applyState(state){
   recalcAllDayBudgets3();
   bumpRowIdCounterFromExisting3();
   resyncBudgetFromSchedule3();
+  refreshUsedStatusFromItinerary();
 }
 const firebaseConfig = {
   apiKey: "AIzaSyD5VyaPCt7keqrZvHe6-LyzdavXZUNan7I",
@@ -2881,6 +3111,7 @@ function makeDayTableRow2(){
   const tr = document.createElement('tr');
   tr.dataset.rowId = 'p2r' + (++scheduleRowIdCounter2);
   tr.innerHTML = `
+    <td class="drag-cell"><span class="drag-handle" draggable="true" title="드래그해서 순서 이동">⋮⋮</span></td>
     <td class="chk-cell"><input type="checkbox" class="row-select-chk" title="선택(다른 여행계획표로 복사)"></td>
     <td class="gubun-cell"><select class="gubun-select">${gubunOptionsHTML()}</select></td>
     <td class="ilsi-cell" contenteditable="true" data-ph="예: 09:00"></td>
@@ -2905,7 +3136,10 @@ function makeDayTableRow2(){
       </select>
       <span class="bigo-text" contenteditable="true" data-ph="비고"></span>
     </td>
-    <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
+    <td class="rm-cell">
+      <button type="button" class="confirm-toggle-btn" title="확정 일정으로 표시">✓</button>
+      <span class="row-del" title="행 삭제">×</span>
+    </td>
   `;
   const ilsiTd = tr.querySelector('.ilsi-cell'), chulbalTd = tr.querySelector('.chulbal-cell'), dochakTd = tr.querySelector('.dochak-cell');
   const timeLink = tr.querySelector('.time-link');
@@ -3008,8 +3242,10 @@ function makeDayTableRow2(){
     }
   });
   tr.querySelector('.row-del').addEventListener('click', ()=>{
-    if(confirm('이 행을 삭제할까요?')){ tr.remove(); recalcAllDayBudgets2(); resyncBudgetFromSchedule2(); scheduleSave(); }
+    if(confirm('이 행을 삭제할까요?')){ tr.remove(); recalcAllDayBudgets2(); resyncBudgetFromSchedule2(); refreshUsedStatusFromItinerary(); scheduleSave(); }
   });
+  bindConfirmToggle(tr);
+  attachRowDragReorder(tr);
   return tr;
 }
 function addDay2(prefillLabel){
@@ -3027,6 +3263,7 @@ function addDay2(prefillLabel){
       <table class="doc-table">
         <thead>
           <tr>
+            <th class="drag-cell"></th>
             <th class="chk-cell"></th>
             <th style="width:9%;">구분</th>
             <th style="width:8%;">일시</th>
@@ -3035,8 +3272,8 @@ function addDay2(prefillLabel){
             <th style="width:16%;">소요시간</th>
             <th class="naeyong-th">내용</th>
             <th class="daechaek-th">대책</th>
-            <th style="width:9%;">예산(원)</th>
-            <th style="width:9%;">실금액(원)</th>
+            <th style="width:11%;">예산(원)</th>
+            <th style="width:11%;">실금액(원)</th>
             <th style="width:9%;">비고</th>
             <th class="rm-cell"></th>
           </tr>
@@ -3050,7 +3287,7 @@ function addDay2(prefillLabel){
   const tbody = wrap.querySelector('tbody');
   for(let i=0;i<5;i++) tbody.appendChild(makeDayTableRow2());
   wrap.querySelector('.day-del').addEventListener('click', ()=>{
-    if(confirm('이 일차를 삭제할까요?')){ wrap.remove(); recalcAllDayBudgets2(); resyncBudgetFromSchedule2(); scheduleSave(); }
+    if(confirm('이 일차를 삭제할까요?')){ wrap.remove(); recalcAllDayBudgets2(); resyncBudgetFromSchedule2(); refreshUsedStatusFromItinerary(); scheduleSave(); }
   });
   wrap.querySelector('.add-row-btn').addEventListener('click', ()=>{
     tbody.appendChild(makeDayTableRow2());
@@ -3302,6 +3539,7 @@ function makeDayTableRow3(){
   const tr = document.createElement('tr');
   tr.dataset.rowId = 'p3r' + (++scheduleRowIdCounter3);
   tr.innerHTML = `
+    <td class="drag-cell"><span class="drag-handle" draggable="true" title="드래그해서 순서 이동">⋮⋮</span></td>
     <td class="chk-cell"><input type="checkbox" class="row-select-chk" title="선택(다른 여행계획표로 복사)"></td>
     <td class="gubun-cell"><select class="gubun-select">${gubunOptionsHTML()}</select></td>
     <td class="ilsi-cell" contenteditable="true" data-ph="예: 09:00"></td>
@@ -3326,7 +3564,10 @@ function makeDayTableRow3(){
       </select>
       <span class="bigo-text" contenteditable="true" data-ph="비고"></span>
     </td>
-    <td class="rm-cell"><span class="row-del" title="행 삭제">×</span></td>
+    <td class="rm-cell">
+      <button type="button" class="confirm-toggle-btn" title="확정 일정으로 표시">✓</button>
+      <span class="row-del" title="행 삭제">×</span>
+    </td>
   `;
   const ilsiTd = tr.querySelector('.ilsi-cell'), chulbalTd = tr.querySelector('.chulbal-cell'), dochakTd = tr.querySelector('.dochak-cell');
   const timeLink = tr.querySelector('.time-link');
@@ -3429,8 +3670,10 @@ function makeDayTableRow3(){
     }
   });
   tr.querySelector('.row-del').addEventListener('click', ()=>{
-    if(confirm('이 행을 삭제할까요?')){ tr.remove(); recalcAllDayBudgets3(); resyncBudgetFromSchedule3(); scheduleSave(); }
+    if(confirm('이 행을 삭제할까요?')){ tr.remove(); recalcAllDayBudgets3(); resyncBudgetFromSchedule3(); refreshUsedStatusFromItinerary(); scheduleSave(); }
   });
+  bindConfirmToggle(tr);
+  attachRowDragReorder(tr);
   return tr;
 }
 function addDay3(prefillLabel){
@@ -3448,6 +3691,7 @@ function addDay3(prefillLabel){
       <table class="doc-table">
         <thead>
           <tr>
+            <th class="drag-cell"></th>
             <th class="chk-cell"></th>
             <th style="width:9%;">구분</th>
             <th style="width:8%;">일시</th>
@@ -3456,8 +3700,8 @@ function addDay3(prefillLabel){
             <th style="width:16%;">소요시간</th>
             <th class="naeyong-th">내용</th>
             <th class="daechaek-th">대책</th>
-            <th style="width:9%;">예산(원)</th>
-            <th style="width:9%;">실금액(원)</th>
+            <th style="width:11%;">예산(원)</th>
+            <th style="width:11%;">실금액(원)</th>
             <th style="width:9%;">비고</th>
             <th class="rm-cell"></th>
           </tr>
@@ -3471,7 +3715,7 @@ function addDay3(prefillLabel){
   const tbody = wrap.querySelector('tbody');
   for(let i=0;i<5;i++) tbody.appendChild(makeDayTableRow3());
   wrap.querySelector('.day-del').addEventListener('click', ()=>{
-    if(confirm('이 일차를 삭제할까요?')){ wrap.remove(); recalcAllDayBudgets3(); resyncBudgetFromSchedule3(); scheduleSave(); }
+    if(confirm('이 일차를 삭제할까요?')){ wrap.remove(); recalcAllDayBudgets3(); resyncBudgetFromSchedule3(); refreshUsedStatusFromItinerary(); scheduleSave(); }
   });
   wrap.querySelector('.add-row-btn').addEventListener('click', ()=>{
     tbody.appendChild(makeDayTableRow3());
@@ -3885,6 +4129,18 @@ function deleteWantToGoPlace(place){
   renderWantToGoChipsGrouped();
   renderWantToGoPlaces();
 }
+// 가고싶은곳 "탭" 카드에서 빼는 것은 메모장 목록이나 여행계획표에 이미 적어둔
+// 내용을 지우는 게 아니라, "여행계획표에 넣어서 계획에 확정됨"을 나타내는
+// used 표시만 해제하는 거예요. 메모장 원본 목록과 여행계획표(출발/도착/내용 등)
+// 칸에 적힌 글자는 그대로 남아있고, 탭에서만 카드가 안 보이게 돼요.
+function removeWantToGoPlaceFromPlanTab(place){
+  if(!confirm(`"${place.name}" 항목을 가고싶은곳 탭에서 뺄까요? (가고싶은곳 메모장과 여행계획표에 적어둔 내용은 그대로 남아있어요)`)) return;
+  place.used = false;
+  const chip = document.querySelector(`#wantToGoChips .idea-chip[data-id="${place.id}"]`);
+  if(chip) chip.classList.remove('used');
+  renderWantToGoPlaces();
+  scheduleSave();
+}
 function makeWantPlaceCard(place){
   const card = document.createElement('div');
   card.className = 'want-place-card' + (place.overlap ? ' overlap-card' : '');
@@ -3892,7 +4148,10 @@ function makeWantPlaceCard(place){
     <div class="want-place-head">
       <span class="want-place-name" contenteditable="true" data-ph="장소 이름">${escapeHtmlSafe(place.name)}</span>
       ${place.group ? `<span class="want-place-group">📁 ${escapeHtmlSafe(place.group)}</span>` : ''}
-      <button type="button" class="want-place-del" title="이 장소 삭제">🗑 삭제</button>
+      <div class="want-place-actions">
+        <button type="button" class="sync-refresh-btn want-place-refresh-btn" title="여행계획표 내용을 다시 확인해서 겹침 표시를 최신 상태로 맞춰요">🔄</button>
+        <button type="button" class="want-place-del" title="가고싶은곳 탭에서만 빼요. 메모장 목록과 여행계획표에 적어둔 내용은 그대로 남아있어요.">🗑 탭에서 빼기</button>
+      </div>
     </div>
     <textarea class="want-place-note" rows="2" placeholder="메모 (선택)">${escapeHtmlSafe(place.note||'')}</textarea>
     <div>
@@ -3902,6 +4161,13 @@ function makeWantPlaceCard(place){
     <div class="want-photo-grid"></div>
   `;
   const nameEl = card.querySelector('.want-place-name');
+  const cardRefreshBtn = card.querySelector('.want-place-refresh-btn');
+  cardRefreshBtn.addEventListener('click', ()=>{
+    cardRefreshBtn.disabled = true;
+    refreshUsedStatusFromItinerary();
+    // 목록이 다시 그려지면서 이 카드 자체가 통째로 교체/제거될 수 있어서
+    // 버튼 상태를 여기서 되돌리지 않아도 돼요.
+  });
   nameEl.addEventListener('blur', ()=>{
     const newName = nameEl.textContent.trim();
     if(!newName){ nameEl.textContent = place.name; return; }
@@ -3918,7 +4184,7 @@ function makeWantPlaceCard(place){
   nameEl.addEventListener('keydown', (e)=>{
     if(e.key === 'Enter'){ e.preventDefault(); nameEl.blur(); }
   });
-  card.querySelector('.want-place-del').addEventListener('click', ()=> deleteWantToGoPlace(place));
+  card.querySelector('.want-place-del').addEventListener('click', ()=> removeWantToGoPlaceFromPlanTab(place));
   const noteEl = card.querySelector('.want-place-note');
   const autoGrowNote = ()=>{ noteEl.style.height = 'auto'; noteEl.style.height = noteEl.scrollHeight + 'px'; };
   noteEl.addEventListener('input', ()=>{ place.note = noteEl.value; autoGrowNote(); });
@@ -3964,8 +4230,10 @@ function renderWantToGoPlaces(){
   const list = document.getElementById('wantToGoPlacesList');
   const emptyHint = document.getElementById('wantToGoEmptyHint');
   list.innerHTML = '';
-  wantToGoPlaces.forEach(place=> list.appendChild(makeWantPlaceCard(place)));
-  emptyHint.style.display = wantToGoPlaces.length ? 'none' : '';
+  // 메모장에 올려둔 전체 장소가 아니라, 여행계획표(일정)에 실제로 넣은(used) 장소만 카드로 보여줘요.
+  const plannedPlaces = wantToGoPlaces.filter(place => place.used);
+  plannedPlaces.forEach(place=> list.appendChild(makeWantPlaceCard(place)));
+  emptyHint.style.display = plannedPlaces.length ? 'none' : '';
   updatePptBtnState();
 }
 function updatePptBtnState(){
